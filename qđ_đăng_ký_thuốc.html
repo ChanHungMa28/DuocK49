@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trắc nghiệm – Quy định về đăng ký thuốc</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+      background: linear-gradient(180deg, #eef2ff, #f9fafb);
+      color: #111827;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 32px auto 40px;
+      padding: 24px 20px 32px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      letter-spacing: -0.04em;
+      text-align: center;
+      color: #1d4ed8;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      margin-bottom: 16px;
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      background: #f9fbff;
+      border: 1px solid #e0e7ff;
+    }
+
+    .question-header {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .question-number {
+      font-weight: 700;
+      color: #4f46e5;
+      font-size: 14px;
+      min-width: 26px;
+    }
+
+    .question-text {
+      font-weight: 600;
+      font-size: 15px;
+      color: #111827;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .option-btn {
+      flex: 1 1 calc(50% - 8px);
+      border-radius: 999px;
+      border: 1px solid #cbd5f5;
+      background: #ffffff;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      white-space: normal;
+      transition: background 0.16s ease, color 0.16s ease,
+        border-color 0.16s ease, box-shadow 0.16s ease, transform 0.05s ease;
+    }
+
+    .option-btn:hover {
+      transform: translateY(-1px);
+      border-color: #818cf8;
+      box-shadow: 0 2px 6px rgba(129, 140, 248, 0.25);
+    }
+
+    .option-btn.correct {
+      background: #d1fae5;
+      border-color: #10b981;
+      color: #065f46;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .option-btn.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .option-btn.disabled {
+      opacity: 0.8;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .summary {
+      margin-top: 26px;
+      padding: 16px 14px 18px;
+      border-radius: 14px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      text-align: center;
+    }
+
+    .summary-text {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1f2937;
+    }
+
+    .summary-note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .reset-btn {
+      margin-top: 12px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      background: #4f46e5;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+      transition: background 0.15s ease, transform 0.08s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .reset-btn:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(67, 56, 202, 0.4);
+    }
+
+    .reset-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(55, 48, 163, 0.4);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        margin: 12px;
+        padding: 18px 14px 24px;
+      }
+
+      .option-btn {
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trắc nghiệm – Quy định về đăng ký thuốc</h1>
+    <p class="subtitle">
+      Chọn đáp án A–D cho từng câu. Đúng hiển thị màu xanh, sai hiển thị màu đỏ.
+      Phía dưới có tổng kết số câu đúng.
+    </p>
+
+    <div id="questions-container"></div>
+
+    <div class="summary">
+      <div id="score-text" class="summary-text">
+        Bạn trả lời đúng 0/<span id="total-count"></span> câu.
+      </div>
+      <div class="summary-note">
+        Mỗi câu chỉ tính điểm lần chọn đầu tiên. Nhấn "Làm lại" để làm lại toàn bộ.
+      </div>
+      <button id="reset-btn" class="reset-btn">Làm lại tất cả câu hỏi</button>
+    </div>
+  </div>
+
+  <script>
+    const questionsData = [
+      {
+        text: "Đăng ký thuốc là gì?",
+        options: [
+          "Việc xin giấy phép nhập khẩu thuốc",
+          "Việc đề nghị cơ quan nhà nước cấp phép lưu hành thuốc trong một quốc gia",
+          "Việc kiểm nghiệm chất lượng thuốc",
+          "Việc đánh giá giá thuốc trên thị trường"
+        ],
+        correct: 1
+      },
+      {
+        text: "Hoạt chất mới là gì?",
+        options: [
+          "Hoạt chất đã lưu hành tại Việt Nam",
+          "Hoạt chất của thuốc generic",
+          "Hoạt chất lần đầu tiên đăng ký lưu hành tại Việt Nam",
+          "Hoạt chất dùng trong nghiên cứu sinh phẩm"
+        ],
+        correct: 2
+      },
+      {
+        text: "Thuốc generic là gì?",
+        options: [
+          "Thuốc phát minh",
+          "Thuốc được sản xuất theo nhượng quyền",
+          "Thuốc thay thế thuốc phát minh sau khi bằng sáng chế hết hạn",
+          "Thuốc chưa có hoạt chất"
+        ],
+        correct: 2
+      },
+      {
+        text: "Thuốc sản xuất nhượng quyền là:",
+        options: [
+          "Thuốc không có hồ sơ kỹ thuật",
+          "Thuốc do nhà nước sản xuất",
+          "Thuốc được cơ sở có số đăng ký chuyển giao quyền sản xuất cho cơ sở khác",
+          "Thuốc sản xuất bí mật không công bố"
+        ],
+        correct: 2
+      },
+      {
+        text: "Tên thương mại của thuốc là:",
+        options: [
+          "Tên khoa học của hoạt chất",
+          "Tên khác với tên gốc hoặc tên chung quốc tế",
+          "Tên quy định bởi WHO",
+          "Tên đăng ký thuế của cơ sở sản xuất"
+        ],
+        correct: 1
+      },
+      {
+        text: "Hồ sơ kỹ thuật chung ASEAN (ACTD) là:",
+        options: [
+          "Hồ sơ tài chính của cơ sở đăng ký",
+          "Bộ tài liệu về kiểm nghiệm thuốc",
+          "Bộ tài liệu đáp ứng yêu cầu kỹ thuật chung của ASEAN",
+          "Hồ sơ xin xuất khẩu thuốc"
+        ],
+        correct: 2
+      },
+      {
+        text: "Thay đổi lớn là gì?",
+        options: [
+          "Thay đổi không ảnh hưởng đến chất lượng thuốc",
+          "Thay đổi có ảnh hưởng rõ rệt đến chất lượng, an toàn, hiệu quả",
+          "Thay đổi bao bì",
+          "Thay đổi địa chỉ văn phòng"
+        ],
+        correct: 1
+      },
+      {
+        text: "Thay đổi nhỏ là gì?",
+        options: [
+          "Thay đổi không ảnh hưởng hoặc ảnh hưởng rất ít đến chất lượng, hiệu quả, an toàn",
+          "Thay đổi nhà phân phối",
+          "Thay đổi nhãn phụ",
+          "Thay đổi tên thương mại"
+        ],
+        correct: 0
+      },
+      {
+        text: "Cơ sở đăng ký thuốc là:",
+        options: [
+          "Cơ sở kiểm nghiệm thuốc",
+          "Cơ sở đứng tên nộp đơn đề nghị cấp giấy phép lưu hành",
+          "Cơ sở sản xuất bao bì thuốc",
+          "Cơ quan thanh tra"
+        ],
+        correct: 1
+      },
+      {
+        text: "Cơ sở sản xuất thuốc là:",
+        options: [
+          "Cơ sở nhập khẩu thuốc",
+          "Cơ sở chỉ bán lẻ thuốc",
+          "Cơ sở thực hiện ít nhất một công đoạn sản xuất hoặc kiểm tra xuất xưởng",
+          "Cơ sở vận chuyển thuốc"
+        ],
+        correct: 2
+      },
+      {
+        text: "Điều kiện đối với cơ sở đăng ký thuốc tại Việt Nam:",
+        options: [
+          "Không cần giấy phép",
+          "Chỉ cần giấy phép kinh doanh thông thường",
+          "Phải có giấy chứng nhận đủ điều kiện kinh doanh thuốc",
+          "Chỉ cần đăng ký mã số thuế"
+        ],
+        correct: 2
+      },
+      {
+        text: "Cơ sở nước ngoài muốn đăng ký thuốc tại Việt Nam cần:",
+        options: [
+          "Giấy phép sản xuất và kinh doanh thuốc do nước ngoài cấp",
+          "Văn bản đồng ý của bệnh viện",
+          "Hợp đồng phân phối với nhà thuốc",
+          "Số đăng ký tạm thời"
+        ],
+        correct: 0
+      },
+      {
+        text: "Nếu không có văn phòng đại diện tại Việt Nam, cơ sở nước ngoài phải:",
+        options: [
+          "Dừng đăng ký thuốc",
+          "Ủy quyền cho cơ sở kinh doanh thuốc của Việt Nam đăng ký",
+          "Tự xuất khẩu trực tiếp",
+          "Xin giấy phép đặc biệt của WHO"
+        ],
+        correct: 1
+      },
+      {
+        text: "Một quyền của cơ sở đăng ký thuốc là:",
+        options: [
+          "Được miễn kiểm tra hậu mại",
+          "Được hướng dẫn về đăng ký thuốc và biết thông tin liên quan thuốc do mình đăng ký",
+          "Được tự quyết định giá bán",
+          "Được sản xuất thuốc tại Việt Nam"
+        ],
+        correct: 1
+      },
+      {
+        text: "Cơ sở đăng ký có quyền rút số đăng ký theo:",
+        options: [
+          "Mẫu số 02/TT",
+          "Mẫu số 04/ĐK",
+          "Mẫu số 01/TT",
+          "Mẫu số 08"
+        ],
+        correct: 2
+      },
+      {
+        text: "Trách nhiệm của cơ sở đăng ký:",
+        options: [
+          "Chỉ đảm bảo hiệu quả, không cần chất lượng",
+          "Chỉ báo cáo khi có yêu cầu đặc biệt",
+          "Bảo đảm chất lượng, an toàn, hiệu quả của thuốc và lưu hành đúng hồ sơ",
+          "Không cần cung cấp thông tin cho cơ quan quản lý"
+        ],
+        correct: 2
+      },
+      {
+        text: "Cơ sở đăng ký phải cung cấp thông tin khi:",
+        options: [
+          "Có yêu cầu của cơ quan quản lý",
+          "Khi thuốc hết hạn",
+          "Khi bán hết hàng",
+          "Khi thay đổi giá"
+        ],
+        correct: 0
+      },
+      {
+        text: "Thời hạn thông báo cho Cục Quản lý Dược khi có vấn đề:",
+        options: [
+          "1 ngày",
+          "3 ngày",
+          "7 ngày làm việc",
+          "30 ngày"
+        ],
+        correct: 2
+      },
+      {
+        text: "Báo cáo hằng năm phải gửi vào ngày:",
+        options: [
+          "01/01",
+          "30/6",
+          "15/12",
+          "31/12"
+        ],
+        correct: 2
+      },
+      {
+        text: "Cơ sở đăng ký phải thay đổi cơ sở đăng ký trong vòng:",
+        options: [
+          "1 tháng khi cơ sở cũ ngừng hoạt động hoặc bị chấm dứt",
+          "3 tháng",
+          "6 tháng",
+          "Không có quy định"
+        ],
+        correct: 0
+      },
+      {
+        text: "Hình thức đăng ký lần đầu áp dụng cho:",
+        options: [
+          "Thuốc đã có số đăng ký còn hiệu lực",
+          "Thuốc chưa được cấp số đăng ký",
+          "Thuốc đã bị thu hồi",
+          "Thuốc đang thử nghiệm"
+        ],
+        correct: 1
+      },
+      {
+        text: "Đăng ký lại áp dụng khi:",
+        options: [
+          "Số đăng ký còn hiệu lực",
+          "Thuốc hết hạn sử dụng",
+          "Số đăng ký hết hiệu lực và không đủ điều kiện gia hạn",
+          "Thuốc bị thay đổi bao bì"
+        ],
+        correct: 2
+      },
+      {
+        text: "Đăng ký gia hạn áp dụng cho thuốc:",
+        options: [
+          "Chưa từng lưu hành",
+          "Đã được cấp số đăng ký 5 năm và có lưu hành",
+          "Không có hồ sơ kỹ thuật",
+          "Không đáp ứng điều kiện ACTD"
+        ],
+        correct: 1
+      },
+      {
+        text: "Một điều kiện của gia hạn số đăng ký thuốc hóa dược:",
+        options: [
+          "Có thay đổi lớn trong hồ sơ",
+          "Có khuyến cáo của WHO về hiệu quả thuốc",
+          "Không có thay đổi nào tại thời điểm nộp hồ sơ",
+          "Không cần hồ sơ ACTD"
+        ],
+        correct: 2
+      },
+      {
+        text: "Đăng ký thay đổi, bổ sung áp dụng khi:",
+        options: [
+          "Thuốc hết hạn",
+          "Thuốc có thay đổi trong thời gian số đăng ký còn hiệu lực",
+          "Thuốc bị cấm",
+          "Thuốc chuyển cơ sở sản xuất"
+        ],
+        correct: 1
+      },
+      {
+        text: "Khi thay đổi theo yêu cầu của hội đồng tư vấn:",
+        options: [
+          "Phải nộp hồ sơ thay đổi đầy đủ",
+          "Không cần chịu trách nhiệm",
+          "Cơ sở đăng ký tự cập nhật theo hướng dẫn và chịu trách nhiệm",
+          "Không cần thực hiện"
+        ],
+        correct: 2
+      },
+      {
+        text: "Bộ Y tế khuyến khích đặt tên thuốc theo:",
+        options: [
+          "Tên thương mại",
+          "Tên gốc",
+          "Tên chung quốc tế (INN)",
+          "Tên viết tắt"
+        ],
+        correct: 2
+      },
+      {
+        text: "Một yêu cầu đối với tên thương mại:",
+        options: [
+          "Có thể ghi quá tác dụng điều trị",
+          "Không được ghi sai tác dụng điều trị",
+          "Không cần tuân thủ sở hữu trí tuệ",
+          "Được phép trùng với thuốc khác"
+        ],
+        correct: 1
+      },
+      {
+        text: "Tên thương mại không được:",
+        options: [
+          "Gây xung đột sở hữu trí tuệ",
+          "Ghi đúng tác dụng",
+          "Giống tên thuốc khác cùng công thức",
+          "Ngắn gọn"
+        ],
+        correct: 0
+      },
+      {
+        text: "Thuốc có cùng công thức, cùng quy trình sản xuất của cùng nhà sản xuất:",
+        options: [
+          "Có thể đặt tên khác nhau",
+          "Không được đặt tên khác nhau",
+          "Không được lưu hành",
+          "Phải đăng ký lại"
+        ],
+        correct: 1
+      },
+      {
+        text: "Thuốc đã được cấp số đăng ký nhưng không nộp hồ sơ trong thời hạn quy định:",
+        options: [
+          "Được tự động gia hạn",
+          "Phải đăng ký lại như lần đầu",
+          "Được cấp số mới ngay",
+          "Không cần xử lý"
+        ],
+        correct: 1
+      },
+      {
+        text: "Sinh phẩm chẩn đoán in vitro được đăng ký theo hình thức:",
+        options: [
+          "Chỉ đăng ký lại",
+          "Như thuốc hóa dược – đăng ký lần đầu / lại / gia hạn",
+          "Không phải đăng ký",
+          "Đăng ký đặc biệt"
+        ],
+        correct: 1
+      },
+      {
+        text: "Gia hạn thuốc sinh phẩm cần điều kiện:",
+        options: [
+          "Không có thay đổi tại thời điểm nộp hồ sơ",
+          "Không cần hồ sơ cũ",
+          "Phải có thay đổi thành phần",
+          "Không cần lưu hành trước đó"
+        ],
+        correct: 0
+      },
+      {
+        text: "Một thuốc có thể gia hạn nhiều lần nếu:",
+        options: [
+          "Chỉ cần thuốc bán chạy",
+          "Có thay đổi nhỏ",
+          "Đáp ứng đầy đủ yêu cầu của quy định về gia hạn",
+          "Do nhà sản xuất yêu cầu"
+        ],
+        correct: 2
+      },
+      {
+        text: "Khi nghi ngờ thuốc mất an toàn:",
+        options: [
+          "Không cần xử lý",
+          "Cơ sở đăng ký phối hợp nhà sản xuất cung cấp thêm thông tin theo yêu cầu",
+          "Ngừng bán nhưng không báo cáo",
+          "Hủy toàn bộ không cần xét"
+        ],
+        correct: 1
+      },
+      {
+        text: "Cơ sở đăng ký phải báo cáo kết quả thu hồi cho:",
+        options: [
+          "Nhà cung cấp",
+          "Bộ Công an",
+          "Cục Quản lý Dược hoặc Vụ Trang thiết bị – Công trình y tế",
+          "Cơ sở bán lẻ"
+        ],
+        correct: 2
+      },
+      {
+        text: "Khi cơ sở đăng ký ngừng hoạt động:",
+        options: [
+          "Thuốc tự động bị thu hồi",
+          "Không ảnh hưởng đến số đăng ký",
+          "Phải thay đổi cơ sở đăng ký trong 1 tháng",
+          "Phải gia hạn số đăng ký"
+        ],
+        correct: 2
+      },
+      {
+        text: "Thuốc đã được cấp số đăng ký nhưng không được sản xuất / nhập khẩu phải:",
+        options: [
+          "Không cần giải trình",
+          "Giải trình lý do trong báo cáo 15/12",
+          "Bị thu hồi ngay",
+          "Chuyển sang đăng ký lại"
+        ],
+        correct: 1
+      },
+      {
+        text: "Một cơ sở sản xuất thuốc phải thực hiện tối thiểu:",
+        options: [
+          "Kiểm tra chất lượng",
+          "Một công đoạn sản xuất hoặc kiểm tra xuất xưởng",
+          "Vận chuyển nguyên liệu",
+          "Nhập khẩu thuốc"
+        ],
+        correct: 1
+      },
+      {
+        text: "Tên thương mại của thuốc không được:",
+        options: [
+          "Vi phạm thuần phong mỹ tục",
+          "Viết theo INN",
+          "Trùng với thuốc đã được cấp số đăng ký của cơ sở khác",
+          "Bao gồm tác dụng điều trị"
+        ],
+        correct: 2
+      }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("questions-container");
+      const scoreText = document.getElementById("score-text");
+      const totalCount = document.getElementById("total-count");
+      const resetBtn = document.getElementById("reset-btn");
+
+      let score = 0;
+
+      function renderQuestions() {
+        container.innerHTML = "";
+        questionsData.forEach((q, index) => {
+          const qDiv = document.createElement("div");
+          qDiv.className = "question";
+          qDiv.dataset.answered = "false";
+
+          const header = document.createElement("div");
+          header.className = "question-header";
+
+          const num = document.createElement("div");
+          num.className = "question-number";
+          num.textContent = (index + 1) + ".";
+
+          const text = document.createElement("div");
+          text.className = "question-text";
+          text.textContent = q.text;
+
+          header.appendChild(num);
+          header.appendChild(text);
+
+          const optionsDiv = document.createElement("div");
+          optionsDiv.className = "options";
+
+          q.options.forEach((opt, optIndex) => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.textContent = String.fromCharCode(65 + optIndex) + ". " + opt;
+            btn.dataset.correct = optIndex === q.correct ? "true" : "false";
+            optionsDiv.appendChild(btn);
+          });
+
+          qDiv.appendChild(header);
+          qDiv.appendChild(optionsDiv);
+          container.appendChild(qDiv);
+        });
+      }
+
+      function attachHandlers() {
+        const questions = document.querySelectorAll(".question");
+        const total = questions.length;
+        totalCount.textContent = total.toString();
+        scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+
+        questions.forEach((q) => {
+          const buttons = q.querySelectorAll(".option-btn");
+          buttons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (q.dataset.answered === "true") return;
+
+              q.dataset.answered = "true";
+              const isCorrect = btn.dataset.correct === "true";
+              const correctBtn = q.querySelector(
+                '.option-btn[data-correct="true"]'
+              );
+
+              if (isCorrect) {
+                btn.classList.add("correct");
+                score++;
+              } else {
+                btn.classList.add("wrong");
+                if (correctBtn) correctBtn.classList.add("correct");
+              }
+
+              buttons.forEach((b) => b.classList.add("disabled"));
+              scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+            });
+          });
+        });
+      }
+
+      renderQuestions();
+      attachHandlers();
+
+      resetBtn.addEventListener("click", () => {
+        score = 0;
+        renderQuestions();
+        attachHandlers();
+      });
+    });
+  </script>
+</body>
+</html>

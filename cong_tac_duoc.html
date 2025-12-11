@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trắc nghiệm – Quy định về công tác dược bệnh viện</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+      background: linear-gradient(180deg, #eef2ff, #f9fafb);
+      color: #111827;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 32px auto 40px;
+      padding: 24px 20px 32px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+      text-align: center;
+      color: #1d4ed8;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      margin-bottom: 18px;
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      background: #f9fbff;
+      border: 1px solid #e0e7ff;
+    }
+
+    .question-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .question-number {
+      font-weight: 700;
+      color: #4f46e5;
+      font-size: 14px;
+      min-width: 26px;
+    }
+
+    .question-text {
+      font-weight: 600;
+      font-size: 15px;
+      color: #111827;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .option-btn {
+      flex: 1 1 calc(50% - 8px);
+      border-radius: 999px;
+      border: 1px solid #cbd5f5;
+      background: #ffffff;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.16s ease, color 0.16s ease,
+        border-color 0.16s ease, transform 0.05s ease;
+      white-space: normal;
+    }
+
+    .option-btn:hover {
+      transform: translateY(-1px);
+      border-color: #818cf8;
+      box-shadow: 0 2px 6px rgba(129, 140, 248, 0.25);
+    }
+
+    .option-btn.correct {
+      background: #d1fae5;
+      border-color: #10b981;
+      color: #065f46;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .option-btn.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .option-btn.disabled {
+      opacity: 0.8;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .summary {
+      margin-top: 26px;
+      padding: 16px 14px 18px;
+      border-radius: 14px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      text-align: center;
+    }
+
+    .summary-text {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1f2937;
+    }
+
+    .summary-note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .reset-btn {
+      margin-top: 12px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      background: #4f46e5;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+      transition: background 0.15s ease, transform 0.08s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .reset-btn:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(67, 56, 202, 0.4);
+    }
+
+    .reset-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(55, 48, 163, 0.4);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        margin: 12px;
+        padding: 18px 14px 24px;
+      }
+
+      .option-btn {
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trắc nghiệm &ndash; Công tác dược bệnh viện</h1>
+    <p class="subtitle">
+      Chọn đáp án A&ndash;D. Đúng sẽ hiển thị màu xanh, sai hiển thị màu đỏ. Cuối
+      trang có tổng kết số câu đúng.
+    </p>
+
+    <!-- CÂU 1 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">1.</div>
+        <div class="question-text">
+          Khoa Dược chịu sự lãnh đạo trực tiếp của ai?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Trưởng phòng điều dưỡng
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Giám đốc bệnh viện
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Trưởng khoa Khám bệnh
+        </button>
+        <button class="option-btn" data-correct="false">D. Bộ Y tế</button>
+      </div>
+    </div>
+
+    <!-- CÂU 2 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">2.</div>
+        <div class="question-text">
+          Chức năng chính của Khoa Dược là gì?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Điều trị người bệnh
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Quản lý và tham mưu công tác dược trong bệnh viện
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Kiểm nghiệm thuốc toàn quốc
+        </button>
+        <button class="option-btn" data-correct="false">D. Thanh tra y tế</button>
+      </div>
+    </div>
+
+    <!-- CÂU 3 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">3.</div>
+        <div class="question-text">
+          Mục tiêu đảm bảo của Khoa Dược đối với thuốc là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Giá rẻ</button>
+        <button class="option-btn" data-correct="true">
+          B. Đủ số lượng, kịp thời, có chất lượng
+        </button>
+        <button class="option-btn" data-correct="false">C. Thuốc nhập khẩu</button>
+        <button class="option-btn" data-correct="false">D. Thuốc generic</button>
+      </div>
+    </div>
+
+    <!-- CÂU 4 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">4.</div>
+        <div class="question-text">
+          Khoa Dược có nhiệm vụ lập kế hoạch cung ứng thuốc cho:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">
+          A. Điều trị và thử nghiệm lâm sàng
+        </button>
+        <button class="option-btn" data-correct="false">
+          B. Nghiên cứu y tế công cộng
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Bào chế thuốc tân dược
+        </button>
+        <button class="option-btn" data-correct="false">D. Phẫu thuật</button>
+      </div>
+    </div>
+
+    <!-- CÂU 5 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">5.</div>
+        <div class="question-text">
+          Khoa Dược phải bảo quản thuốc theo nguyên tắc nào?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. GDP</button>
+        <button class="option-btn" data-correct="false">B. GPP</button>
+        <button class="option-btn" data-correct="true">C. GSP</button>
+        <button class="option-btn" data-correct="false">D. GLP</button>
+      </div>
+    </div>
+
+    <!-- CÂU 6 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">6.</div>
+        <div class="question-text">
+          Khoa Dược tham gia giám sát sử dụng thuốc, đặc biệt là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Thuốc tiêm truyền</button>
+        <button class="option-btn" data-correct="true">B. Kháng sinh</button>
+        <button class="option-btn" data-correct="false">C. Vắc xin</button>
+        <button class="option-btn" data-correct="false">D. Thuốc đông y</button>
+      </div>
+    </div>
+
+    <!-- CÂU 7 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">7.</div>
+        <div class="question-text">
+          Khoa Dược có trách nhiệm tổ chức hoạt động của cơ quan nào?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Hội đồng đạo đức
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Hội đồng thuốc và điều trị
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Hội đồng chuyên môn điều dưỡng
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Hội đồng kiểm soát nhiễm khuẩn
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 8 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">8.</div>
+        <div class="question-text">
+          Khoa Dược là cơ sở thực hành cho các trường:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Sư phạm</button>
+        <button class="option-btn" data-correct="false">B. Kinh tế</button>
+        <button class="option-btn" data-correct="true">
+          C. Đại học, cao đẳng, trung học về dược
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Công nghệ thông tin
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 9 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">9.</div>
+        <div class="question-text">
+          Khoa Dược phải tham gia quản lý kinh phí liên quan đến:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Phòng bệnh</button>
+        <button class="option-btn" data-correct="true">B. Sử dụng thuốc</button>
+        <button class="option-btn" data-correct="false">C. Xét nghiệm</button>
+        <button class="option-btn" data-correct="false">D. Dinh dưỡng</button>
+      </div>
+    </div>
+
+    <!-- CÂU 10 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">10.</div>
+        <div class="question-text">
+          Khoa Dược tham gia chỉ đạo tuyến khi:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Được Sở Y tế yêu cầu
+        </button>
+        <button class="option-btn" data-correct="false">
+          B. Được Bộ Y tế điều động
+        </button>
+        <button class="option-btn" data-correct="true">
+          C. Là một nhiệm vụ ghi trong tài liệu
+        </button>
+        <button class="option-btn" data-correct="false">D. Khi có dịch bệnh</button>
+      </div>
+    </div>
+
+    <!-- CÂU 11 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">11.</div>
+        <div class="question-text">
+          Trình độ tối thiểu của trưởng khoa dược là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Dược tá</button>
+        <button class="option-btn" data-correct="false">
+          B. Dược sĩ trung học
+        </button>
+        <button class="option-btn" data-correct="true">
+          C. Dược sĩ đại học
+        </button>
+        <button class="option-btn" data-correct="false">D. Cao đẳng dược</button>
+      </div>
+    </div>
+
+    <!-- CÂU 12 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">12.</div>
+        <div class="question-text">
+          Bệnh viện hạng 3 không có dược sĩ đại học thì ai được ủy quyền phụ
+          trách?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Điều dưỡng trưởng
+        </button>
+        <button class="option-btn" data-correct="true">B. Dược sĩ trung học</button>
+        <button class="option-btn" data-correct="false">C. Bác sĩ điều trị</button>
+        <button class="option-btn" data-correct="false">
+          D. Trưởng phòng tài chính
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 13 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">13.</div>
+        <div class="question-text">
+          Trưởng khoa Dược là phó chủ tịch thường trực của:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Hội đồng kiểm soát nhiễm khuẩn
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Hội đồng thuốc và điều trị
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Hội đồng chuyên môn
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Hội đồng tuyển dụng
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 14 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">14.</div>
+        <div class="question-text">
+          Trưởng khoa Dược chịu trách nhiệm trước ai?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Bộ Y tế</button>
+        <button class="option-btn" data-correct="false">B. Phòng kế toán</button>
+        <button class="option-btn" data-correct="true">
+          C. Giám đốc bệnh viện
+        </button>
+        <button class="option-btn" data-correct="false">D. Hội đồng thuốc</button>
+      </div>
+    </div>
+
+    <!-- CÂU 15 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">15.</div>
+        <div class="question-text">
+          Trưởng khoa Dược tham gia công tác đấu thầu thuốc với vai trò:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Thư ký</button>
+        <button class="option-btn" data-correct="false">
+          B. Tổ trưởng mua sắm thiết bị
+        </button>
+        <button class="option-btn" data-correct="true">C. Đầu mối</button>
+        <button class="option-btn" data-correct="false">D. Thanh tra</button>
+      </div>
+    </div>
+
+    <!-- CÂU 16 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">16.</div>
+        <div class="question-text">
+          Trưởng khoa Dược phải theo dõi các hoạt động nào liên quan đến thuốc?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Bán buôn</button>
+        <button class="option-btn" data-correct="true">
+          B. Bảo quản, nhập, xuất
+        </button>
+        <button class="option-btn" data-correct="false">C. Xuất khẩu</button>
+        <button class="option-btn" data-correct="false">D. Đăng ký thuốc</button>
+      </div>
+    </div>
+
+    <!-- CÂU 17 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">17.</div>
+        <div class="question-text">
+          Trưởng khoa Dược có nhiệm vụ thông tin thuốc cho:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Người dân</button>
+        <button class="option-btn" data-correct="true">B. Cán bộ y tế</button>
+        <button class="option-btn" data-correct="false">C. Doanh nghiệp</button>
+        <button class="option-btn" data-correct="false">
+          D. Bảo hiểm y tế
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 18 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">18.</div>
+        <div class="question-text">
+          Đối với bệnh viện hạng đặc biệt, hạng 1–2, trình độ tối thiểu của
+          dược sĩ nghiệp vụ là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Dược sĩ trung học</button>
+        <button class="option-btn" data-correct="true">B. Dược sĩ đại học</button>
+        <button class="option-btn" data-correct="false">C. Dược tá</button>
+        <button class="option-btn" data-correct="false">
+          D. Cử nhân y tế công cộng
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 19 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">19.</div>
+        <div class="question-text">
+          Một nhiệm vụ quan trọng của dược sĩ nghiệp vụ là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Khám bệnh</button>
+        <button class="option-btn" data-correct="true">
+          B. Kiểm tra việc sử dụng và bảo quản thuốc tại tủ trực
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Làm xét nghiệm sinh hóa
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Quản lý dinh dưỡng
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 20 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">20.</div>
+        <div class="question-text">
+          Nếu bệnh viện không có bộ phận kiểm nghiệm, mẫu pha chế phải gửi
+          đến:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Bộ Y tế</button>
+        <button class="option-btn" data-correct="true">
+          B. Cơ quan có chức năng kiểm nghiệm
+        </button>
+        <button class="option-btn" data-correct="false">C. Nhà sản xuất</button>
+        <button class="option-btn" data-correct="false">D. Bệnh viện tỉnh</button>
+      </div>
+    </div>
+
+    <!-- CÂU 21 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">21.</div>
+        <div class="question-text">
+          Trình độ tối thiểu của thủ kho thuốc gây nghiện là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Dược sĩ trung học</button>
+        <button class="option-btn" data-correct="true">
+          B. Dược sĩ đại học hoặc trung học có ủy quyền
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Điều dưỡng trung cấp
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Bất kỳ ai được phân công
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 22 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">22.</div>
+        <div class="question-text">
+          Một nhiệm vụ cốt lõi của thủ kho là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Xét nghiệm thuốc</button>
+        <button class="option-btn" data-correct="true">
+          B. Thực hiện nguyên tắc GSP
+        </button>
+        <button class="option-btn" data-correct="false">C. Pha chế thuốc</button>
+        <button class="option-btn" data-correct="false">D. Điều trị bệnh</button>
+      </div>
+    </div>
+
+    <!-- CÂU 23 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">23.</div>
+        <div class="question-text">
+          Thủ kho phải kiểm tra chặt chẽ việc:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Lập danh mục thuốc quốc gia
+        </button>
+        <button class="option-btn" data-correct="true">B. Xuất – nhập thuốc</button>
+        <button class="option-btn" data-correct="false">
+          C. Cấp chứng chỉ hành nghề
+        </button>
+        <button class="option-btn" data-correct="false">D. In nhãn thuốc</button>
+      </div>
+    </div>
+
+    <!-- CÂU 24 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">24.</div>
+        <div class="question-text">
+          Cán bộ thống kê dược yêu cầu trình độ gồm:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Điều dưỡng</button>
+        <button class="option-btn" data-correct="true">
+          B. Thống kê và dược
+        </button>
+        <button class="option-btn" data-correct="false">C. Kế toán</button>
+        <button class="option-btn" data-correct="false">
+          D. Công nghệ thông tin
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 25 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">25.</div>
+        <div class="question-text">
+          Cán bộ thống kê phải theo dõi chính xác số liệu về:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Doanh thu</button>
+        <button class="option-btn" data-correct="true">
+          B. Thuốc nhập và thuốc cấp phát
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Bệnh nhân điều trị
+        </button>
+        <button class="option-btn" data-correct="false">D. Nhân sự</button>
+      </div>
+    </div>
+
+    <!-- CÂU 26 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">26.</div>
+        <div class="question-text">
+          Báo cáo định kỳ hàng năm phải gửi trước ngày:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. 01/01</button>
+        <button class="option-btn" data-correct="false">B. 30/9</button>
+        <button class="option-btn" data-correct="true">C. 15/10</button>
+        <button class="option-btn" data-correct="false">D. 31/12</button>
+      </div>
+    </div>
+
+    <!-- CÂU 27 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">27.</div>
+        <div class="question-text">
+          Trình độ tối thiểu của dược sĩ làm công tác dược lâm sàng là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Dược sĩ trung học
+        </button>
+        <button class="option-btn" data-correct="true">B. Dược sĩ đại học</button>
+        <button class="option-btn" data-correct="false">C. Cử nhân y sinh</button>
+        <button class="option-btn" data-correct="false">
+          D. Điều dưỡng đại học
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 28 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">28.</div>
+        <div class="question-text">
+          Dược sĩ lâm sàng chịu trách nhiệm triển khai mạng lưới theo dõi:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Tai nạn y khoa</button>
+        <button class="option-btn" data-correct="true">
+          B. ADR và cảnh giác dược
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Tai nạn lao động
+        </button>
+        <button class="option-btn" data-correct="false">D. Gây mê hồi sức</button>
+      </div>
+    </div>
+
+    <!-- CÂU 29 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">29.</div>
+        <div class="question-text">
+          Dược sĩ lâm sàng được quyền thay thế thuốc khi:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Bệnh nhân yêu cầu
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Phát hiện tương tác hoặc hết thuốc trong kho
+        </button>
+        <button class="option-btn" data-correct="false">C. Thuốc giá cao</button>
+        <button class="option-btn" data-correct="false">D. Bác sĩ yêu cầu</button>
+      </div>
+    </div>
+
+    <!-- CÂU 30 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">30.</div>
+        <div class="question-text">
+          Trình độ tối thiểu cho dược sĩ phụ trách pha chế thuốc ung bướu là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Dược sĩ trung học</button>
+        <button class="option-btn" data-correct="true">B. Dược sĩ đại học</button>
+        <button class="option-btn" data-correct="false">C. Điều dưỡng</button>
+        <button class="option-btn" data-correct="false">D. Kỹ sư sinh học</button>
+      </div>
+    </div>
+
+    <!-- CÂU 31 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">31.</div>
+        <div class="question-text">
+          Khi pha chế thuốc cho trẻ em phải chú ý:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Không dùng nước cất</button>
+        <button class="option-btn" data-correct="true">
+          B. Chia nhỏ liều và pha đúng quy trình
+        </button>
+        <button class="option-btn" data-correct="false">C. Giảm giá thuốc</button>
+        <button class="option-btn" data-correct="false">D. Tăng liều</button>
+      </div>
+    </div>
+
+    <!-- CÂU 32 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">32.</div>
+        <div class="question-text">
+          Nhà thuốc và quầy thuốc được phép bán:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Thuốc tự pha chế
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Thuốc thành phẩm được phép lưu hành
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Thuốc thử nghiệm
+        </button>
+        <button class="option-btn" data-correct="false">D. Vắc xin</button>
+      </div>
+    </div>
+
+    <!-- CÂU 33 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">33.</div>
+        <div class="question-text">
+          Nhà thuốc được pha chế thuốc khi:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Có giấy phép kinh doanh
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Có bố trí hoạt động pha chế theo đơn
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Có bác sĩ trực
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Không có thuốc trên thị trường
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 34 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">34.</div>
+        <div class="question-text">
+          Cơ sở bán lẻ thuốc từ dược liệu được bán:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Thuốc tân dược</button>
+        <button class="option-btn" data-correct="true">
+          B. Thuốc đông y và thuốc từ dược liệu
+        </button>
+        <button class="option-btn" data-correct="false">C. Thuốc thử nghiệm</button>
+        <button class="option-btn" data-correct="false">D. Thuốc gây nghiện</button>
+      </div>
+    </div>
+
+    <!-- CÂU 35 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">35.</div>
+        <div class="question-text">
+          Danh mục thuốc tại cơ sở bán lẻ phải đáp ứng danh mục của:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Bộ Y tế</button>
+        <button class="option-btn" data-correct="true">
+          B. Hội đồng Thuốc và Điều trị bệnh viện
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Nhà thuốc trung ương
+        </button>
+        <button class="option-btn" data-correct="false">D. Sở Y tế</button>
+      </div>
+    </div>
+
+    <!-- CÂU 36 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">36.</div>
+        <div class="question-text">
+          Cơ sở bán lẻ phải niêm yết giá thuốc theo văn bản:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Quyết định 04/2008/QĐ-BYT
+        </button>
+        <button class="option-btn" data-correct="false">
+          B. Thông tư 08/2009/TT-BYT
+        </button>
+        <button class="option-btn" data-correct="true">
+          C. Thông tư 11/2007/TTLT-BYT-BTC-BCT
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Quyết định 31/2010/QĐ-BYT
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 37 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">37.</div>
+        <div class="question-text">
+          Giá bán lẻ không được cao hơn giá nào?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Giá mua vào</button>
+        <button class="option-btn" data-correct="true">
+          B. Giá thuốc cùng loại trên thị trường
+        </button>
+        <button class="option-btn" data-correct="false">C. Giá trúng thầu</button>
+        <button class="option-btn" data-correct="false">D. Giá kê khai</button>
+      </div>
+    </div>
+
+    <!-- CÂU 38 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">38.</div>
+        <div class="question-text">
+          Giá mua vào đối với thuốc trong danh mục đấu thầu không được vượt
+          quá:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">
+          A. Giá thuốc ngoài thị trường
+        </button>
+        <button class="option-btn" data-correct="true">
+          B. Giá thuốc trúng thầu cùng thời điểm
+        </button>
+        <button class="option-btn" data-correct="false">C. Giá kê khai</button>
+        <button class="option-btn" data-correct="false">D. Giá bán buôn</button>
+      </div>
+    </div>
+
+    <!-- CÂU 39 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">39.</div>
+        <div class="question-text">
+          Thuốc có đơn vị đóng gói nhỏ nhất là “viên” thuộc dạng bào chế:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Dạng bột</button>
+        <button class="option-btn" data-correct="true">B. Dạng viên</button>
+        <button class="option-btn" data-correct="false">C. Dạng khí dung</button>
+        <button class="option-btn" data-correct="false">D. Dạng mỡ</button>
+      </div>
+    </div>
+
+    <!-- CÂU 40 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">40.</div>
+        <div class="question-text">
+          Thuốc dạng lỏng có đơn vị đóng gói nhỏ nhất là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Viên</button>
+        <button class="option-btn" data-correct="true">
+          B. Ống, chai, lọ, túi, ống tiêm, xy lanh đóng sẵn thuốc
+        </button>
+        <button class="option-btn" data-correct="false">C. Gói</button>
+        <button class="option-btn" data-correct="false">D. Miếng dán</button>
+      </div>
+    </div>
+
+    <!-- CÂU 41 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">41.</div>
+        <div class="question-text">
+          Thuốc dạng bột pha tiêm có đơn vị đóng gói nhỏ nhất là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Gói</button>
+        <button class="option-btn" data-correct="true">
+          B. Ống, chai, lọ, ống tiêm đóng sẵn thuốc
+        </button>
+        <button class="option-btn" data-correct="false">C. Viên</button>
+        <button class="option-btn" data-correct="false">D. Tuýp</button>
+      </div>
+    </div>
+
+    <!-- CÂU 42 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">42.</div>
+        <div class="question-text">
+          Thuốc dạng kem, mỡ, gel dùng ngoài có đơn vị đóng gói nhỏ nhất là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Ống tiêm</button>
+        <button class="option-btn" data-correct="true">B. Tuýp hoặc lọ</button>
+        <button class="option-btn" data-correct="false">C. Gói</button>
+        <button class="option-btn" data-correct="false">D. Bột</button>
+      </div>
+    </div>
+
+    <!-- CÂU 43 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">43.</div>
+        <div class="question-text">
+          Thuốc dán có đơn vị đóng gói nhỏ nhất là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Tuýp</button>
+        <button class="option-btn" data-correct="true">B. Miếng dán</button>
+        <button class="option-btn" data-correct="false">C. Lọ</button>
+        <button class="option-btn" data-correct="false">D. Gói</button>
+      </div>
+    </div>
+
+    <!-- CÂU 44 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">44.</div>
+        <div class="question-text">
+          Thuốc xịt hay thuốc khí dung có đơn vị đóng gói nhỏ nhất là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">
+          A. Lọ xịt hoặc lọ dựng thuốc dùng cho máy khí dung
+        </button>
+        <button class="option-btn" data-correct="false">B. Viên</button>
+        <button class="option-btn" data-correct="false">C. Miếng dán</button>
+        <button class="option-btn" data-correct="false">D. Tuýp</button>
+      </div>
+    </div>
+
+    <!-- CÂU 45 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">45.</div>
+        <div class="question-text">
+          Thuốc có giá ≤ 1.000 đồng tại bệnh viện tuyến tỉnh trở lên có thặng
+          số bán lẻ tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. 10%</button>
+        <button class="option-btn" data-correct="true">B. 15%</button>
+        <button class="option-btn" data-correct="false">C. 7%</button>
+        <button class="option-btn" data-correct="false">D. 5%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 46 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">46.</div>
+        <div class="question-text">
+          Thuốc giá 1.000–5.000 đồng tại bệnh viện tuyến tỉnh trở lên có thặng
+          số tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. 7%</button>
+        <button class="option-btn" data-correct="false">B. 5%</button>
+        <button class="option-btn" data-correct="true">C. 10%</button>
+        <button class="option-btn" data-correct="false">D. 15%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 47 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">47.</div>
+        <div class="question-text">
+          Thuốc giá 5.000–100.000 đồng (tuyến tỉnh trở lên) có thặng số tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">A. 10%</button>
+        <button class="option-btn" data-correct="false">B. 7%</button>
+        <button class="option-btn" data-correct="false">C. 5%</button>
+        <button class="option-btn" data-correct="false">D. 20%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 48 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">48.</div>
+        <div class="question-text">
+          Thuốc giá 100.000–1.000.000 đồng (tuyến tỉnh trở lên) có thặng số tối
+          đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">A. 5%</button>
+        <button class="option-btn" data-correct="false">B. 7%</button>
+        <button class="option-btn" data-correct="false">C. 10%</button>
+        <button class="option-btn" data-correct="false">D. 2%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 49 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">49.</div>
+        <div class="question-text">
+          Thuốc giá &gt; 1.000.000 đồng (tuyến tỉnh trở lên) có thặng số tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. 15%</button>
+        <button class="option-btn" data-correct="false">B. 7%</button>
+        <button class="option-btn" data-correct="false">C. 10%</button>
+        <button class="option-btn" data-correct="true">D. 2%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 50 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">50.</div>
+        <div class="question-text">
+          Thuốc giá ≤ 1.000 đồng tại bệnh viện tuyến huyện hạng II có thặng số
+          tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">A. 20%</button>
+        <button class="option-btn" data-correct="false">B. 15%</button>
+        <button class="option-btn" data-correct="false">C. 10%</button>
+        <button class="option-btn" data-correct="false">D. 7%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 51 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">51.</div>
+        <div class="question-text">
+          Thuốc giá 1.000–5.000 đồng (tuyến huyện hạng II) có thặng số tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. 20%</button>
+        <button class="option-btn" data-correct="true">B. 15%</button>
+        <button class="option-btn" data-correct="false">C. 10%</button>
+        <button class="option-btn" data-correct="false">D. 7%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 52 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">52.</div>
+        <div class="question-text">
+          Thuốc giá 5.000–100.000 đồng (tuyến huyện hạng II) có thặng số tối
+          đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. 20%</button>
+        <button class="option-btn" data-correct="true">B. 10%</button>
+        <button class="option-btn" data-correct="false">C. 15%</button>
+        <button class="option-btn" data-correct="false">D. 7%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 53 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">53.</div>
+        <div class="question-text">
+          Thuốc giá 100.000–1.000.000 đồng (tuyến huyện hạng II) có thặng số
+          tối đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">A. 7%</button>
+        <button class="option-btn" data-correct="false">B. 5%</button>
+        <button class="option-btn" data-correct="false">C. 10%</button>
+        <button class="option-btn" data-correct="false">D. 15%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 54 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">54.</div>
+        <div class="question-text">
+          Thuốc giá &gt; 1.000.000 đồng (tuyến huyện hạng II) có thặng số tối
+          đa:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="true">A. 5%</button>
+        <button class="option-btn" data-correct="false">B. 7%</button>
+        <button class="option-btn" data-correct="false">C. 10%</button>
+        <button class="option-btn" data-correct="false">D. 2%</button>
+      </div>
+    </div>
+
+    <!-- CÂU 55 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">55.</div>
+        <div class="question-text">
+          Nhà thuốc phải thực hiện nghiêm chỉnh Quyết định 04/2008/QĐ-BYT về:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Giá thuốc</button>
+        <button class="option-btn" data-correct="true">
+          B. Quy chế kê đơn thuốc trong điều trị ngoại trú
+        </button>
+        <button class="option-btn" data-correct="false">C. Dược lâm sàng</button>
+        <button class="option-btn" data-correct="false">
+          D. Kiểm soát nhiễm khuẩn
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 56 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">56.</div>
+        <div class="question-text">
+          Danh mục thuốc không kê đơn được ban hành theo:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Thông tư 04/2008</button>
+        <button class="option-btn" data-correct="false">B. Thông tư 11/2007</button>
+        <button class="option-btn" data-correct="true">
+          C. Thông tư 08/2009/TT-BYT
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Quyết định 33/2010
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 57 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">57.</div>
+        <div class="question-text">
+          Một nhiệm vụ của Khoa Dược liên quan đến thử nghiệm lâm sàng là:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Duyệt đề cương</button>
+        <button class="option-btn" data-correct="true">
+          B. Cung ứng thuốc cho thử nghiệm lâm sàng
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Trực tiếp nghiên cứu thuốc
+        </button>
+        <button class="option-btn" data-correct="false">D. Sản xuất thuốc</button>
+      </div>
+    </div>
+
+    <!-- CÂU 58 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">58.</div>
+        <div class="question-text">
+          Khoa Dược phải giám sát đặc biệt việc sử dụng nhóm thuốc nào?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Vitamin</button>
+        <button class="option-btn" data-correct="true">B. Kháng sinh</button>
+        <button class="option-btn" data-correct="false">C. Thuốc bổ</button>
+        <button class="option-btn" data-correct="false">D. Thuốc ho</button>
+      </div>
+    </div>
+
+    <!-- CÂU 59 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">59.</div>
+        <div class="question-text">
+          Khoa Dược phải phối hợp với khoa nào để giám sát sử dụng thuốc?
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Khoa phòng bệnh</button>
+        <button class="option-btn" data-correct="true">
+          B. Khoa cận lâm sàng và lâm sàng
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Khoa dinh dưỡng
+        </button>
+        <button class="option-btn" data-correct="false">
+          D. Khoa phục hồi chức năng
+        </button>
+      </div>
+    </div>
+
+    <!-- CÂU 60 -->
+    <div class="question" data-answered="false">
+      <div class="question-header">
+        <div class="question-number">60.</div>
+        <div class="question-text">
+          Cơ sở bán lẻ thuốc phải bán theo ca nhằm mục đích:
+        </div>
+      </div>
+      <div class="options">
+        <button class="option-btn" data-correct="false">A. Tăng doanh thu</button>
+        <button class="option-btn" data-correct="true">
+          B. Đảm bảo cung ứng thuốc ngoài giờ
+        </button>
+        <button class="option-btn" data-correct="false">
+          C. Kiểm tra chất lượng thuốc
+        </button>
+        <button class="option-btn" data-correct="false">D. Giảm nhân sự</button>
+      </div>
+    </div>
+
+    <!-- TỔNG KẾT -->
+    <div class="summary">
+      <div id="score-text" class="summary-text">
+        Bạn trả lời đúng 0/<span id="total-count"></span> câu.
+      </div>
+      <div class="summary-note">
+        Mỗi câu chỉ được tính điểm lần nhấn đầu tiên. Bạn có thể bấm "Làm lại"
+        để bắt đầu lại từ đầu.
+      </div>
+      <button id="reset-btn" class="reset-btn">Làm lại tất cả câu hỏi</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const questions = document.querySelectorAll(".question");
+      const total = questions.length;
+      let score = 0;
+
+      const scoreText = document.getElementById("score-text");
+      const totalCount = document.getElementById("total-count");
+      const resetBtn = document.getElementById("reset-btn");
+
+      totalCount.textContent = total.toString();
+      scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+
+      questions.forEach((q) => {
+        const buttons = q.querySelectorAll(".option-btn");
+
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            if (q.dataset.answered === "true") return;
+
+            q.dataset.answered = "true";
+
+            const isCorrect = btn.dataset.correct === "true";
+            const correctBtn = q.querySelector(
+              '.option-btn[data-correct="true"]'
+            );
+
+            if (isCorrect) {
+              btn.classList.add("correct");
+              score++;
+            } else {
+              btn.classList.add("wrong");
+              if (correctBtn) correctBtn.classList.add("correct");
+            }
+
+            buttons.forEach((b) => b.classList.add("disabled"));
+            scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+          });
+        });
+      });
+
+      resetBtn.addEventListener("click", function () {
+        score = 0;
+        questions.forEach((q) => {
+          q.dataset.answered = "false";
+          const buttons = q.querySelectorAll(".option-btn");
+          buttons.forEach((btn) => {
+            btn.classList.remove("correct", "wrong", "disabled");
+          });
+        });
+        scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+      });
+    });
+  </script>
+</body>
+</html>
