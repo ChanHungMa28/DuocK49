@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc nghiệm Pháp chế Dược - K48 (Cô Phụng)</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .stats-bar {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .option-item.selected {
+            background-color: #e3f2fd;
+            border-color: var(--primary-color);
+        }
+
+        .option-item.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .option-item.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            display: none;
+            font-size: 0.9em;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .btn-submit:hover {
+            background-color: #004494;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Trắc nghiệm Pháp chế Dược - Thuốc KSĐB & Kê đơn</h1>
+    
+    <div class="stats-bar">
+        <span>Tổng số câu: <span id="total-q">60</span></span>
+        <span>Điểm: <span id="score">0</span>/60</span>
+    </div>
+
+    <div id="quiz-container">
+        </div>
+
+    <button class="btn-submit" onclick="submitQuiz()">Nộp bài & Chấm điểm</button>
+    <div class="footer">Dữ liệu dựa trên bài giảng PCD K48 - Cô Phụng (2025)</div>
+</div>
+
+<script>
+    // Dữ liệu 60 câu hỏi dựa trên file PDF
+    const questions = [
+        // --- Định nghĩa & Phân loại (Slide 4-9) ---
+        {
+            q: "Thuốc dạng phối hợp chứa dược chất gây nghiện được quản lý là 'Thuốc gây nghiện' khi nào?",
+            a: [
+                "Nồng độ chất gây nghiện [GN] > giới hạn quy định [GNPH]",
+                "Nồng độ chất gây nghiện [GN] ≤ giới hạn quy định [GNPH]",
+                "Chứa bất kỳ hàm lượng nào",
+                "Phối hợp với thuốc hướng thần"
+            ],
+            correct: 0,
+            explain: "Theo Slide 4: [GN] > [GNPH] thì quản lý như thuốc gây nghiện."
+        },
+        {
+            q: "Thuốc dạng phối hợp chứa dược chất hướng thần (HT) được quản lý là 'Thuốc hướng thần' khi nào?",
+            a: [
+                "[HT] ≤ [HTPH]",
+                "[HT] > [HTPH]",
+                "Chứa thêm tiền chất",
+                "Dùng đường tiêm"
+            ],
+            correct: 1,
+            explain: "Theo Slide 5: Nếu nồng độ [HT] > [HTPH] thì quản lý là thuốc hướng thần."
+        },
+        {
+            q: "Thuốc tiền chất là thuốc có chứa dược chất tiền chất (TC) với điều kiện nào?",
+            a: [
+                "[TC] > [TCPH]",
+                "[TC] ≤ [TCPH]",
+                "[GN] ≤ [GNPH] và [HT] ≤ [HTPH]",
+                "Cả A và C"
+            ],
+            correct: 3,
+            explain: "Theo Slide 6: Thuốc tiền chất phải có [TC] > [TCPH], đồng thời các chất gây nghiện/hướng thần khác (nếu có) phải nhỏ hơn giới hạn."
+        },
+        // --- Điều kiện kinh doanh & Cơ sở vật chất (Slide 10-22) ---
+        {
+            q: "Cơ sở sản xuất thuốc gây nghiện phải có kho bảo quản như thế nào?",
+            a: [
+                "Chung với kho thuốc thường",
+                "Kho riêng hoặc khu vực riêng, tường kiên cố, cửa khóa chắc chắn",
+                "Tủ riêng có khóa",
+                "Chỉ cần camera theo dõi"
+            ],
+            correct: 1,
+            explain: "Theo Slide 13: CSSX thuốc GN phải có kho riêng/khu vực riêng, tường trần kiên cố, cửa khóa chắc chắn."
+        },
+        {
+            q: "Cơ sở sản xuất thuốc gây nghiện bắt buộc phải trang bị hệ thống gì để giám sát?",
+            a: [
+                "Hệ thống báo động",
+                "Camera theo dõi từng công đoạn sản xuất và bảo quản",
+                "Bảo vệ trực 24/24",
+                "Hệ thống thẻ từ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 13: Có camera theo dõi từng công đoạn/sx BQ thuốc."
+        },
+        {
+            q: "Tại cơ sở bán lẻ thuốc gây nghiện (nhà thuốc), thuốc phải được bảo quản ở đâu?",
+            a: [
+                "Trên kệ cùng thuốc kê đơn khác",
+                "Trong tủ kính có khóa",
+                "Kho riêng hoặc tủ riêng/ngăn riêng có khóa chắc chắn",
+                "Trong tủ lạnh"
+            ],
+            correct: 2,
+            explain: "Theo Slide 20: Đối với CS bán lẻ thuốc GN, HT, TC: Có kho hoặc khu vực riêng hoặc tủ riêng/ngăn riêng có khóa chắc chắn."
+        },
+        // --- Nhân sự (Slide 23-28) ---
+        {
+            q: "Thủ kho bảo quản thuốc gây nghiện tại cơ sở sản xuất phải có trình độ chuyên môn gì?",
+            a: [
+                "Dược sĩ trung học",
+                "Dược sĩ đại học",
+                "Dược tá",
+                "Y sĩ đa khoa"
+            ],
+            correct: 1,
+            explain: "Theo Slide 23: Thủ kho BQ thuốc GN, NLGN tại CSSX phải ≥ ĐH dược."
+        },
+        {
+            q: "Kinh nghiệm yêu cầu đối với thủ kho thuốc gây nghiện tại cơ sở sản xuất là bao lâu?",
+            a: [
+                "1 năm",
+                "2 năm",
+                "3 năm",
+                "5 năm"
+            ],
+            correct: 1,
+            explain: "Theo Slide 23: Yêu cầu ≥ 02 năm kinh nghiệm tại CSKD dược."
+        },
+        {
+            q: "Thủ kho bảo quản thuốc hướng thần tại cơ sở sản xuất cần trình độ tối thiểu là?",
+            a: [
+                "Dược sĩ trung học",
+                "Dược sĩ đại học",
+                "Dược tá",
+                "Kỹ thuật viên"
+            ],
+            correct: 0,
+            explain: "Theo Slide 23: Thủ kho BQ thuốc HT, TC tại CSSX chỉ cần ≥ TC dược."
+        },
+        {
+            q: "Người chịu trách nhiệm bán lẻ thuốc gây nghiện tại nhà thuốc phải có bằng cấp gì?",
+            a: [
+                "Dược sĩ đại học",
+                "Dược sĩ trung học",
+                "Dược sĩ cao đẳng",
+                "Dược tá"
+            ],
+            correct: 0,
+            explain: "Theo Slide 27: Người chịu trách nhiệm bán lẻ thuốc GN phải ≥ ĐH dược."
+        },
+        {
+            q: "Người chịu trách nhiệm bán lẻ thuốc hướng thần tại nhà thuốc cần bằng cấp gì?",
+            a: [
+                "Dược sĩ đại học",
+                "Dược sĩ trung học trở lên",
+                "Dược tá",
+                "Y sĩ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 27: Người chịu trách nhiệm bán lẻ thuốc HT, TC phải ≥ TC dược."
+        },
+        // --- Mua bán (Slide 29-31) ---
+        {
+            q: "Cơ sở sản xuất thuốc gây nghiện được bán thuốc cho đối tượng nào?",
+            a: [
+                "Bán trực tiếp cho người bệnh",
+                "Bán cho bất kỳ nhà thuốc nào",
+                "Bán toàn bộ mặt hàng cho 01 cơ sở bán buôn tại 01 tỉnh",
+                "Bán cho các phòng khám tư nhân"
+            ],
+            correct: 2,
+            explain: "Theo Slide 29: CSSX chỉ được bán thuốc do chính CSSX cho CS khác, bán toàn bộ mặt hàng/SX cho 01 cơ sở bán buôn/01 tỉnh."
+        },
+        {
+            q: "Nếu tỉnh không có cơ sở kinh doanh thuốc GN, HT, TC thì ai chỉ định cơ sở bán buôn?",
+            a: [
+                "Bộ Y tế",
+                "Sở Y tế",
+                "Ủy ban nhân dân tỉnh",
+                "Công an tỉnh"
+            ],
+            correct: 1,
+            explain: "Theo Slide 12: SYT chỉ định một CS bán buôn/tỉnh đáp ứng điều kiện."
+        },
+        // --- Bảo quản tại CS KCB (Slide 32-34) ---
+        {
+            q: "Tại trạm y tế xã, thuốc hướng thần phải được quản lý như thế nào?",
+            a: [
+                "Để chung với thuốc khác",
+                "Để ở quầy/tủ có khóa chắc chắn, phân công người quản lý",
+                "Giao cho bảo vệ giữ",
+                "Để tự do trên bàn làm việc"
+            ],
+            correct: 1,
+            explain: "Theo Slide 32: Thuốc HT/quầy, tủ TYT xã: khóa chắc chắn, phân công người quản lý."
+        },
+        {
+            q: "Thuốc gây nghiện tại tủ trực cấp cứu do ai giữ?",
+            a: [
+                "Trưởng khoa",
+                "Dược sĩ khoa dược",
+                "Điều dưỡng viên trực",
+                "Bác sĩ trực"
+            ],
+            correct: 2,
+            explain: "Theo Slide 34: Do điều dưỡng viên trực giữ, cấp phát theo y lệnh."
+        },
+        {
+            q: "Khi đổi ca trực, việc bàn giao thuốc gây nghiện tại tủ trực thực hiện thế nào?",
+            a: [
+                "Chỉ cần đếm số lượng",
+                "Người giao và người nhận ký nhận đầy đủ trên sổ theo dõi",
+                "Không cần bàn giao",
+                "Bàn giao miệng"
+            ],
+            correct: 1,
+            explain: "Theo Slide 34: Khi đổi ca -> bàn giao người giao và người nhận phải ký nhận đầy đủ trên sổ."
+        },
+        // --- Giao nhận & Vận chuyển (Slide 39-40) ---
+        {
+            q: "Người vận chuyển thuốc gây nghiện cần mang theo giấy tờ gì?",
+            a: [
+                "Chỉ cần CCCD",
+                "Văn bản giao nhiệm vụ, giấy tờ tùy thân, hóa đơn/phiếu xuất kho",
+                "Giấy giới thiệu của công an",
+                "Bằng lái xe"
+            ],
+            correct: 1,
+            explain: "Theo Slide 39: Mang theo VB giao nhiệm vụ, giấy tờ tùy thân, hóa đơn hoặc phiếu xuất kho."
+        },
+        {
+            q: "Khi giao nhận thuốc GN, HT, TC bắt buộc phải có chứng từ gì?",
+            a: [
+                "Biên bản giao nhận",
+                "Giấy cam kết",
+                "Hợp đồng kinh tế",
+                "Giấy ủy quyền"
+            ],
+            correct: 0,
+            explain: "Theo Slide 40: Khi tiến hành giao, nhận thuốc GN, HT, TC: có biên bản giao nhận."
+        },
+        // --- Báo cáo (Slide 41-43) ---
+        {
+            q: "Thời hạn báo cáo xuất khẩu, nhập khẩu thuốc GN, HT, TC về Bộ Y tế là bao lâu?",
+            a: [
+                "Trong vòng 30 ngày",
+                "Trong vòng 10 ngày kể từ ngày XNK",
+                "Trước ngày 15/1 năm sau",
+                "Trong vòng 48 giờ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 41: Báo cáo/BYT trong vòng 10 ngày, kể từ ngày XNK."
+        },
+        {
+            q: "Cơ sở bán buôn, bán lẻ báo cáo định kỳ (6 tháng, năm) về cơ quan nào?",
+            a: [
+                "Bộ Y tế",
+                "Sở Y tế",
+                "Trung tâm kiểm nghiệm",
+                "Phòng Y tế quận/huyện"
+            ],
+            correct: 1,
+            explain: "Theo Slide 42: CS bán buôn, bán lẻ báo cáo/SYT."
+        },
+        {
+            q: "Khi phát hiện thất thoát thuốc gây nghiện, phải báo cáo Bộ Y tế trong vòng bao lâu?",
+            a: [
+                "24 giờ",
+                "48 giờ",
+                "72 giờ",
+                "10 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 43: Trong thời hạn 48h, khi phát hiện nhầm lẫn, thất thoát... báo cáo BYT."
+        },
+        // --- Hủy thuốc (Slide 44-45) ---
+        {
+            q: "Hội đồng hủy thuốc GN, HT, TC tại cơ sở phải có ít nhất bao nhiêu thành viên?",
+            a: [
+                "02 người",
+                "03 người",
+                "05 người",
+                "07 người"
+            ],
+            correct: 1,
+            explain: "Theo Slide 45: Hội đồng hủy thuốc >= 03 người."
+        },
+        {
+            q: "Việc hủy thuốc phải có sự chứng kiến của đại diện cơ quan nào?",
+            a: [
+                "Công an tỉnh",
+                "Sở Y tế",
+                "Ủy ban nhân dân",
+                "Phòng Y tế"
+            ],
+            correct: 1,
+            explain: "Theo Slide 45: Có sự chứng kiến của đại diện SYT."
+        },
+        {
+            q: "Sau khi hủy thuốc, phải gửi báo cáo kèm biên bản hủy về BYT/SYT trong bao lâu?",
+            a: [
+                "05 ngày",
+                "10 ngày",
+                "15 ngày",
+                "30 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 45: Trong thời hạn 10 ngày."
+        },
+        // --- Hồ sơ sổ sách (Slide 46-55) ---
+        {
+            q: "Hồ sơ, sổ sách liên quan đến thuốc GN, HT, TC phải lưu trữ ít nhất bao lâu?",
+            a: [
+                "01 năm kể từ ngày hết hạn dùng",
+                "02 năm kể từ ngày hết hạn dùng",
+                "05 năm kể từ ngày sản xuất",
+                "10 năm"
+            ],
+            correct: 1,
+            explain: "Theo Slide 55: Lưu giữ chứng từ... >= hai (02) năm kể từ ngày hết hạn dùng."
+        },
+        // --- Xuất khẩu (Slide 76-80) ---
+        {
+            q: "Lượng thuốc gây nghiện tối đa cá nhân được mang theo khi xuất cảnh để điều trị bệnh là?",
+            a: [
+                "05 ngày",
+                "07 ngày",
+                "10 ngày",
+                "30 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 80: Thuốc GN: 07 ngày."
+        },
+        {
+            q: "Lượng thuốc hướng thần tối đa cá nhân được mang theo khi xuất cảnh là?",
+            a: [
+                "07 ngày",
+                "10 ngày",
+                "15 ngày",
+                "30 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 80: Thuốc HT, TC: 10 ngày."
+        },
+        {
+            q: "Lượng thuốc dạng phối hợp được mang theo khi xuất cảnh tối đa là?",
+            a: [
+                "10 ngày",
+                "20 ngày",
+                "30 ngày",
+                "60 ngày"
+            ],
+            correct: 2,
+            explain: "Theo Slide 80: Thuốc dạng PH: 30 ngày."
+        },
+        // --- KÊ ĐƠN THUỐC (Slide 89 trở đi) ---
+        {
+            q: "Văn bản nào quy định về đơn thuốc và kê đơn thuốc hóa dược?",
+            a: [
+                "Thông tư 20/2017",
+                "Thông tư 52/2017, 18/2018, 04/2022",
+                "Nghị định 54/2017",
+                "Luật Dược 2016"
+            ],
+            correct: 1,
+            explain: "Theo Slide 89: TT 52/2017, 18/2018, 04/2022."
+        },
+        {
+            q: "Ai là đối tượng được phép kê đơn thuốc?",
+            a: [
+                "Dược sĩ đại học",
+                "Bác sỹ, y sỹ",
+                "Điều dưỡng",
+                "Y tá"
+            ],
+            correct: 1,
+            explain: "Theo Slide 90: Đối tượng áp dụng là Bác sỹ, y sỹ."
+        },
+        {
+            q: "Mẫu đơn thuốc 'N' được sử dụng cho loại thuốc nào?",
+            a: [
+                "Thuốc thường",
+                "Thuốc hướng thần",
+                "Thuốc gây nghiện",
+                "Thuốc đông y"
+            ],
+            correct: 2,
+            explain: "Theo Slide 93: Mẫu Đơn thuốc 'N' (Narcotics) dùng cho thuốc gây nghiện."
+        },
+        {
+            q: "Mẫu đơn thuốc 'H' được sử dụng cho loại thuốc nào?",
+            a: [
+                "Thuốc gây nghiện",
+                "Thuốc hướng thần, tiền chất",
+                "Thực phẩm chức năng",
+                "Thuốc phóng xạ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 94: Mẫu Đơn thuốc 'H' dùng cho thuốc HT, TC."
+        },
+        {
+            q: "Nguyên tắc kê đơn: Số lượng thuốc chỉ định tối đa là bao nhiêu (với bệnh thông thường)?",
+            a: [
+                "10 ngày",
+                "15 ngày",
+                "30 ngày",
+                "60 ngày"
+            ],
+            correct: 2,
+            explain: "Theo Slide 96: Số lượng thuốc... phù hợp hoặc <= 30 ngày."
+        },
+        {
+            q: "Sản phẩm nào sau đây KHÔNG được kê vào đơn thuốc?",
+            a: [
+                "Thuốc gây nghiện",
+                "Thực phẩm chức năng",
+                "Thuốc kháng sinh",
+                "Thuốc tiêm"
+            ],
+            correct: 1,
+            explain: "Theo Slide 98: Không được kê đơn thực phẩm chức năng."
+        },
+        {
+            q: "Khi kê đơn thuốc gây nghiện cho bệnh cấp tính, số lượng thuốc tối đa là?",
+            a: [
+                "03 ngày",
+                "05 ngày",
+                "07 ngày",
+                "10 ngày"
+            ],
+            correct: 2,
+            explain: "Theo Slide 110: Điều trị bệnh cấp tính số lượng ≤ 07 ngày."
+        },
+        {
+            q: "Kê đơn thuốc gây nghiện phải lập thành mấy bản?",
+            a: [
+                "02 bản",
+                "03 bản",
+                "04 bản",
+                "01 bản"
+            ],
+            correct: 1,
+            explain: "Theo Slide 110: Làm thành 03 bản lưu (CS KCB, sổ khám bệnh, cơ sở cấp bán)."
+        },
+        {
+            q: "Đối với người bệnh ung thư/AIDS giai đoạn cuối, mỗi lần kê đơn thuốc gây nghiện tối đa bao nhiêu ngày?",
+            a: [
+                "10 ngày",
+                "30 ngày (chia 3 đơn, mỗi đơn 10 ngày)",
+                "07 ngày",
+                "15 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 113: Tối đa 30 ngày, ghi 03 đơn, mỗi đơn cho đợt điều trị ≤ 10 ngày."
+        },
+        {
+            q: "Bệnh nhân ung thư/AIDS điều trị tại nhà muốn kê đơn thuốc GN cần xác nhận của ai?",
+            a: [
+                "Công an xã",
+                "Trưởng trạm y tế xã",
+                "Chủ tịch xã",
+                "Giám đốc bệnh viện huyện"
+            ],
+            correct: 1,
+            explain: "Theo Slide 114: Phải có Giấy xác nhận của Trạm trưởng TYT xã."
+        },
+        {
+            q: "Kê đơn thuốc hướng thần cho bệnh cấp tính tối đa bao nhiêu ngày?",
+            a: [
+                "07 ngày",
+                "10 ngày",
+                "20 ngày",
+                "30 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 115: Bệnh cấp tính: Kê đơn với số lượng thuốc ≤ 10 ngày."
+        },
+        {
+            q: "Kê đơn thuốc hướng thần cho bệnh mạn tính tối đa bao nhiêu ngày?",
+            a: [
+                "10 ngày",
+                "30 ngày",
+                "60 ngày",
+                "90 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 116: Bệnh mạn tính: tối đa 30 ngày."
+        },
+        {
+            q: "Đơn thuốc có giá trị mua/lĩnh thuốc trong thời hạn bao lâu?",
+            a: [
+                "03 ngày",
+                "05 ngày",
+                "07 ngày",
+                "10 ngày"
+            ],
+            correct: 1,
+            explain: "Theo Slide 118: Đơn thuốc có giá trị trong thời hạn tối đa 05 ngày, kể từ ngày kê."
+        },
+        {
+            q: "Người bệnh mua thuốc gây nghiện đợt tiếp theo cho bệnh ung thư/AIDS có thể mua trước bao lâu?",
+            a: [
+                "01-03 ngày",
+                "05 ngày",
+                "07 ngày",
+                "Không được mua trước"
+            ],
+            correct: 0,
+            explain: "Theo Slide 118: Mua trước 01 -> 03 ngày của mỗi đợt."
+        },
+        {
+            q: "Cơ sở khám chữa bệnh lưu đơn thuốc thường trong bao lâu?",
+            a: [
+                "06 tháng",
+                "01 năm",
+                "02 năm",
+                "05 năm"
+            ],
+            correct: 1,
+            explain: "Theo Slide 121: Cs KCB lưu đơn thuốc, thời gian lưu 01 năm."
+        },
+        {
+            q: "Cơ sở khám chữa bệnh lưu đơn thuốc 'N' và 'H' trong bao lâu?",
+            a: [
+                "01 năm",
+                "02 năm",
+                "05 năm",
+                "10 năm"
+            ],
+            correct: 1,
+            explain: "Theo Slide 121: Cs KCB lưu Đơn thuốc 'N', 'H'... thời gian lưu 02 năm."
+        },
+        {
+            q: "Người chịu trách nhiệm chuyên môn tại nhà thuốc có được phép thay thế thuốc trong đơn không?",
+            a: [
+                "Không được phép",
+                "Được thay thế thuốc tương đương (cùng hoạt chất, hàm lượng...) nếu người mua đồng ý",
+                "Được thay thế tùy ý",
+                "Chỉ được thay thế thực phẩm chức năng"
+            ],
+            correct: 1,
+            explain: "Theo Slide 124: Thay thuốc: Cùng hoạt chất, hàm lượng... + Người mua đồng ý."
+        },
+        {
+            q: "Cơ sở bán lẻ thuốc phải làm gì nếu đơn thuốc không hợp lệ?",
+            a: [
+                "Vẫn bán nhưng dặn dò kỹ",
+                "Từ chối bán",
+                "Sửa lại đơn rồi bán",
+                "Bán thuốc khác"
+            ],
+            correct: 1,
+            explain: "Theo Slide 125: Từ chối bán nếu không hợp lệ/sai sót."
+        },
+        // --- Điều trị Nội trú & YHCT (Slide 127-161) ---
+        {
+            q: "Tại cơ sở điều trị nội trú, ai là người thực hiện y lệnh dùng thuốc?",
+            a: [
+                "Dược sĩ",
+                "Điều dưỡng, Hộ sinh",
+                "Người nhà bệnh nhân",
+                "Hộ lý"
+            ],
+            correct: 1,
+            explain: "Theo Slide 129: Điều dưỡng, Hộ sinh -> người bệnh/theo y lệnh."
+        },
+        {
+            q: "Khi dùng thuốc cho người bệnh, phải đảm bảo nguyên tắc '5 đúng' gồm?",
+            a: [
+                "Người bệnh, thuốc, liều dùng, đường dùng, giá tiền",
+                "Người bệnh, thuốc, liều dùng, đường dùng, thời gian",
+                "Người bệnh, bác sĩ, thuốc, liều dùng, thời gian",
+                "Người bệnh, thuốc, liều dùng, nơi sản xuất, thời gian"
+            ],
+            correct: 1,
+            explain: "Theo Slide 139: Đảm bảo 5 đúng: người bệnh; thuốc; liều dùng; đường dùng; thời gian."
+        },
+        {
+            q: "Thuốc dư ra tại khoa lâm sàng phải trả lại Khoa Dược trong thời gian nào?",
+            a: [
+                "12 giờ",
+                "24 giờ",
+                "48 giờ",
+                "72 giờ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 142: Trả lại KD/24 giờ."
+        },
+        {
+            q: "Bác sĩ đa khoa được phép kê đơn thuốc Y học cổ truyền (YHCT) loại nào?",
+            a: [
+                "Tất cả các loại",
+                "Thuốc thang",
+                "Chỉ thuốc thành phẩm YHCT",
+                "Không được kê"
+            ],
+            correct: 2,
+            explain: "Theo Slide 146: Bác sỹ đa khoa... chỉ KĐ thuốc thành phẩm YHCT."
+        },
+        {
+            q: "Thứ tự kê đơn trong đơn thuốc kết hợp YHCT và Tân dược là gì?",
+            a: [
+                "Thuốc YHCT trước, Tân dược sau",
+                "Thuốc Tân dược trước, YHCT sau",
+                "Không quy định",
+                "Kê xen kẽ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 157: Kê thuốc tân dược trước, thuốc YHCT sau."
+        },
+        {
+            q: "Khi kê đơn thuốc cho trẻ dưới 72 tháng tuổi, bắt buộc phải ghi thông tin gì?",
+            a: [
+                "Số cân nặng",
+                "Số tháng tuổi + tên bố/mẹ",
+                "Số thẻ BHYT",
+                "Địa chỉ trường học"
+            ],
+            correct: 1,
+            explain: "Theo Slide 102/153: Ghi số tháng tuổi + tên bố/mẹ."
+        },
+        {
+            q: "Số lượng thuốc gây nghiện trong đơn thuốc phải viết như thế nào?",
+            a: [
+                "Chỉ ghi số",
+                "Viết bằng chữ, chữ đầu viết hoa",
+                "Viết số La Mã",
+                "Viết bằng mực đỏ"
+            ],
+            correct: 1,
+            explain: "Theo Slide 104: Số lượng thuốc gây nghiện phải viết bằng chữ, chữ đầu viết hoa."
+        },
+        {
+            q: "Nếu số lượng thuốc trong đơn < 10 thì phải ghi thế nào?",
+            a: [
+                "Ghi bình thường",
+                "Thêm số 0 phía trước",
+                "Ghi bằng chữ",
+                "Gạch chân"
+            ],
+            correct: 1,
+            explain: "Theo Slide 104: Số lượng thuốc < 10 thì thêm số 0 phía trước."
+        },
+        {
+            q: "Việc công khai thuốc dùng hàng ngày cho bệnh nhân nội trú được thực hiện qua phiếu nào?",
+            a: [
+                "Phiếu lĩnh thuốc",
+                "Phiếu công khai dịch vụ KCB nội trú hàng ngày",
+                "Sổ y bạ",
+                "Hóa đơn viện phí"
+            ],
+            correct: 1,
+            explain: "Theo Slide 137: Ký nhận vào Phiếu công khai dịch vụ KCB nội trú hàng ngày."
+        },
+        {
+            q: "Bác sĩ Chuyên khoa YHCT được kê đơn loại thuốc nào?",
+            a: [
+                "Chỉ thuốc thang",
+                "Chỉ thuốc thành phẩm YHCT",
+                "Tất cả các dạng thuốc YHCT và YHCT + Tân dược",
+                "Chỉ thuốc tân dược"
+            ],
+            correct: 2,
+            explain: "Theo Slide 146: Kê đơn tất cả các dạng thuốc YHCT và YHCT + TD."
+        },
+        {
+            q: "Lương y được kê đơn thuốc như thế nào?",
+            a: [
+                "Kê đơn thuốc tân dược",
+                "Kê đơn thuốc YHCT theo đúng phạm vi hành nghề",
+                "Kê thực phẩm chức năng",
+                "Kê thuốc gây nghiện"
+            ],
+            correct: 1,
+            explain: "Theo Slide 148: Lương y chỉ được kê đơn thuốc YHCT theo đúng phạm vi hành nghề."
+        },
+        {
+            q: "Tại khoa lâm sàng, việc tổng hợp thuốc lĩnh từ Khoa Dược do ai thực hiện?",
+            a: [
+                "Bác sĩ điều trị",
+                "Điều dưỡng",
+                "Hộ lý",
+                "Người nhà bệnh nhân"
+            ],
+            correct: 1,
+            explain: "Theo Slide 135: Điều dưỡng tổng hợp thuốc... vào sổ hàng ngày."
+        }
+    ];
+
+    function loadQuiz() {
+        const quizContainer = document.getElementById('quiz-container');
+        document.getElementById('total-q').innerText = questions.length;
+        
+        let html = '';
+        questions.forEach((q, index) => {
+            let optionsHtml = '';
+            q.a.forEach((option, i) => {
+                optionsHtml += `<li class="option-item" onclick="selectOption(${index}, ${i})">${String.fromCharCode(65+i)}. ${option}</li>`;
+            });
+
+            html += `
+                <div class="question-card" id="q-${index}">
+                    <div class="question-text">Câu ${index + 1}: ${q.q}</div>
+                    <ul class="options-list" id="opt-list-${index}">
+                        ${optionsHtml}
+                    </ul>
+                    <div class="explanation" id="exp-${index}">
+                        <strong>Giải thích:</strong> ${q.explain}
+                    </div>
+                </div>
+            `;
+        });
+        quizContainer.innerHTML = html;
+    }
+
+    function selectOption(qIndex, oIndex) {
+        // Xóa class selected cũ
+        const list = document.getElementById(`opt-list-${qIndex}`);
+        const items = list.getElementsByClassName('option-item');
+        for (let item of items) {
+            item.classList.remove('selected');
+        }
+        // Thêm class selected mới
+        items[oIndex].classList.add('selected');
+        // Lưu lựa chọn (gán thuộc tính data-selected)
+        list.setAttribute('data-selected', oIndex);
+    }
+
+    function submitQuiz() {
+        let score = 0;
+        questions.forEach((q, index) => {
+            const list = document.getElementById(`opt-list-${index}`);
+            const selected = list.getAttribute('data-selected');
+            const items = list.getElementsByClassName('option-item');
+            const explanation = document.getElementById(`exp-${index}`);
+
+            // Reset màu sắc
+            for (let item of items) {
+                item.classList.remove('correct', 'incorrect');
+                item.onclick = null; // Khóa không cho chọn lại
+            }
+
+            if (selected !== null) {
+                if (parseInt(selected) === q.correct) {
+                    score++;
+                    items[selected].classList.add('correct');
+                } else {
+                    items[selected].classList.add('incorrect');
+                    items[q.correct].classList.add('correct');
+                }
+            } else {
+                // Nếu chưa chọn thì hiện đáp án đúng
+                items[q.correct].classList.add('correct');
+            }
+            
+            // Hiện giải thích
+            explanation.style.display = 'block';
+        });
+
+        document.getElementById('score').innerText = score;
+        alert(`Bạn đã hoàn thành bài thi!\nĐiểm số: ${score}/${questions.length}`);
+        
+        // Cuộn lên đầu trang
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // Khởi tạo
+    loadQuiz();
+</script>
+
+</body>
+</html>
