@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trắc nghiệm – Công tác dược bệnh viện</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: linear-gradient(180deg, #eef2ff, #f9fafb);
+        color: #111827;
+      }
+
+      .container {
+        max-width: 980px;
+        margin: 32px auto 40px;
+        padding: 24px 20px 32px;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-size: 26px;
+        letter-spacing: -0.04em;
+        text-align: center;
+        color: #1d4ed8;
+      }
+
+      .subtitle {
+        text-align: center;
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 20px;
+      }
+
+      .question {
+        margin-bottom: 16px;
+        padding: 14px 14px 12px;
+        border-radius: 14px;
+        background: #f9fbff;
+        border: 1px solid #e0e7ff;
+      }
+
+      .question-header {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .question-number {
+        font-weight: 700;
+        color: #4f46e5;
+        font-size: 14px;
+        min-width: 26px;
+      }
+
+      .question-text {
+        font-weight: 600;
+        font-size: 15px;
+        color: #111827;
+      }
+
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .option-btn {
+        flex: 1 1 calc(50% - 8px);
+        border-radius: 999px;
+        border: 1px solid #cbd5f5;
+        background: #ffffff;
+        padding: 8px 12px;
+        font-size: 14px;
+        text-align: left;
+        cursor: pointer;
+        white-space: normal;
+        transition: background 0.16s ease, color 0.16s ease,
+          border-color 0.16s ease, box-shadow 0.16s ease, transform 0.05s ease;
+      }
+
+      .option-btn:hover {
+        transform: translateY(-1px);
+        border-color: #818cf8;
+        box-shadow: 0 2px 6px rgba(129, 140, 248, 0.25);
+      }
+
+      .option-btn.correct {
+        background: #d1fae5;
+        border-color: #10b981;
+        color: #065f46;
+        box-shadow: none;
+        transform: none;
+      }
+
+      .option-btn.wrong {
+        background: #fee2e2;
+        border-color: #ef4444;
+        color: #991b1b;
+        box-shadow: none;
+        transform: none;
+      }
+
+      .option-btn.disabled {
+        opacity: 0.8;
+        cursor: default;
+        box-shadow: none;
+      }
+
+      .summary {
+        margin-top: 26px;
+        padding: 16px 14px 18px;
+        border-radius: 14px;
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+        text-align: center;
+      }
+
+      .summary-text {
+        font-weight: 600;
+        font-size: 15px;
+        color: #1f2937;
+      }
+
+      .summary-note {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 4px;
+      }
+
+      .reset-btn {
+        margin-top: 12px;
+        padding: 9px 18px;
+        border-radius: 999px;
+        border: none;
+        background: #4f46e5;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+        transition: background 0.15s ease, transform 0.08s ease,
+          box-shadow 0.15s ease;
+      }
+
+      .reset-btn:hover {
+        background: #4338ca;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(67, 56, 202, 0.4);
+      }
+
+      .reset-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(55, 48, 163, 0.4);
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          margin: 12px;
+          padding: 18px 14px 24px;
+        }
+
+        .option-btn {
+          flex-basis: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Trắc nghiệm – Công tác dược bệnh viện</h1>
+      <p class="subtitle">
+        Chọn đáp án A–D cho từng câu. Đúng hiển thị màu xanh, sai hiển thị màu
+        đỏ. Phía dưới có tổng kết số câu đúng. Đáp án được
+        <b>trộn ngẫu nhiên</b> mỗi lần mở trang.
+      </p>
+
+      <div id="questions-container"></div>
+
+      <div class="summary">
+        <div id="score-text" class="summary-text">
+          Bạn trả lời đúng 0/<span id="total-count"></span> câu.
+        </div>
+        <div class="summary-note">
+          Mỗi câu chỉ tính điểm lần chọn đầu tiên. Nhấn "Làm lại" để làm lại
+          toàn bộ.
+        </div>
+        <button id="reset-btn" class="reset-btn">Làm lại tất cả câu hỏi</button>
+      </div>
+    </div>
+
+    <script>
+      // DANH SÁCH CÂU HỎI (GIỮ NGUYÊN, CHỈ TRỘN KHI HIỂN THỊ)
+      const questionsData = [
+        // 1–10
+        {
+          text: "Khoa Dược thuộc sự lãnh đạo trực tiếp của ai?",
+          options: [
+            "Trưởng phòng khám",
+            "Giám đốc bệnh viện",
+            "Bộ Y tế",
+            "Phòng điều dưỡng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Chức năng chính của Khoa Dược là gì?",
+          options: [
+            "Chẩn đoán và điều trị",
+            "Cấp cứu ngoại viện",
+            "Quản lý và tham mưu công tác dược trong bệnh viện",
+            "Thanh tra chuyên môn",
+          ],
+          correct: 2,
+        },
+        {
+          text: "Mục tiêu cung ứng thuốc của Khoa Dược là:",
+          options: [
+            "Giá rẻ",
+            "Đủ, kịp thời, đảm bảo chất lượng",
+            "Chỉ xuất khẩu thuốc",
+            "Tự sản xuất thuốc",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược có nhiệm vụ cung ứng thuốc cho:",
+          options: [
+            "Điều trị và thử nghiệm lâm sàng",
+            "Chỉ điều trị nội trú",
+            "Chỉ điều trị ngoại trú",
+            "Chỉ phòng chống dịch",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Khoa Dược phải bảo quản thuốc theo nguyên tắc nào?",
+          options: ["GPP", "GSP", "GDP", "GLP"],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược tổ chức hoạt động của bộ phận nào?",
+          options: [
+            "Hội đồng đạo đức",
+            "Hội đồng thuốc và điều trị",
+            "Hội đồng chuyên môn phẫu thuật",
+            "Phòng vật tư",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược có nhiệm vụ tham gia công tác nào khi được yêu cầu?",
+          options: [
+            "Hội chẩn",
+            "Kiểm toán tài chính",
+            "Phân công trực",
+            "Tuyển dụng",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Khoa Dược phải theo dõi, giám sát đặc biệt việc sử dụng nhóm thuốc nào?",
+          options: ["Vitamin", "Thuốc giảm đau", "Kháng sinh", "Thuốc ho"],
+          correct: 2,
+        },
+        {
+          text: "Khoa Dược phối hợp với khoa nào để giám sát sử dụng thuốc?",
+          options: [
+            "Khoa dinh dưỡng",
+            "Khoa cận lâm sàng và lâm sàng",
+            "Khoa kiểm soát nhiễm khuẩn",
+            "Khoa hành chính",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược có nhiệm vụ tham gia chỉ đạo tuyến:",
+          options: [
+            "Không có trong nhiệm vụ",
+            "Chỉ khi có dịch",
+            "Theo quy định, là nhiệm vụ của khoa",
+            "Chỉ khi được Bộ Y tế yêu cầu",
+          ],
+          correct: 2,
+        },
+
+        // 11–20
+        {
+          text: "Khoa Dược quản lý hoạt động nào trong bệnh viện?",
+          options: [
+            "Phòng kế toán",
+            "Nhà thuốc bệnh viện",
+            "Khoa khám bệnh",
+            "Phòng tổ chức",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược có thể được giao nhiệm vụ theo dõi, quản lý, giám sát, kiểm tra, báo cáo về:",
+          options: [
+            "Vật tư y tế tiêu hao và khí y tế",
+            "Thiết bị chẩn đoán hình ảnh",
+            "Hồ sơ bệnh án",
+            "Lương nhân viên",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Trình độ tối thiểu của Trưởng khoa Dược là:",
+          options: [
+            "Dược tá",
+            "Dược sĩ trung học",
+            "Dược sĩ đại học",
+            "Cao đẳng dược",
+          ],
+          correct: 2,
+        },
+        {
+          text: "Bệnh viện hạng 3 chưa có dược sĩ đại học thì ai được ủy quyền phụ trách khoa?",
+          options: [
+            "Điều dưỡng trưởng",
+            "Dược sĩ trung học",
+            "Bác sĩ khoa nội",
+            "Kế toán trưởng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trưởng khoa Dược là phó chủ tịch thường trực của:",
+          options: [
+            "Hội đồng chuyên môn",
+            "Hội đồng thuốc và điều trị",
+            "Hội đồng đạo đức",
+            "Hội đồng nhân sự",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trưởng khoa Dược chịu trách nhiệm trước:",
+          options: [
+            "Bộ Y tế",
+            "Hội đồng thuốc",
+            "Giám đốc bệnh viện",
+            "Phòng kế toán",
+          ],
+          correct: 2,
+        },
+        {
+          text: "Trưởng khoa Dược là đầu mối trong công tác:",
+          options: [
+            "Kiểm soát nhiễm khuẩn",
+            "Đấu thầu thuốc",
+            "Tuyển dụng nhân sự",
+            "Quản lý hồ sơ bệnh án",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trưởng khoa Dược phải theo dõi các hoạt động nào liên quan đến thuốc?",
+          options: [
+            "Bán buôn thuốc ra ngoài",
+            "Bảo quản, nhập, xuất thuốc",
+            "Xuất khẩu thuốc",
+            "Đăng ký thuốc",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trưởng khoa Dược phối hợp với phòng tài chính – kế toán để:",
+          options: [
+            "Lập bảng lương",
+            "Thanh quyết toán kinh phí sử dụng thuốc",
+            "Kiểm tra tài sản",
+            "Tuyển nhân viên",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trưởng khoa Dược có nhiệm vụ thông tin, hướng dẫn sử dụng thuốc cho:",
+          options: [
+            "Người bệnh",
+            "Cán bộ y tế",
+            "Doanh nghiệp dược",
+            "Nhà cung cấp",
+          ],
+          correct: 1,
+        },
+
+        // 21–30
+        {
+          text: "Đối với bệnh viện hạng đặc biệt, hạng 1 và 2, trình độ tối thiểu của dược sĩ làm công tác nghiệp vụ là:",
+          options: [
+            "Dược sĩ trung học",
+            "Dược sĩ đại học",
+            "Dược tá",
+            "Cử nhân y tế công cộng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ nghiệp vụ phải kiểm tra việc tuân thủ quy định chuyên môn dược tại:",
+          options: [
+            "Chỉ khoa dược",
+            "Khoa dược, các khoa lâm sàng và nhà thuốc",
+            "Chỉ nhà thuốc bệnh viện",
+            "Chỉ khoa lâm sàng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ nghiệp vụ định kỳ kiểm tra việc:",
+          options: [
+            "Khám bệnh",
+            "Bảo quản, quản lý, cấp phát thuốc tại khoa dược",
+            "Lập bệnh án",
+            "Thu viện phí",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ nghiệp vụ kiểm tra tại các khoa lâm sàng chủ yếu về:",
+          options: [
+            "Vệ sinh buồng bệnh",
+            "Việc sử dụng và bảo quản thuốc trong tủ trực",
+            "Thời gian trực",
+            "Tình hình điều dưỡng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Nếu bệnh viện không có bộ phận kiểm nghiệm, mẫu thuốc pha chế phải gửi:",
+          options: [
+            "Bộ Y tế",
+            "Các cơ quan có chức năng kiểm nghiệm",
+            "Nhà cung cấp",
+            "Trung tâm y tế dự phòng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trình độ tối thiểu của thủ kho giữ thuốc gây nghiện là:",
+          options: [
+            "Dược tá",
+            "Dược sĩ trung học có ủy quyền hoặc dược sĩ đại học",
+            "Điều dưỡng",
+            "Bất kỳ nhân viên nào",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Thủ kho phải thực hiện đầy đủ nguyên tắc:",
+          options: [
+            "GPP",
+            "Thực hành tốt bảo quản thuốc (GSP)",
+            "GLP",
+            "ISO 9001",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Thủ kho có trách nhiệm giám sát chặt chẽ việc:",
+          options: [
+            "Khám bệnh",
+            "Xuất, nhập thuốc",
+            "Lập lịch trực",
+            "Lưu trữ hồ sơ bệnh án",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Cán bộ thống kê dược phải có:",
+          options: [
+            "Bằng kế toán",
+            "Nghiệp vụ thống kê và dược",
+            "Bằng điều dưỡng",
+            "Bằng công nghệ thông tin",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Cán bộ thống kê theo dõi chính xác số liệu:",
+          options: [
+            "Thu – chi của bệnh viện",
+            "Thuốc nhập và cấp phát cho nội trú, ngoại trú và nhu cầu đột xuất",
+            "Số lượt khám",
+            "Số ca phẫu thuật",
+          ],
+          correct: 1,
+        },
+
+        // 31–40
+        {
+          text: "Báo cáo công tác khoa dược gửi Sở Y tế, Bộ Y tế trước ngày:",
+          options: ["01/01", "30/9", "15/10", "31/12"],
+          correct: 2,
+        },
+        {
+          text: "Trình độ tối thiểu của dược sĩ làm công tác dược lâm sàng là:",
+          options: [
+            "Dược sĩ trung học",
+            "Dược sĩ đại học",
+            "Bác sĩ đa khoa",
+            "Điều dưỡng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ lâm sàng chịu trách nhiệm về:",
+          options: [
+            "Thiết bị y tế",
+            "Thông tin thuốc, theo dõi ADR và cảnh giác dược",
+            "Quản lý nhân sự",
+            "Thu viện phí",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ lâm sàng tư vấn sử dụng thuốc cho:",
+          options: [
+            "Nhà cung cấp",
+            "Hội đồng thuốc và điều trị, cán bộ y tế và người bệnh",
+            "Chỉ Giám đốc",
+            "Chỉ bệnh nhân ngoại trú",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ lâm sàng được quyền xem xét thay thế thuốc khi:",
+          options: [
+            "Người bệnh yêu cầu",
+            "Phát hiện tương tác, kê đơn cùng hoạt chất hoặc khi thuốc trong kho hết",
+            "Giá thuốc cao",
+            "Bác sĩ vắng mặt",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Pha chế thuốc cho nhi, ung bướu và thuốc gây nghiện yêu cầu trình độ tối thiểu:",
+          options: [
+            "Dược sĩ trung học",
+            "Dược sĩ đại học",
+            "Điều dưỡng",
+            "Kỹ thuật viên",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khi pha chế thuốc cho trẻ em cần đặc biệt chú ý:",
+          options: [
+            "Không dùng dung môi",
+            "Chia nhỏ liều, pha thuốc tiêm truyền đúng quy trình",
+            "Tăng liều",
+            "Thay đổi dạng bào chế",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược tổ chức pha chế những loại nào sau đây?",
+          options: [
+            "Thuốc, hóa chất sát khuẩn, thuốc đông y, thuốc từ dược liệu",
+            "Chỉ thuốc tân dược",
+            "Chỉ vắc xin",
+            "Chỉ thuốc thử nghiệm",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Nhà thuốc bệnh viện và quầy thuốc được phép bán:",
+          options: [
+            "Thuốc tự pha chế không đăng ký",
+            "Thuốc thành phẩm được phép lưu hành tại Việt Nam",
+            "Chỉ thuốc đông y",
+            "Chỉ thuốc gây nghiện",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Nhà thuốc được pha chế thuốc theo đơn khi:",
+          options: [
+            "Có bố trí hoạt động pha chế theo đơn tại nhà thuốc",
+            "Giám đốc cho phép miệng",
+            "Không có thuốc trên thị trường",
+            "Bất cứ khi nào muốn",
+          ],
+          correct: 0,
+        },
+
+        // 41–50
+        {
+          text: "Cơ sở bán lẻ thuốc đông y, thuốc từ dược liệu được bán:",
+          options: [
+            "Thuốc tân dược",
+            "Thuốc đông y, thuốc từ dược liệu",
+            "Vắc xin",
+            "Thuốc thử nghiệm",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Danh mục thuốc tại cơ sở bán lẻ phải đáp ứng danh mục do:",
+          options: [
+            "Bộ Y tế ban hành",
+            "Hội đồng thuốc và điều trị bệnh viện công bố",
+            "Nhà cung cấp đề xuất",
+            "Phòng tài chính phê duyệt",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Cơ sở bán lẻ sắp xếp bán thuốc theo ca nhằm:",
+          options: [
+            "Tăng doanh thu",
+            "Đảm bảo cung ứng thuốc kể cả ngoài giờ hành chính, ngày lễ, ngày nghỉ",
+            "Giảm nhân sự",
+            "Giảm tồn kho",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Cơ sở bán lẻ thuốc phải niêm yết giá theo quy định tại:",
+          options: [
+            "Quyết định 04/2008/QĐ-BYT",
+            "Thông tư 08/2009/TT-BYT",
+            "Thông tư liên tịch 11/2007/TTLT-BYT-BTC-BCT",
+            "Luật dược",
+          ],
+          correct: 2,
+        },
+        {
+          text: "Giá bán lẻ tại cơ sở bán lẻ không được cao hơn:",
+          options: [
+            "Giá trúng thầu",
+            "Giá thuốc cùng loại trên thị trường",
+            "Giá kê khai",
+            "Giá nhập khẩu",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Đối với mặt hàng có trong danh mục đấu thầu, giá thuốc mua vào không được cao hơn:",
+          options: [
+            "Giá thuốc trúng thầu cùng thời điểm",
+            "Giá kê khai",
+            "Giá thị trường",
+            "Giá nhập khẩu",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Thuốc có giá mua ≤ 1.000 đồng (tuyến tỉnh trở lên) có thặng số bán lẻ tối đa:",
+          options: ["10%", "15%", "20%", "5%"],
+          correct: 1,
+        },
+        {
+          text: "Thuốc có giá từ trên 1.000 đến 5.000 đồng (tuyến tỉnh trở lên) có thặng số tối đa:",
+          options: ["7%", "5%", "10%", "15%"],
+          correct: 2,
+        },
+        {
+          text: "Thuốc giá trên 5.000 đến 100.000 đồng (tuyến tỉnh trở lên) có thặng số tối đa:",
+          options: ["10%", "7%", "5%", "20%"],
+          correct: 1,
+        },
+        {
+          text: "Thuốc giá trên 100.000 đến 1.000.000 đồng (tuyến tỉnh trở lên) có thặng số tối đa:",
+          options: ["5%", "7%", "10%", "2%"],
+          correct: 0,
+        },
+
+        // 51–60
+        {
+          text: "Thuốc giá trên 1.000.000 đồng (tuyến tỉnh trở lên) có thặng số tối đa:",
+          options: ["5%", "2%", "10%", "7%"],
+          correct: 1,
+        },
+        {
+          text: "Thuốc giá ≤ 1.000 đồng (bệnh viện tuyến huyện hạng II) có thặng số tối đa:",
+          options: ["15%", "20%", "10%", "7%"],
+          correct: 1,
+        },
+        {
+          text: "Thuốc giá trên 1.000 đến 5.000 đồng (tuyến huyện hạng II) có thặng số tối đa:",
+          options: ["10%", "15%", "20%", "7%"],
+          correct: 1,
+        },
+        {
+          text: "Thuốc giá trên 5.000 đến 100.000 đồng (tuyến huyện hạng II) có thặng số tối đa:",
+          options: ["20%", "10%", "15%", "7%"],
+          correct: 1,
+        },
+        {
+          text: "Thuốc giá trên 100.000 đến 1.000.000 đồng (tuyến huyện hạng II) có thặng số tối đa:",
+          options: ["7%", "5%", "10%", "15%"],
+          correct: 0,
+        },
+        {
+          text: "Thuốc giá trên 1.000.000 đồng (tuyến huyện hạng II) có thặng số tối đa:",
+          options: ["5%", "7%", "10%", "2%"],
+          correct: 0,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của dạng viên là:",
+          options: ["Gói", "Viên", "Chai", "Tuýp"],
+          correct: 1,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của dạng lỏng là:",
+          options: [
+            "Gói",
+            "Ống, chai, lọ, túi, ống tiêm, xy lanh đóng sẵn thuốc",
+            "Viên",
+            "Miếng dán",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của dạng bột pha tiêm là:",
+          options: [
+            "Gói",
+            "Ống, chai, lọ, ống tiêm đóng sẵn thuốc",
+            "Viên",
+            "Tuýp",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của dạng bột/cốm pha uống là:",
+          options: ["Viên", "Gói, chai, lọ", "Tuýp", "Miếng dán"],
+          correct: 1,
+        },
+
+        // 61–70
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của kem, mỡ, gel dùng ngoài là:",
+          options: ["Ống tiêm", "Tuýp, lọ", "Gói", "Bột"],
+          correct: 1,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của thuốc dán là:",
+          options: ["Tuýp", "Miếng dán", "Lọ", "Gói"],
+          correct: 1,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của thuốc xịt hay thuốc khí dung là:",
+          options: [
+            "Viên",
+            "Miếng dán",
+            "Lọ xịt hoặc lọ dựng thuốc dùng cho máy khí dung",
+            "Gói",
+          ],
+          correct: 2,
+        },
+        {
+          text: "Đơn vị đóng gói nhỏ nhất của bộ kit phối hợp là:",
+          options: ["Viên", "Bộ kit", "Gói", "Lọ"],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược phải theo dõi tình hình gì liên quan đến kháng sinh?",
+          options: [
+            "Giá mua kháng sinh",
+            "Khả năng kháng kháng sinh trong bệnh viện",
+            "Số hãng sản xuất",
+            "Số toa kê mỗi ngày",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Công tác dược lâm sàng bao gồm:",
+          options: [
+            "Đấu thầu thuốc",
+            "Giám sát tác dụng không mong muốn của thuốc",
+            "Bảo trì thiết bị",
+            "Thu phí khám bệnh",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khoa Dược là cơ sở thực hành cho:",
+          options: [
+            "Trường điều dưỡng",
+            "Các trường đại học, cao đẳng, trung học về dược",
+            "Trường y tế công cộng",
+            "Trường kinh tế",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Trong phòng chống dịch bệnh, nhiệm vụ trọng tâm của Khoa Dược là:",
+          options: [
+            "Tổ chức tiêm chủng",
+            "Cung ứng thuốc đáp ứng yêu cầu điều trị và phòng chống dịch",
+            "Khám sàng lọc",
+            "Lập bệnh án",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ lâm sàng có trách nhiệm hiệu chỉnh liều đối với:",
+          options: [
+            "Mọi bệnh nhân",
+            "Những người bệnh cần điều chỉnh liều",
+            "Chỉ bệnh nhân ngoại trú",
+            "Chỉ bệnh nhân nội trú",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Mạng lưới theo dõi, giám sát và báo cáo ADR trong bệnh viện do ai triển khai?",
+          options: [
+            "Điều dưỡng trưởng",
+            "Dược sĩ lâm sàng",
+            "Bác sĩ trưởng khoa",
+            "Phòng kế hoạch tổng hợp",
+          ],
+          correct: 1,
+        },
+
+        // 71–80
+        {
+          text: "Khi thay thế thuốc trong đơn, dược sĩ lâm sàng phải:",
+          options: [
+            "Không cần thông báo cho ai",
+            "Thông tin lại cho khoa lâm sàng để thống nhất",
+            "Chỉ báo cáo lãnh đạo bệnh viện",
+            "Xin ý kiến nhà cung cấp",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Nhà thuốc được phép bán lẻ thuốc pha chế của bệnh viện khi:",
+          options: [
+            "Tự ý quyết định",
+            "Có bố trí hoạt động pha chế và theo quy định của bệnh viện",
+            "Không có thuốc trên thị trường",
+            "Bệnh nhân yêu cầu",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Bộ Y tế quy định thặng số bán lẻ tối đa đối với:",
+          options: [
+            "Tất cả các nhà thuốc tư nhân",
+            "Thuốc thành phẩm tại cơ sở bán lẻ thuốc trong bệnh viện",
+            "Chỉ thuốc nhập khẩu",
+            "Chỉ thuốc nội",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Khi mua thuốc không có trong danh mục đấu thầu hoặc giá biến động, người quyết định danh mục và giá mua vào là:",
+          options: [
+            "Trưởng khoa dược",
+            "Giám đốc bệnh viện",
+            "Sở Y tế",
+            "Nhà cung cấp",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Bệnh viện yêu cầu các doanh nghiệp cung cấp giá bán buôn đã kê khai để:",
+          options: [
+            "Thương lượng giảm giá",
+            "Kiểm tra, không được mua thuốc có giá cao hơn giá đã kê khai/kê khai lại",
+            "Làm quảng cáo",
+            "Tính lương nhân viên",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Cơ sở bán lẻ thuốc phải thực hiện nghiêm chỉnh Quyết định 04/2008/QĐ-BYT về:",
+          options: [
+            "Quy chế kê đơn thuốc trong điều trị ngoại trú",
+            "Quy định giá thuốc",
+            "Quy chế khám bệnh",
+            "Quy định bảo hiểm y tế",
+          ],
+          correct: 0,
+        },
+        {
+          text: "Danh mục thuốc không kê đơn được ban hành theo:",
+          options: [
+            "Quyết định 04/2008/QĐ-BYT",
+            "Thông tư liên tịch 11/2007/TTLT-BYT-BTC-BCT",
+            "Thông tư 08/2009/TT-BYT",
+            "Thông tư 05/2015/TT-BYT",
+          ],
+          correct: 2,
+        },
+        {
+          text: "Cơ sở bán lẻ thuốc đông y, thuốc từ dược liệu chủ yếu bán:",
+          options: [
+            "Thuốc tân dược",
+            "Thuốc đông y, thuốc từ dược liệu",
+            "Vắc xin",
+            "Thuốc thử nghiệm lâm sàng",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Danh mục thuốc điều trị cho người bệnh trong bệnh viện do cơ quan nào công bố?",
+          options: [
+            "Giám đốc bệnh viện",
+            "Hội đồng thuốc và điều trị của bệnh viện",
+            "Sở Y tế",
+            "Nhà cung cấp thuốc",
+          ],
+          correct: 1,
+        },
+        {
+          text: "Dược sĩ lâm sàng phải giám sát việc kê đơn thuốc ở:",
+          options: [
+            "Chỉ nội trú",
+            "Chỉ ngoại trú",
+            "Cả nội trú và ngoại trú",
+            "Chỉ phòng cấp cứu",
+          ],
+          correct: 2,
+        },
+      ];
+
+      // HÀM TRỘN MẢNG (FISHER–YATES)
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("questions-container");
+        const scoreText = document.getElementById("score-text");
+        const totalCount = document.getElementById("total-count");
+        const resetBtn = document.getElementById("reset-btn");
+
+        let score = 0;
+
+        function renderQuestions() {
+          container.innerHTML = "";
+          questionsData.forEach((q, index) => {
+            const qDiv = document.createElement("div");
+            qDiv.className = "question";
+            qDiv.dataset.answered = "false";
+
+            const header = document.createElement("div");
+            header.className = "question-header";
+
+            const num = document.createElement("div");
+            num.className = "question-number";
+            num.textContent = index + 1 + ".";
+
+            const text = document.createElement("div");
+            text.className = "question-text";
+            text.textContent = q.text;
+
+            header.appendChild(num);
+            header.appendChild(text);
+
+            const optionsDiv = document.createElement("div");
+            optionsDiv.className = "options";
+
+            // Tạo mảng option có gắn cờ đúng/sai, rồi TRỘN
+            const optionObjs = q.options.map((optText, idx) => ({
+              text: optText,
+              isCorrect: idx === q.correct,
+            }));
+            shuffle(optionObjs);
+
+            optionObjs.forEach((optObj, optIndex) => {
+              const btn = document.createElement("button");
+              btn.className = "option-btn";
+              btn.textContent =
+                String.fromCharCode(65 + optIndex) + ". " + optObj.text;
+              btn.dataset.correct = optObj.isCorrect ? "true" : "false";
+              optionsDiv.appendChild(btn);
+            });
+
+            qDiv.appendChild(header);
+            qDiv.appendChild(optionsDiv);
+            container.appendChild(qDiv);
+          });
+        }
+
+        function attachHandlers() {
+          const questions = document.querySelectorAll(".question");
+          const total = questions.length;
+          totalCount.textContent = total.toString();
+          scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+
+          questions.forEach((q) => {
+            const buttons = q.querySelectorAll(".option-btn");
+            buttons.forEach((btn) => {
+              btn.addEventListener("click", () => {
+                if (q.dataset.answered === "true") return;
+
+                q.dataset.answered = "true";
+                const isCorrect = btn.dataset.correct === "true";
+                const correctBtn = q.querySelector(
+                  '.option-btn[data-correct="true"]'
+                );
+
+                if (isCorrect) {
+                  btn.classList.add("correct");
+                  score++;
+                } else {
+                  btn.classList.add("wrong");
+                  if (correctBtn) correctBtn.classList.add("correct");
+                }
+
+                buttons.forEach((b) => b.classList.add("disabled"));
+                scoreText.textContent = `Bạn trả lời đúng ${score}/${total} câu.`;
+              });
+            });
+          });
+        }
+
+        renderQuestions();
+        attachHandlers();
+
+        resetBtn.addEventListener("click", () => {
+          score = 0;
+          renderQuestions();
+          attachHandlers();
+        });
+      });
+    </script>
+  </body>
+</html>
