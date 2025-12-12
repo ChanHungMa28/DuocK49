@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ôn tập kê đơn & sử dụng thuốc</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef3ff;
+      color: #222;
+    }
+    header {
+      background: #3f51b5;
+      color: white;
+      padding: 16px 24px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+    header p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    #main {
+      max-width: 960px;
+      margin: 16px auto 32px;
+      padding: 0 12px 32px;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    #reset-btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #ff9800;
+      color: #222;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+    }
+    #reset-btn:hover {
+      filter: brightness(1.05);
+    }
+    .hint {
+      font-size: 12px;
+      color: #555;
+    }
+    .question-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .question-text {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .option-btn {
+      border-radius: 8px;
+      border: 1px solid #cfd2dc;
+      padding: 8px 10px;
+      background: #fafbff;
+      cursor: pointer;
+      text-align: left;
+      font-size: 13px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+      width: 100%;
+      display: block;
+    }
+    .option-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    .option-btn.correct {
+      background: #e5f8ea;
+      border-color: #2e7d32;
+    }
+    .option-btn.incorrect {
+      background: #fdecea;
+      border-color: #c62828;
+    }
+    .feedback {
+      margin-top: 4px;
+      font-size: 12px;
+      font-style: italic;
+    }
+    .feedback.correct-text {
+      color: #2e7d32;
+    }
+    .feedback.incorrect-text {
+      color: #c62828;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 18px;
+      }
+      .question-text, .option-btn {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ôn tập: Kê đơn & Sử dụng thuốc (1 – 80)</h1>
+    <p>Chọn đáp án để xem đúng/sai · Nút “Làm lại” sẽ đảo vị trí đáp án mỗi lần</p>
+  </header>
+
+  <div id="main">
+    <div class="toolbar">
+      <button id="reset-btn">🔁 Làm lại & đảo đáp án</button>
+      <div class="hint">
+        Gợi ý: đúng → xanh, sai → đỏ. Có thể làm lại nhiều lần.
+      </div>
+    </div>
+    <div id="quiz-container"></div>
+  </div>
+
+  <script>
+    const questions = [
+      // 1–20: Ngoại trú
+      {
+        text: "Câu 1. Phạm vi điều chỉnh của quy định kê đơn ngoại trú tập trung vào nhóm thuốc nào?",
+        options: [
+          { text: "Thuốc đông dược và thuốc cổ truyền", isCorrect: false },
+          { text: "Thuốc hóa dược và sinh phẩm sử dụng trong ngoại trú", isCorrect: true },
+          { text: "Tất cả các loại thuốc trong bệnh viện", isCorrect: false },
+          { text: "Chỉ áp dụng cho thuốc kháng sinh", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 2. Đối tượng nào sau đây không thuộc phạm vi áp dụng của quy định kê đơn ngoại trú?",
+        options: [
+          { text: "Người hành nghề khám bệnh", isCorrect: false },
+          { text: "Người trực tiếp kê đơn thuốc", isCorrect: false },
+          { text: "Người đến mua thuốc theo đơn", isCorrect: false },
+          { text: "Doanh nghiệp sản xuất và phân phối thuốc", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 3. Mẫu đơn thuốc ký hiệu “H” được sử dụng cho nhóm thuốc nào?",
+        options: [
+          { text: "Thuốc kháng sinh điều trị nhiễm khuẩn", isCorrect: false },
+          { text: "Thuốc hướng tâm thần và tiền chất", isCorrect: true },
+          { text: "Thuốc tiêm và truyền dịch", isCorrect: false },
+          { text: "Thuốc không kê đơn", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 4. Nguyên tắc chung khi kê đơn thuốc là phải phù hợp với yếu tố nào?",
+        options: [
+          { text: "Khả năng chi trả của người bệnh", isCorrect: false },
+          { text: "Sở thích của người kê đơn", isCorrect: false },
+          { text: "Tình trạng bệnh và mức độ bệnh lý", isCorrect: true },
+          { text: "Giá bán lẻ của thuốc trên thị trường", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 5. Việc kê đơn thuốc phải căn cứ vào tất cả các tài liệu sau, ngoại trừ:",
+        options: [
+          { text: "Hướng dẫn chẩn đoán và điều trị", isCorrect: false },
+          { text: "Dược thư Quốc gia Việt Nam", isCorrect: false },
+          { text: "Tờ hướng dẫn sử dụng thuốc", isCorrect: false },
+          { text: "Tài liệu quảng cáo của doanh nghiệp dược", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 6. Thời gian tối đa của một đơn thuốc điều trị ngoại trú thông thường là bao nhiêu ngày?",
+        options: [
+          { text: "Không quá 7 ngày", isCorrect: false },
+          { text: "Không quá 10 ngày", isCorrect: false },
+          { text: "Không quá 20 ngày", isCorrect: false },
+          { text: "Không quá 30 ngày", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 7. Trường hợp nào sau đây vẫn được phép kê đơn?",
+        options: [
+          { text: "Kê thực phẩm chức năng như một thuốc điều trị", isCorrect: false },
+          { text: "Kê mỹ phẩm trong đơn thuốc", isCorrect: false },
+          { text: "Kê thuốc chưa được cấp số đăng ký lưu hành", isCorrect: false },
+          { text: "Kê thuốc đã được cấp phép lưu hành hợp pháp", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 8. Khi người bệnh khám tại từ 3 chuyên khoa trở lên, người quyết định việc kê đơn là:",
+        options: [
+          { text: "Bác sĩ điều trị cuối cùng", isCorrect: false },
+          { text: "Trưởng khoa tiếp nhận bệnh nhân", isCorrect: false },
+          { text: "Người đứng đầu cơ sở khám chữa bệnh hoặc người được ủy quyền", isCorrect: true },
+          { text: "Dược sĩ phụ trách nhà thuốc", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 9. Đối với thuốc đơn chất, khi kê đơn bắt buộc phải ghi theo:",
+        options: [
+          { text: "Tên thương mại của thuốc", isCorrect: false },
+          { text: "Tên chung quốc tế (INN – generic)", isCorrect: true },
+          { text: "Tên viết tắt của hoạt chất", isCorrect: false },
+          { text: "Tên của nhà sản xuất", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 10. Khi kê đơn thuốc gây nghiện, số lượng thuốc phải được ghi:",
+        options: [
+          { text: "Bằng số La Mã", isCorrect: false },
+          { text: "Bằng chữ thường", isCorrect: false },
+          { text: "Bằng chữ, chữ cái đầu viết hoa", isCorrect: true },
+          { text: "Bằng cả số và đơn vị đóng gói", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 11. Khi số lượng thuốc kê nhỏ hơn 10 đơn vị, cách ghi đúng là:",
+        options: [
+          { text: "Ghi số tự nhiên bình thường", isCorrect: false },
+          { text: "Không cần ghi số lượng", isCorrect: false },
+          { text: "Thêm số 0 phía trước", isCorrect: true },
+          { text: "Ghi bằng chữ hoàn toàn", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 12. Khi có sửa chữa trên đơn thuốc, người kê đơn phải thực hiện điều gì?",
+        options: [
+          { text: "Ghi lại toàn bộ đơn mới", isCorrect: false },
+          { text: "Ký tên xác nhận bên cạnh nội dung sửa", isCorrect: true },
+          { text: "Đóng dấu tròn của cơ sở khám chữa bệnh", isCorrect: false },
+          { text: "Ghi chú bằng mực đỏ", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 13. Đơn thuốc thuốc gây nghiện phải được lập thành mấy bản?",
+        options: [
+          { text: "Một bản", isCorrect: false },
+          { text: "Hai bản", isCorrect: false },
+          { text: "Ba bản", isCorrect: true },
+          { text: "Bốn bản", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 14. Thuốc gây nghiện dùng trong điều trị bệnh cấp tính được kê tối đa trong bao nhiêu ngày?",
+        options: [
+          { text: "Không quá 5 ngày", isCorrect: false },
+          { text: "Không quá 7 ngày", isCorrect: true },
+          { text: "Không quá 10 ngày", isCorrect: false },
+          { text: "Không quá 14 ngày", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 15. Mẫu đơn “H” được dùng trong trường hợp kê đơn cho:",
+        options: [
+          { text: "Thuốc đông y", isCorrect: false },
+          { text: "Thuốc hướng tâm thần và tiền chất", isCorrect: true },
+          { text: "Thuốc tiêm truyền tĩnh mạch", isCorrect: false },
+          { text: "Thuốc kháng sinh phổ rộng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 16. Đơn thuốc sau khi kê có giá trị sử dụng tối đa trong bao nhiêu ngày?",
+        options: [
+          { text: "3 ngày", isCorrect: false },
+          { text: "5 ngày", isCorrect: true },
+          { text: "7 ngày", isCorrect: false },
+          { text: "10 ngày", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 17. Đơn thuốc gây nghiện và đơn thuốc hướng tâm thần phải được lưu trữ tối thiểu trong thời gian:",
+        options: [
+          { text: "1 năm kể từ ngày kê đơn", isCorrect: false },
+          { text: "2 năm kể từ khi thuốc hết hạn", isCorrect: true },
+          { text: "3 năm kể từ khi bán thuốc", isCorrect: false },
+          { text: "5 năm kể từ ngày lập đơn", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 18. Việc thay thế thuốc trong đơn chỉ được thực hiện khi:",
+        options: [
+          { text: "Thuốc thay thế có giá rẻ hơn", isCorrect: false },
+          { text: "Thuốc thay thế có cùng hoạt chất, hàm lượng và dạng bào chế", isCorrect: true },
+          { text: "Có sự đồng ý của người bán thuốc", isCorrect: false },
+          { text: "Thuốc thay thế có thương hiệu nổi tiếng hơn", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 19. Hành vi nào sau đây là đúng quy định?",
+        options: [
+          { text: "Bán thuốc kê đơn khi không có đơn của bác sĩ", isCorrect: false },
+          { text: "Bán thuốc theo yêu cầu miệng của người bệnh", isCorrect: false },
+          { text: "Bán thuốc kê đơn khi có đơn hợp lệ", isCorrect: true },
+          { text: "Tự ý thay đổi nội dung đơn thuốc khi bán", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 20. Hành vi nào sau đây bị nghiêm cấm trong thực hành khám chữa bệnh và bán thuốc?",
+        options: [
+          { text: "Bác sĩ trực tiếp kê đơn cho bệnh nhân", isCorrect: false },
+          { text: "Dược sĩ tư vấn sử dụng thuốc", isCorrect: false },
+          { text: "Bác sĩ vừa khám bệnh vừa trực tiếp bán thuốc", isCorrect: true },
+          { text: "Người bệnh mua thuốc theo đơn hợp lệ", isCorrect: false }
+        ]
+      },
+
+      // 21–40: Nội trú + 5 đúng + ADR
+      {
+        text: "Câu 21. Kê đơn thuốc nội trú áp dụng cho đối tượng nào?",
+        options: [
+          { text: "Người bệnh điều trị ngoại trú", isCorrect: false },
+          { text: "Người bệnh điều trị nội trú tại cơ sở khám chữa bệnh", isCorrect: true },
+          { text: "Người bệnh mua thuốc tại nhà thuốc tư nhân", isCorrect: false },
+          { text: "Người bệnh tự điều trị tại nhà", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 22. Người chịu trách nhiệm chính về việc kê đơn nội trú là:",
+        options: [
+          { text: "Điều dưỡng trưởng khoa", isCorrect: false },
+          { text: "Trưởng khoa dược", isCorrect: false },
+          { text: "Bác sĩ điều trị trực tiếp", isCorrect: true },
+          { text: "Giám đốc bệnh viện", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 23. Đơn thuốc nội trú phải thể hiện đầy đủ yếu tố nào sau đây?",
+        options: [
+          { text: "Chẩn đoán bệnh", isCorrect: false },
+          { text: "Diễn tiến bệnh", isCorrect: false },
+          { text: "Phác đồ điều trị", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 24. Khi kê đơn thuốc cho người bệnh nội trú, không bắt buộc phải ghi nội dung nào sau đây?",
+        options: [
+          { text: "Họ tên người bệnh", isCorrect: false },
+          { text: "Chẩn đoán bệnh", isCorrect: false },
+          { text: "Số giường điều trị", isCorrect: false },
+          { text: "Giá tiền từng loại thuốc", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 25. Trong điều trị nội trú, việc thay đổi thuốc phải dựa vào yếu tố nào là quan trọng nhất?",
+        options: [
+          { text: "Giá thuốc trên thị trường", isCorrect: false },
+          { text: "Diễn tiến lâm sàng của người bệnh", isCorrect: true },
+          { text: "Ý kiến của người bệnh", isCorrect: false },
+          { text: "Sự sẵn có của thuốc", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 26. Nguyên tắc “5 đúng” trong sử dụng thuốc không bao gồm yếu tố nào sau đây?",
+        options: [
+          { text: "Đúng người bệnh", isCorrect: false },
+          { text: "Đúng thuốc", isCorrect: false },
+          { text: "Đúng liều", isCorrect: false },
+          { text: "Đúng nhà sản xuất", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 27. “Đúng thời gian” trong nguyên tắc 5 đúng nghĩa là:",
+        options: [
+          { text: "Uống thuốc bất kỳ lúc nào trong ngày", isCorrect: false },
+          { text: "Sử dụng thuốc đúng thời điểm quy định và đúng khoảng cách liều", isCorrect: true },
+          { text: "Uống thuốc khi nhớ ra", isCorrect: false },
+          { text: "Uống thuốc trước khi ngủ là tốt nhất", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 28. “Đúng đường dùng” có ý nghĩa quan trọng nhất trong trường hợp nào?",
+        options: [
+          { text: "Thuốc uống thông thường", isCorrect: false },
+          { text: "Thuốc tiêm tĩnh mạch", isCorrect: false },
+          { text: "Thuốc bôi ngoài da", isCorrect: false },
+          { text: "Tất cả các trường hợp trên", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 29. Nguyên tắc “5 đúng” chỉ áp dụng cho điều dưỡng, không áp dụng cho bác sĩ.",
+        options: [
+          { text: "Đúng", isCorrect: false },
+          { text: "Sai", isCorrect: true },
+          { text: "Chỉ áp dụng trong nội trú", isCorrect: false },
+          { text: "Chỉ áp dụng cho thuốc tiêm", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 30. Việc ghi chép y lệnh thuốc trong điều trị nội trú nhằm mục đích chính nào sau đây?",
+        options: [
+          { text: "Phục vụ thanh toán bảo hiểm", isCorrect: false },
+          { text: "Tránh nhầm lẫn trong sử dụng thuốc", isCorrect: true },
+          { text: "Kiểm soát chi phí bệnh viện", isCorrect: false },
+          { text: "Phục vụ thống kê hành chính", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 31. Y lệnh thuốc nội trú phải được ghi khi nào?",
+        options: [
+          { text: "Trước khi thăm khám người bệnh", isCorrect: false },
+          { text: "Sau khi có chẩn đoán và chỉ định điều trị", isCorrect: true },
+          { text: "Sau khi người bệnh xuất viện", isCorrect: false },
+          { text: "Khi người bệnh yêu cầu", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 32. Nội dung nào sau đây không bắt buộc phải có trong y lệnh thuốc?",
+        options: [
+          { text: "Tên thuốc", isCorrect: false },
+          { text: "Liều dùng", isCorrect: false },
+          { text: "Đường dùng", isCorrect: false },
+          { text: "Hạn sử dụng của thuốc", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 33. Việc kiểm tra thuốc trước khi dùng là trách nhiệm chính của:",
+        options: [
+          { text: "Bác sĩ điều trị", isCorrect: false },
+          { text: "Dược sĩ cấp phát", isCorrect: false },
+          { text: "Điều dưỡng thực hiện y lệnh", isCorrect: true },
+          { text: "Người bệnh", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 34. Sai sót thường gặp nhất trong sử dụng thuốc nội trú là:",
+        options: [
+          { text: "Nhầm người bệnh", isCorrect: false },
+          { text: "Nhầm liều dùng", isCorrect: false },
+          { text: "Nhầm đường dùng", isCorrect: false },
+          { text: "Tất cả các đáp án trên", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 35. Việc theo dõi phản ứng có hại của thuốc (ADR) trong điều trị nội trú nhằm mục đích:",
+        options: [
+          { text: "Phát hiện sớm tai biến", isCorrect: false },
+          { text: "Điều chỉnh phác đồ điều trị", isCorrect: false },
+          { text: "Đảm bảo an toàn cho người bệnh", isCorrect: false },
+          { text: "Tất cả các đáp án trên", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 36. Phát biểu nào sau đây về ADR là sai?",
+        options: [
+          { text: "Là phản ứng không mong muốn của thuốc", isCorrect: false },
+          { text: "Xảy ra ở liều thường dùng", isCorrect: false },
+          { text: "Có thể dự đoán được trong một số trường hợp", isCorrect: false },
+          { text: "Luôn luôn không nguy hiểm", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 37. Khi phát hiện ADR nghiêm trọng, nhân viên y tế phải:",
+        options: [
+          { text: "Tiếp tục dùng thuốc để theo dõi", isCorrect: false },
+          { text: "Ngừng thuốc và xử trí kịp thời", isCorrect: true },
+          { text: "Chỉ cần ghi nhận vào hồ sơ", isCorrect: false },
+          { text: "Báo cho người nhà người bệnh", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 38. Báo cáo ADR có ý nghĩa lớn nhất trong nội dung nào sau đây?",
+        options: [
+          { text: "Nâng cao an toàn trong sử dụng thuốc", isCorrect: true },
+          { text: "Tăng lợi nhuận cho bệnh viện", isCorrect: false },
+          { text: "Đẩy nhanh thời gian xuất viện", isCorrect: false },
+          { text: "Tăng số lượng thuốc sử dụng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 39. Việc cấp phát thuốc nội trú phải đảm bảo nguyên tắc nào sau đây?",
+        options: [
+          { text: "Đủ số lượng", isCorrect: false },
+          { text: "Đúng chủng loại", isCorrect: false },
+          { text: "Đúng thời gian", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 40. Thuốc sau khi cấp phát cho người bệnh nội trú phải được sử dụng dưới sự giám sát của:",
+        options: [
+          { text: "Bác sĩ", isCorrect: false },
+          { text: "Dược sĩ", isCorrect: false },
+          { text: "Điều dưỡng", isCorrect: true },
+          { text: "Người nhà người bệnh", isCorrect: false }
+        ]
+      },
+
+      // 41–55: GN – HT – tiền chất – thuốc độc
+      {
+        text: "Câu 41. Thuốc gây nghiện là thuốc:",
+        options: [
+          { text: "Dùng điều trị dài ngày", isCorrect: false },
+          { text: "Có nguy cơ gây lệ thuộc", isCorrect: true },
+          { text: "Gây ngủ mạnh", isCorrect: false },
+          { text: "Có nguồn gốc thảo dược", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 42. Thuốc hướng tâm thần là thuốc có tác dụng chủ yếu lên:",
+        options: [
+          { text: "Hệ tiêu hóa", isCorrect: false },
+          { text: "Hệ miễn dịch", isCorrect: false },
+          { text: "Hệ thần kinh trung ương", isCorrect: true },
+          { text: "Hệ nội tiết", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 43. Thuốc tiền chất là thuốc:",
+        options: [
+          { text: "Dùng làm nguyên liệu sản xuất thuốc", isCorrect: false },
+          { text: "Có thể gây nghiện", isCorrect: false },
+          { text: "Có thể chuyển hóa thành chất gây nghiện", isCorrect: false },
+          { text: "Luôn luôn là thuốc không kê đơn", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 44. Đơn thuốc gây nghiện bắt buộc phải có đầy đủ:",
+        options: [
+          { text: "Họ tên – tuổi – cân nặng người bệnh", isCorrect: false },
+          { text: "Chẩn đoán – chữ ký – dấu", isCorrect: true },
+          { text: "Số CMND/CCCD người bệnh", isCorrect: false },
+          { text: "Chỉ ghi tên thuốc và liều dùng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 45. Đơn thuốc gây nghiện dùng cho điều trị bệnh mạn tính được kê tối đa:",
+        options: [
+          { text: "7 ngày", isCorrect: false },
+          { text: "10 ngày", isCorrect: false },
+          { text: "30 ngày", isCorrect: true },
+          { text: "60 ngày", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 46. Đối với thuốc hướng tâm thần, thời gian kê đơn tối đa là:",
+        options: [
+          { text: "7 ngày", isCorrect: false },
+          { text: "10 ngày", isCorrect: false },
+          { text: "30 ngày", isCorrect: true },
+          { text: "Không giới hạn", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 47. Thuốc gây nghiện có thể bán mà không cần lưu đơn.",
+        options: [
+          { text: "Đúng", isCorrect: false },
+          { text: "Sai", isCorrect: true },
+          { text: "Chỉ áp dụng cho ngoại trú", isCorrect: false },
+          { text: "Chỉ áp dụng cho nội trú", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 48. Đơn thuốc gây nghiện phải được lưu tại nhà thuốc tối thiểu:",
+        options: [
+          { text: "6 tháng", isCorrect: false },
+          { text: "1 năm", isCorrect: false },
+          { text: "2 năm kể từ khi thuốc hết hạn", isCorrect: true },
+          { text: "5 năm kể từ ngày kê", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 49. Hành vi nào sau đây là đúng khi bán thuốc gây nghiện?",
+        options: [
+          { text: "Bán theo yêu cầu người bệnh", isCorrect: false },
+          { text: "Bán khi có đơn hợp lệ", isCorrect: true },
+          { text: "Bán khi thiếu một nội dung trên đơn", isCorrect: false },
+          { text: "Bán theo kinh nghiệm người bán", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 50. Khi bán thuốc hướng tâm thần, dược sĩ phải:",
+        options: [
+          { text: "Chỉ cần đối chiếu tên thuốc", isCorrect: false },
+          { text: "Kiểm tra đầy đủ đơn hợp lệ", isCorrect: true },
+          { text: "Không cần lưu đơn", isCorrect: false },
+          { text: "Chỉ cần ghi sổ bán lẻ", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 51. Thuốc độc là thuốc:",
+        options: [
+          { text: "Có độc tính cao", isCorrect: false },
+          { text: "Có chỉ số an toàn hẹp", isCorrect: false },
+          { text: "Dễ gây tai biến nếu dùng sai", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 52. Thuốc độc khi bảo quản phải:",
+        options: [
+          { text: "Để chung với thuốc thông thường", isCorrect: false },
+          { text: "Để ở nơi dễ lấy", isCorrect: false },
+          { text: "Có nhãn cảnh báo riêng", isCorrect: true },
+          { text: "Không cần phân loại", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 53. Thuốc độc có thể:",
+        options: [
+          { text: "Gây tử vong nếu dùng sai", isCorrect: false },
+          { text: "Phải kiểm soát chặt chẽ", isCorrect: false },
+          { text: "Bán tự do không cần đơn", isCorrect: true },
+          { text: "Có nguy cơ cao cho người bệnh", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 54. Khi cấp phát thuốc độc nội trú, người thực hiện phải:",
+        options: [
+          { text: "Chỉ cần đọc y lệnh", isCorrect: false },
+          { text: "Kiểm tra chéo trước khi dùng", isCorrect: true },
+          { text: "Chỉ ghi nhận sau khi dùng", isCorrect: false },
+          { text: "Không cần đối chiếu hồ sơ", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 55. Thuốc độc không cần tuân thủ nguyên tắc 5 đúng.",
+        options: [
+          { text: "Đúng", isCorrect: false },
+          { text: "Sai", isCorrect: true },
+          { text: "Chỉ áp dụng với thuốc uống", isCorrect: false },
+          { text: "Chỉ áp dụng với thuốc tiêm", isCorrect: false }
+        ]
+      },
+
+      // 56–65: YHCT + phối hợp
+      {
+        text: "Câu 56. Thuốc YHCT là thuốc có nguồn gốc từ:",
+        options: [
+          { text: "Hóa dược tổng hợp", isCorrect: false },
+          { text: "Sinh phẩm công nghệ cao", isCorrect: false },
+          { text: "Dược liệu tự nhiên", isCorrect: true },
+          { text: "Kháng sinh bán tổng hợp", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 57. Kê đơn thuốc YHCT phải căn cứ vào:",
+        options: [
+          { text: "Chẩn đoán theo Y học hiện đại", isCorrect: false },
+          { text: "Chẩn đoán theo YHCT", isCorrect: true },
+          { text: "Kết quả cận lâm sàng", isCorrect: false },
+          { text: "Giá thuốc", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 58. Bài thuốc YHCT thường gồm:",
+        options: [
+          { text: "Một vị thuốc", isCorrect: false },
+          { text: "Hai vị thuốc", isCorrect: false },
+          { text: "Nhiều vị thuốc phối hợp", isCorrect: true },
+          { text: "Chỉ một dược chất", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 59. Thuốc YHCT thường được sử dụng dưới dạng:",
+        options: [
+          { text: "Thang sắc", isCorrect: false },
+          { text: "Viên hoàn", isCorrect: false },
+          { text: "Thuốc tiêm tĩnh mạch", isCorrect: true },
+          { text: "Cao lỏng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 60. Khi kê đơn thuốc YHCT, phải ghi rõ:",
+        options: [
+          { text: "Tên từng vị thuốc", isCorrect: false },
+          { text: "Liều lượng từng vị", isCorrect: false },
+          { text: "Cách dùng", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 61. Phối hợp YHCT với tân dược nhằm mục tiêu:",
+        options: [
+          { text: "Tăng chi phí điều trị", isCorrect: false },
+          { text: "Tăng hiệu quả và giảm tác dụng phụ", isCorrect: true },
+          { text: "Thay thế hoàn toàn tân dược", isCorrect: false },
+          { text: "Chỉ điều trị triệu chứng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 62. Khi phối hợp YHCT và tân dược cần quan tâm nhiều nhất đến:",
+        options: [
+          { text: "Mùi vị thuốc", isCorrect: false },
+          { text: "Tương tác thuốc", isCorrect: true },
+          { text: "Giá thuốc", isCorrect: false },
+          { text: "Thời gian sắc thuốc", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 63. Thuốc YHCT không bao giờ gây tương tác thuốc.",
+        options: [
+          { text: "Đúng", isCorrect: false },
+          { text: "Sai", isCorrect: true },
+          { text: "Chỉ đúng với thuốc bổ", isCorrect: false },
+          { text: "Chỉ đúng với thảo dược", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 64. Việc phối hợp thuốc không hợp lý có thể gây:",
+        options: [
+          { text: "Giảm hiệu quả điều trị", isCorrect: false },
+          { text: "Tăng nguy cơ tai biến", isCorrect: false },
+          { text: "Tăng chi phí", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 65. Khi nghi ngờ có tương tác thuốc YHCT – tân dược, cần:",
+        options: [
+          { text: "Ngưng toàn bộ thuốc", isCorrect: false },
+          { text: "Báo ngay cho bác sĩ điều trị", isCorrect: true },
+          { text: "Tiếp tục theo dõi", isCorrect: false },
+          { text: "Tự điều chỉnh liều", isCorrect: false }
+        ]
+      },
+
+      // 66–80: An toàn & tổng kết
+      {
+        text: "Câu 66. Mục tiêu cao nhất của an toàn thuốc là:",
+        options: [
+          { text: "Giảm chi phí", isCorrect: false },
+          { text: "Ngăn ngừa sai sót", isCorrect: false },
+          { text: "Bảo vệ người bệnh", isCorrect: true },
+          { text: "Tăng lợi nhuận", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 67. Sai sót trong sử dụng thuốc thường xảy ra nhiều nhất ở khâu:",
+        options: [
+          { text: "Kê đơn", isCorrect: false },
+          { text: "Cấp phát", isCorrect: false },
+          { text: "Sử dụng", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 68. Báo cáo sai sót thuốc nhằm mục đích:",
+        options: [
+          { text: "Quy trách nhiệm cá nhân", isCorrect: false },
+          { text: "Phòng ngừa tái diễn sai sót", isCorrect: true },
+          { text: "Xử phạt hành chính", isCorrect: false },
+          { text: "Che giấu lỗi", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 69. An toàn thuốc bao gồm:",
+        options: [
+          { text: "Kê đơn hợp lý", isCorrect: false },
+          { text: "Cấp phát chính xác", isCorrect: false },
+          { text: "Sử dụng đúng", isCorrect: false },
+          { text: "Bán thuốc theo yêu cầu người bệnh", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 70. Người bệnh cần được tư vấn sử dụng thuốc nhằm:",
+        options: [
+          { text: "Hiểu cách dùng", isCorrect: false },
+          { text: "Tránh quên liều", isCorrect: false },
+          { text: "Phát hiện sớm ADR", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 71. Hoạt động nào không thuộc sử dụng thuốc hợp lý?",
+        options: [
+          { text: "Chẩn đoán đúng", isCorrect: false },
+          { text: "Kê đơn hợp lý", isCorrect: false },
+          { text: "Sử dụng đúng", isCorrect: false },
+          { text: "Bán thuốc không cần đơn", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 72. Mỗi sai sót thuốc đều có thể dẫn đến:",
+        options: [
+          { text: "Kéo dài thời gian điều trị", isCorrect: false },
+          { text: "Tăng nguy cơ biến chứng", isCorrect: false },
+          { text: "Tăng chi phí điều trị", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 73. Vai trò lớn nhất của nhân viên y tế trong sử dụng thuốc an toàn là:",
+        options: [
+          { text: "Chỉ bán đúng thuốc", isCorrect: false },
+          { text: "Chỉ tuân thủ y lệnh", isCorrect: false },
+          { text: "Phối hợp kiểm soát sai sót", isCorrect: true },
+          { text: "Chỉ chăm sóc người bệnh", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 74. Chỉ cần bác sĩ tuân thủ đúng là đủ đảm bảo an toàn thuốc.",
+        options: [
+          { text: "Đúng", isCorrect: false },
+          { text: "Sai", isCorrect: true },
+          { text: "Chỉ đúng với nội trú", isCorrect: false },
+          { text: "Chỉ đúng với ngoại trú", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 75. Hệ thống báo cáo an toàn thuốc giúp:",
+        options: [
+          { text: "Phát hiện nguy cơ sớm", isCorrect: false },
+          { text: "Cải tiến quy trình", isCorrect: false },
+          { text: "Nâng cao chất lượng điều trị", isCorrect: false },
+          { text: "Cả A, B và C", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 76. Mục tiêu cuối cùng của quản lý kê đơn là:",
+        options: [
+          { text: "Tăng số lượng thuốc", isCorrect: false },
+          { text: "Giảm trách nhiệm pháp lý", isCorrect: false },
+          { text: "Đảm bảo hiệu quả – an toàn – hợp lý", isCorrect: true },
+          { text: "Đẩy mạnh tiêu thụ thuốc", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 77. Yếu tố nào sau đây không ảnh hưởng đến an toàn thuốc?",
+        options: [
+          { text: "Người kê đơn", isCorrect: false },
+          { text: "Người cấp phát", isCorrect: false },
+          { text: "Người sử dụng", isCorrect: false },
+          { text: "Nhà sản xuất quảng cáo hay", isCorrect: true }
+        ]
+      },
+      {
+        text: "Câu 78. Tất cả thuốc khi sử dụng đều phải tuân thủ:",
+        options: [
+          { text: "3 đúng", isCorrect: false },
+          { text: "4 đúng", isCorrect: false },
+          { text: "5 đúng", isCorrect: true },
+          { text: "6 đúng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 79. Nguyên tắc quan trọng nhất khi dùng thuốc cho người bệnh là:",
+        options: [
+          { text: "Nhanh", isCorrect: false },
+          { text: "Rẻ", isCorrect: false },
+          { text: "Đúng chỉ định – an toàn", isCorrect: true },
+          { text: "Phổ rộng", isCorrect: false }
+        ]
+      },
+      {
+        text: "Câu 80. Kết luận quan trọng nhất của quản lý sử dụng thuốc là:",
+        options: [
+          { text: "Thuốc càng nhiều càng tốt", isCorrect: false },
+          { text: "Thuốc càng mạnh càng hiệu quả", isCorrect: false },
+          { text: "Dùng thuốc đúng – đủ – an toàn", isCorrect: true },
+          { text: "Không cần theo dõi phản ứng thuốc", isCorrect: false }
+        ]
+      }
+    ];
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById("quiz-container");
+      container.innerHTML = "";
+
+      questions.forEach((q, qIndex) => {
+        const card = document.createElement("div");
+        card.className = "question-card";
+        card.dataset.answered = "false";
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = q.text.split(".")[0] + "."; // "Câu X."
+        const textDiv = document.createElement("div");
+        textDiv.className = "question-text";
+        textDiv.textContent = q.text.replace(/^Câu\s*\d+\.\s*/, "");
+
+        const optionsDiv = document.createElement("div");
+        optionsDiv.className = "options";
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+
+        const shuffledOptions = shuffleArray(q.options);
+
+        shuffledOptions.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.type = "button";
+          btn.textContent = opt.text;
+          btn.dataset.correct = opt.isCorrect ? "true" : "false";
+
+          btn.addEventListener("click", () => {
+            if (card.dataset.answered === "true") return;
+            card.dataset.answered = "true";
+
+            const allBtns = optionsDiv.querySelectorAll(".option-btn");
+            allBtns.forEach((b) => (b.disabled = true));
+
+            if (opt.isCorrect) {
+              btn.classList.add("correct");
+              feedback.textContent = "Chính xác ✅";
+              feedback.classList.add("correct-text");
+            } else {
+              btn.classList.add("incorrect");
+              feedback.textContent = "Chưa đúng ❌";
+              feedback.classList.add("incorrect-text");
+              allBtns.forEach((b) => {
+                if (b.dataset.correct === "true") {
+                  b.classList.add("correct");
+                }
+              });
+            }
+          });
+
+          optionsDiv.appendChild(btn);
+        });
+
+        card.appendChild(title);
+        card.appendChild(textDiv);
+        card.appendChild(optionsDiv);
+        card.appendChild(feedback);
+        container.appendChild(card);
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("reset-btn").addEventListener("click", () => {
+      renderQuiz();
+    });
+
+    // Khởi tạo lần đầu
+    renderQuiz();
+  </script>
+</body>
+</html>

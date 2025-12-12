@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm Mỹ phẩm & Thực phẩm chức năng</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f8ff;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    .subtitle {
+        text-align: center;
+        color: #555;
+        margin-bottom: 25px;
+    }
+    .question {
+        margin-bottom: 22px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        background: #f8fbff;
+        border: 1px solid #dde7ff;
+    }
+    .question-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .answers button {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+        padding: 9px 10px;
+        border-radius: 8px;
+        border: 1px solid #cccccc;
+        cursor: pointer;
+        text-align: left;
+        background: #ffffff;
+    }
+    .answers button:hover {
+        background: #ecf5ff;
+    }
+    .correct {
+        background: #c8f7c5 !important;
+        border-color: #27ae60 !important;
+    }
+    .wrong {
+        background: #ffd6d6 !important;
+        border-color: #e74c3c !important;
+    }
+    .hint {
+        margin-top: 6px;
+        font-style: italic;
+        color: #555555;
+    }
+    .controls {
+        text-align: center;
+        margin-top: 30px;
+    }
+    .controls button {
+        padding: 10px 18px;
+        margin: 6px;
+        border-radius: 8px;
+        border: none;
+        background: #3498db;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .controls button:hover {
+        opacity: 0.92;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>TRẮC NGHIỆM MỸ PHẨM & THỰC PHẨM CHỨC NĂNG</h1>
+    <div class="subtitle">
+        Chọn đáp án đúng. Đáp án đúng hiển thị <b style="color:#27ae60;">màu xanh</b>, sai hiển thị <b style="color:#e74c3c;">màu đỏ</b>, kèm gợi ý.
+        <br>Mỗi lần tải lại trang, thứ tự đáp án sẽ được đảo ngẫu nhiên.
+    </div>
+
+    <div id="quiz"></div>
+
+    <div class="controls">
+        <button onclick="location.reload()">🔄 Làm lại toàn bộ (đảo đáp án)</button>
+    </div>
+</div>
+
+<script>
+// ================== DỮ LIỆU CÂU HỎI ==================
+const questions = [
+    // NHÓM 1 – KHÁI NIỆM MỸ PHẨM (1–12)
+    {
+        num: 1,
+        text: "Sản phẩm mỹ phẩm là:",
+        options: [
+            "Chỉ là chế phẩm dùng ngoài da",
+            "Chất hoặc chế phẩm tiếp xúc bên ngoài cơ thể, răng, niêm mạc miệng nhằm làm sạch, làm thơm, thay đổi diện mạo, bảo vệ hoặc giữ cơ thể trong điều kiện tốt",
+            "Chỉ dùng để trang điểm",
+            "Chỉ dùng trong y tế"
+        ],
+        correctIndex: 1,
+        hint: "Định nghĩa nhấn mạnh tiếp xúc bên ngoài cơ thể và mục đích chính là làm sạch, làm thơm, thay đổi diện mạo hoặc bảo vệ."
+    },
+    {
+        num: 2,
+        text: "Tên mỹ phẩm là:",
+        options: [
+            "Tên bắt buộc theo hoạt chất",
+            "Tên bằng ký tự La tinh, do nhà sản xuất đặt, có thể gắn với thương hiệu",
+            "Tên theo tiếng Việt",
+            "Tên theo INCI"
+        ],
+        correctIndex: 1,
+        hint: "Tên mỹ phẩm phải được cấu thành bởi ký tự La tinh và do nhà sản xuất đặt."
+    },
+    {
+        num: 3,
+        text: "(NGOẠI TRỪ) Số tiếp nhận phiếu công bố mỹ phẩm KHÔNG CÓ ý nghĩa nào sau đây?",
+        options: [
+            "Chứng nhận doanh nghiệp đã khai báo với cơ quan quản lý",
+            "Là điều kiện để mỹ phẩm được lưu thông",
+            "Chứng nhận sản phẩm an toàn, hiệu quả tuyệt đối",
+            "Là số do cơ quan nhà nước cấp khi tiếp nhận hồ sơ"
+        ],
+        correctIndex: 2,
+        hint: "Số tiếp nhận KHÔNG chứng nhận sản phẩm an toàn, hiệu quả tuyệt đối."
+    },
+    {
+        num: 4,
+        text: "Số lô sản xuất mỹ phẩm dùng để:",
+        options: [
+            "Quản lý giá",
+            "Quảng cáo sản phẩm",
+            "Nhận biết và truy xuất toàn bộ lai lịch lô sản phẩm",
+            "Chứng minh nguồn gốc xuất xứ"
+        ],
+        correctIndex: 2,
+        hint: "Số lô dùng để nhận biết và truy xuất toàn bộ lịch sử sản xuất của lô đó."
+    },
+    {
+        num: 5,
+        text: "Quảng cáo mỹ phẩm là:",
+        options: [
+            "Hoạt động tư vấn điều trị da",
+            "Hoạt động giới thiệu, quảng bá nhằm thúc đẩy sản xuất, bán, sử dụng",
+            "Hoạt động bán hàng trực tiếp",
+            "Hoạt động nghiên cứu thị trường"
+        ],
+        correctIndex: 1,
+        hint: "Quảng cáo là hoạt động giới thiệu, quảng bá nhằm thúc đẩy quá trình sản xuất, bán, sử dụng mỹ phẩm."
+    },
+    {
+        num: 6,
+        text: "Hội thảo giới thiệu mỹ phẩm là:",
+        options: [
+            "Hội nghị khoa học y tế",
+            "Hội nghị thảo luận chuyên đề về mỹ phẩm với người tiêu dùng",
+            "Hội thảo nội bộ doanh nghiệp",
+            "Hội thảo dược sĩ"
+        ],
+        correctIndex: 1,
+        hint: "Hội thảo giới thiệu mỹ phẩm phải hướng tới người tiêu dùng và bàn về các vấn đề chuyên sâu liên quan đến mỹ phẩm."
+    },
+    {
+        num: 7,
+        text: "Người quảng cáo mỹ phẩm là:",
+        options: [
+            "Người phân tích thị trường",
+            "Tổ chức, cá nhân có nhu cầu quảng cáo về mỹ phẩm do mình sản xuất, phân phối",
+            "Cơ quan báo chí",
+            "Bộ Y tế"
+        ],
+        correctIndex: 1,
+        hint: "Người quảng cáo là tổ chức/cá nhân đứng tên sản phẩm và có nhu cầu quảng cáo sản phẩm của mình."
+    },
+    {
+        num: 8,
+        text: "Người phát hành quảng cáo là:",
+        options: [
+            "Doanh nghiệp sản xuất",
+            "Cơ quan đưa sản phẩm quảng cáo đến người tiêu dùng",
+            "Nhân viên bán hàng",
+            "Hội đồng mỹ phẩm ASEAN"
+        ],
+        correctIndex: 1,
+        hint: "Người phát hành thường là báo, đài, truyền hình, nhà xuất bản đưa nội dung quảng cáo tới công chúng."
+    },
+    {
+        num: 9,
+        text: "Ngày sản xuất mỹ phẩm là:",
+        options: [
+            "Ngày xuất kho",
+            "Ngày hoàn thành công đoạn cuối cùng của lô sản phẩm",
+            "Ngày vận chuyển",
+            "Ngày cấp phép"
+        ],
+        correctIndex: 1,
+        hint: "Ngày sản xuất được tính khi hoàn thành sản xuất, chế biến, đóng gói lô sản phẩm."
+    },
+    {
+        num: 10,
+        text: "Hạn dùng mỹ phẩm là:",
+        options: [
+            "Ngày bắt đầu quảng cáo",
+            "Thời điểm mỹ phẩm không còn được phép lưu thông, sử dụng",
+            "Ngày nhập kho",
+            "Ngày sản xuất"
+        ],
+        correctIndex: 1,
+        hint: "Sau thời hạn này, mỹ phẩm không được phép lưu thông và sử dụng."
+    },
+    {
+        num: 11,
+        text: "CFS (Giấy chứng nhận lưu hành tự do) dùng để:",
+        options: [
+            "Quảng cáo mỹ phẩm",
+            "Chứng nhận mỹ phẩm được phép lưu hành tự do tại nước xuất khẩu",
+            "Kiểm nghiệm chất lượng tại Việt Nam",
+            "Đăng ký giá mỹ phẩm"
+        ],
+        correctIndex: 1,
+        hint: "CFS chứng nhận sản phẩm được sản xuất và lưu hành hợp pháp tại nước xuất khẩu."
+    },
+    {
+        num: 12,
+        text: "(NGOẠI TRỪ) Nhãn phụ mỹ phẩm KHÔNG CÓ chức năng nào sau đây?",
+        options: [
+            "Dịch nội dung từ nhãn gốc ra tiếng Việt",
+            "Bổ sung nội dung còn thiếu theo quy định",
+            "Thay thế hoàn toàn nhãn gốc",
+            "Thể hiện thông tin bắt buộc"
+        ],
+        correctIndex: 2,
+        hint: "Nhãn phụ chỉ dịch và bổ sung, không được thay thế hoàn toàn nhãn gốc."
+    },
+
+    // NHÓM 2 – NỘI DUNG QUẢNG CÁO MỸ PHẨM (13–16)
+    {
+        num: 13,
+        text: "Nội dung quảng cáo mỹ phẩm phải:",
+        options: [
+            "Tự do sáng tạo",
+            "Phù hợp tài liệu chứng minh an toàn – hiệu quả và tuân thủ hướng dẫn ASEAN",
+            "Chỉ cần hấp dẫn",
+            "Theo yêu cầu doanh nghiệp"
+        ],
+        correctIndex: 1,
+        hint: "Nội dung phải phù hợp tài liệu chứng minh tính an toàn, hiệu quả và quy định hiện hành."
+    },
+    {
+        num: 14,
+        text: "Thông tin KHÔNG BẮT BUỘC trong quảng cáo mỹ phẩm là:",
+        options: [
+            "Tên mỹ phẩm",
+            "Thành phần định lượng chi tiết",
+            "Công dụng",
+            "Tên – địa chỉ tổ chức chịu trách nhiệm"
+        ],
+        correctIndex: 1,
+        hint: "Thành phần định lượng chi tiết không phải luôn phải ghi trong nội dung quảng cáo."
+    },
+    {
+        num: 15,
+        text: "Nội dung hội thảo mỹ phẩm KHÔNG BẮT BUỘC có:",
+        options: [
+            "Tên mỹ phẩm",
+            "Cách dùng",
+            "Giá bán lẻ",
+            "Tên, địa chỉ đơn vị chịu trách nhiệm"
+        ],
+        correctIndex: 2,
+        hint: "Giá bán lẻ không phải nội dung bắt buộc trong hội thảo giới thiệu mỹ phẩm."
+    },
+    {
+        num: 16,
+        text: "(SAI) Quảng cáo mỹ phẩm được phép:",
+        options: [
+            "Ghi đúng công dụng",
+            "Ghi phù hợp tài liệu an toàn",
+            "Phóng đại tác dụng điều trị",
+            "Nêu tên cơ sở chịu trách nhiệm"
+        ],
+        correctIndex: 2,
+        hint: "Không được phóng đại tác dụng điều trị, phải đúng như tài liệu chứng minh."
+    },
+
+    // NHÓM 3 – THANH TRA – KIỂM TRA MỸ PHẨM (21–28)
+    {
+        num: 21,
+        text: "Cơ quan giúp Bộ trưởng Y tế kết luận chất lượng mỹ phẩm toàn quốc là:",
+        options: [
+            "Viện Kiểm nghiệm TP.HCM",
+            "Cục Quản lý Dược Việt Nam",
+            "Sở Y tế",
+            "Trung tâm kiểm nghiệm tỉnh"
+        ],
+        correctIndex: 1,
+        hint: "Cơ quan quản lý dược ở trung ương tham mưu cho Bộ Y tế về quản lý chất lượng mỹ phẩm."
+    },
+    {
+        num: 22,
+        text: "Thanh tra định kỳ có đặc điểm:",
+        options: [
+            "Không báo trước",
+            "Báo trước để doanh nghiệp chuẩn bị",
+            "Chỉ thực hiện khi có vi phạm",
+            "Do doanh nghiệp yêu cầu"
+        ],
+        correctIndex: 1,
+        hint: "Thanh tra định kỳ thường được thông báo trước để cơ sở chuẩn bị hồ sơ, nhân sự."
+    },
+    {
+        num: 23,
+        text: "Thanh tra đột xuất phải báo trước:",
+        options: [
+            "24 giờ",
+            "36 giờ",
+            "48 giờ",
+            "72 giờ"
+        ],
+        correctIndex: 2,
+        hint: "Quy định yêu cầu thông báo trước một khoảng thời gian nhất định (48 giờ)."
+    },
+    {
+        num: 24,
+        text: "(SAI) Trong trường hợp khẩn cấp, thanh tra:",
+        options: [
+            "Vẫn phải báo trước 48h",
+            "Có quyền thanh tra không báo trước",
+            "Do Bộ Y tế quyết định",
+            "Không cần doanh nghiệp đồng ý"
+        ],
+        correctIndex: 0,
+        hint: "Trong trường hợp khẩn cấp có thể thanh tra không báo trước, nên phương án 'vẫn phải báo trước 48h' là sai."
+    },
+    {
+        num: 25,
+        text: "CGMP-ASEAN là:",
+        options: [
+            "Tiêu chuẩn thực hành tốt phân phối",
+            "Tiêu chuẩn sản xuất mỹ phẩm ASEAN",
+            "Tiêu chuẩn quảng cáo",
+            "Tiêu chuẩn thử nghiệm lâm sàng"
+        ],
+        correctIndex: 1,
+        hint: "CGMP-ASEAN là thực hành tốt sản xuất mỹ phẩm theo hướng dẫn ASEAN."
+    },
+    {
+        num: 26,
+        text: "Cơ quan kiểm tra chất lượng mỹ phẩm gồm:",
+        options: [
+            "Viện Kiểm nghiệm TW, Viện Kiểm nghiệm TP.HCM, Trung tâm kiểm nghiệm tỉnh",
+            "Chỉ Bộ Y tế",
+            "Chỉ Sở Y tế",
+            "Chỉ doanh nghiệp"
+        ],
+        correctIndex: 0,
+        hint: "Nhiều tuyến kiểm nghiệm: trung ương, TP.HCM và các trung tâm kiểm nghiệm tỉnh."
+    },
+    {
+        num: 27,
+        text: "Mẫu do cơ quan nhà nước lấy, phân tích tại phòng thử nghiệm được công nhận:",
+        options: [
+            "Chỉ có giá trị tham khảo",
+            "Có giá trị pháp lý cho cả lô",
+            "Chỉ có giá trị cho mẫu",
+            "Không có giá trị pháp lý"
+        ],
+        correctIndex: 1,
+        hint: "Mẫu do cơ quan nhà nước lấy và kiểm nghiệm được dùng làm căn cứ pháp lý cho cả lô."
+    },
+    {
+        num: 28,
+        text: "Mẫu do doanh nghiệp gửi kiểm nghiệm:",
+        options: [
+            "Có giá trị pháp lý cho cả lô",
+            "Chỉ có giá trị cho mẫu",
+            "Thay thế kết luận thanh tra",
+            "Có giá trị toàn quốc"
+        ],
+        correctIndex: 1,
+        hint: "Kết quả mẫu doanh nghiệp gửi chủ yếu có giá trị cho chính mẫu đó, không thay thế cho thanh tra."
+    },
+
+    // NHÓM 4 – ĐÌNH CHỈ – THU HỒI MỸ PHẨM (36–38)
+    {
+        num: 36,
+        text: "Mỹ phẩm bị đình chỉ khi:",
+        options: [
+            "Không đạt chất lượng",
+            "Công thức không đúng hồ sơ công bố",
+            "Không an toàn",
+            "Tất cả đáp án trên"
+        ],
+        correctIndex: 3,
+        hint: "Bất kỳ yếu tố nào trong ba yếu tố trên đều có thể dẫn đến đình chỉ lưu hành."
+    },
+    {
+        num: 37,
+        text: "Cục Quản lý Dược:",
+        options: [
+            "Ra quyết định thu hồi toàn quốc",
+            "Chỉ thu hồi tại Hà Nội",
+            "Không có quyền thu hồi",
+            "Chỉ đề xuất thu hồi"
+        ],
+        correctIndex: 0,
+        hint: "Cục Quản lý Dược có thẩm quyền ra quyết định thu hồi trong phạm vi toàn quốc."
+    },
+    {
+        num: 38,
+        text: "Sau thu hồi, doanh nghiệp phải:",
+        options: [
+            "Chỉ dừng bán",
+            "Thu hồi triệt để, báo cáo và giải quyết hậu quả",
+            "Hủy sản phẩm ngay",
+            "Bồi thường nếu có khiếu nại"
+        ],
+        correctIndex: 1,
+        hint: "Việc thu hồi phải triệt để và có báo cáo, kèm biện pháp xử lý hậu quả."
+    },
+
+    // NHÓM 5 – THỰC PHẨM CHỨC NĂNG – KHÁI NIỆM (46–50)
+    {
+        num: 46,
+        text: "Thực phẩm chức năng (TPCN) là:",
+        options: [
+            "Thuốc chữa bệnh",
+            "Thực phẩm hỗ trợ chức năng cơ thể, giảm nguy cơ mắc bệnh",
+            "Thực phẩm thông thường",
+            "Thực phẩm ăn kiêng"
+        ],
+        correctIndex: 1,
+        hint: "TPCN có tác dụng hỗ trợ, không phải thuốc điều trị bệnh."
+    },
+    {
+        num: 47,
+        text: "TPCN KHÔNG BAO GỒM:",
+        options: [
+            "Thực phẩm bổ sung",
+            "Thực phẩm bảo vệ sức khỏe",
+            "Thực phẩm dinh dưỡng y học",
+            "Thuốc đông y"
+        ],
+        correctIndex: 3,
+        hint: "Thuốc (kể cả đông y) không được xếp vào nhóm thực phẩm chức năng."
+    },
+    {
+        num: 48,
+        text: "Thực phẩm bổ sung là:",
+        options: [
+            "Thực phẩm thêm vitamin, khoáng chất, probiotic…",
+            "Thuốc điều trị",
+            "Thực phẩm ăn kiêng",
+            "Thực phẩm cho bệnh nhân"
+        ],
+        correctIndex: 0,
+        hint: "Thực phẩm bổ sung giúp bổ sung chất dinh dưỡng còn thiếu trong khẩu phần."
+    },
+    {
+        num: 49,
+        text: "Thực phẩm bảo vệ sức khỏe:",
+        options: [
+            "Được dùng thay thuốc",
+            "Giúp bổ sung vào chế độ ăn, tăng cường chức năng",
+            "Bắt buộc kê đơn",
+            "Là thuốc đặc trị"
+        ],
+        correctIndex: 1,
+        hint: "TPBVSK chỉ hỗ trợ, không thay thế thuốc chữa bệnh."
+    },
+    {
+        num: 50,
+        text: "Thực phẩm dinh dưỡng y học:",
+        options: [
+            "Chỉ dùng cho người khỏe mạnh",
+            "Chỉ dùng dưới sự giám sát của nhân viên y tế",
+            "Dùng thay toàn bộ thuốc",
+            "Không cần tư vấn"
+        ],
+        correctIndex: 1,
+        hint: "Thực phẩm dinh dưỡng y học phải dùng dưới sự giám sát của nhân viên y tế."
+    },
+
+    // NHÓM 6 – NHÃN – GHI NHÃN – QUẢNG CÁO TPCN (56–58)
+    {
+        num: 56,
+        text: "Trên nhãn TPCN BẮT BUỘC phải có:",
+        options: [
+            "Mã QR",
+            "Ngày sản xuất – hạn dùng",
+            "Giá bán",
+            "Khuyến mãi"
+        ],
+        correctIndex: 1,
+        hint: "NSX và HSD là thông tin bắt buộc trên nhãn TPCN."
+    },
+    {
+        num: 57,
+        text: "Chiều cao chữ tối thiểu trên nhãn là:",
+        options: [
+            "0,5 mm",
+            "0,9 – 1,2 mm tùy diện tích",
+            "1,5 mm",
+            "2 mm"
+        ],
+        correctIndex: 1,
+        hint: "Quy định chiều cao chữ tối thiểu tùy diện tích nhãn, thường 0,9–1,2 mm."
+    },
+    {
+        num: 58,
+        text: "Quảng cáo TPBVSK trên truyền hình phải có câu:",
+        options: [
+            "“Sản phẩm này là thuốc”",
+            "“Không có tác dụng điều trị”",
+            "“Sản phẩm này không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh”",
+            "“Dùng thay thuốc”"
+        ],
+        correctIndex: 2,
+        hint: "Đây là câu cảnh báo bắt buộc trong quảng cáo TPBVSK."
+    },
+
+    // NHÓM 7 – THU HỒI – TRUY NGUYÊN TPCN (63–65)
+    {
+        num: 63,
+        text: "TPCN bị thu hồi khi:",
+        options: [
+            "Quá hạn sử dụng",
+            "Sai nội dung công bố",
+            "Chưa có chứng nhận hợp quy",
+            "Tất cả đáp án trên"
+        ],
+        correctIndex: 3,
+        hint: "Bất kỳ trường hợp nào nêu trên đều có thể là lý do để thu hồi sản phẩm."
+    },
+    {
+        num: 64,
+        text: "Khi thu hồi TPCN, doanh nghiệp phải:",
+        options: [
+            "Báo chí xử lý",
+            "Báo cáo với Cục An toàn thực phẩm",
+            "Chỉ cần tiêu hủy",
+            "Chỉ cần dừng bán"
+        ],
+        correctIndex: 1,
+        hint: "Doanh nghiệp phải báo cáo với cơ quan quản lý chuyên trách về an toàn thực phẩm."
+    },
+    {
+        num: 65,
+        text: "Truy nguyên nguồn gốc thực phẩm được tiến hành:",
+        options: [
+            "Ở nơi bán lẻ",
+            "Ở nơi đóng gói cuối cùng",
+            "Ở bệnh viện",
+            "Ở kho trung gian"
+        ],
+        correctIndex: 1,
+        hint: "Truy nguyên nguồn gốc thường tập trung tại nơi đóng gói cuối cùng của sản phẩm."
+    }
+];
+
+// =============== HÀM TRỘN MẢNG (FISHER–YATES) ===============
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// =============== TẠO QUIZ ===============
+function createQuiz() {
+    const quizDiv = document.getElementById("quiz");
+    quizDiv.innerHTML = "";
+
+    questions.forEach(q => {
+        const qDiv = document.createElement("div");
+        qDiv.className = "question";
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.textContent = "Câu " + q.num + ": " + q.text;
+        qDiv.appendChild(title);
+
+        const ansDiv = document.createElement("div");
+        ansDiv.className = "answers";
+
+        // tạo mảng index 0-1-2-3 rồi shuffle để đảo vị trí đáp án
+        const indexArr = [0,1,2,3];
+        shuffle(indexArr);
+
+        indexArr.forEach(idx => {
+            const btn = document.createElement("button");
+            btn.textContent = q.options[idx];
+            // đánh dấu đúng/sai theo index gốc
+            btn.dataset.correct = (idx === q.correctIndex) ? "true" : "false";
+
+            btn.onclick = function() {
+                const buttons = ansDiv.querySelectorAll("button");
+                buttons.forEach(b => b.disabled = true);
+
+                if (btn.dataset.correct === "true") {
+                    btn.classList.add("correct");
+                } else {
+                    btn.classList.add("wrong");
+                    // tô xanh đáp án đúng
+                    buttons.forEach(b => {
+                        if (b.dataset.correct === "true") {
+                            b.classList.add("correct");
+                        }
+                    });
+                }
+
+                // gợi ý
+                const hintDiv = document.createElement("div");
+                hintDiv.className = "hint";
+                hintDiv.textContent = "💡 Gợi ý: " + q.hint;
+                qDiv.appendChild(hintDiv);
+            };
+
+            ansDiv.appendChild(btn);
+        });
+
+        qDiv.appendChild(ansDiv);
+        quizDiv.appendChild(qDiv);
+    });
+}
+
+createQuiz();
+</script>
+
+</body>
+</html>

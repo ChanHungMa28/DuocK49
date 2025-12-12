@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MCQ – Quảng cáo & Thông tin thuốc (65 câu)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --card:#ffffff;
+      --card2:#f7f8fb;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:rgba(2,6,23,.12);
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --btn:#2563eb;
+      --btn2:#ffffff;
+      --chip:#f1f5f9;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, #ffffff 0%, #f6f7fb 70%, #ffffff 100%) fixed;
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .wrap{max-width:1050px; margin:0 auto; padding:18px 16px;}
+    h1{font-size:18px; margin:0 0 6px;}
+    .sub{color:var(--muted); font-size:13px; line-height:1.4}
+    .bar{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      margin-top:12px;
+    }
+    button{
+      border:0; border-radius:12px; padding:10px 12px;
+      color:white; background:var(--btn);
+      cursor:pointer; font-weight:700;
+      box-shadow: 0 6px 18px rgba(37,99,235,.18);
+    }
+    button.secondary{
+      background:var(--btn2);
+      color:var(--text);
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+    button:hover{filter:brightness(0.98)}
+    .pill{
+      padding:8px 10px; border-radius:999px;
+      background:var(--chip); border:1px solid var(--line);
+      color:var(--muted); font-size:13px;
+    }
+
+    main{padding:18px 0 38px}
+    .grid{display:grid; grid-template-columns: 1fr; gap:12px;}
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 14px 12px;
+      box-shadow: 0 10px 26px rgba(2,6,23,.06);
+    }
+    .qhead{
+      display:flex; gap:10px; align-items:flex-start;
+      margin-bottom:10px;
+    }
+    .qnum{
+      min-width:44px;
+      padding:6px 10px; border-radius:10px;
+      background: #f8fafc;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-weight:800; font-size:13px;
+      text-align:center;
+    }
+    .qtext{font-size:15px; line-height:1.45}
+    .opts{display:grid; gap:8px; margin-top:8px;}
+    .opt{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: #f8fafc;
+      transition: transform .05s ease, border-color .15s ease, background .15s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .opt:hover{transform: translateY(-1px); border-color: rgba(2,6,23,.25)}
+    .opt input{margin-top:3px}
+    .opt .letter{
+      width:28px; height:28px; display:grid; place-items:center;
+      border-radius:10px;
+      background: #ffffff;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-weight:900;
+      flex: 0 0 28px;
+    }
+    .opt .otext{color:var(--text); font-size:14px; line-height:1.35}
+    .opt.correct{
+      border-color: rgba(22,163,74,.45);
+      background: rgba(22,163,74,.10);
+    }
+    .opt.wrong{
+      border-color: rgba(220,38,38,.45);
+      background: rgba(220,38,38,.10);
+    }
+    .opt.disabled{cursor:default; opacity: .98}
+    .opt.disabled:hover{transform:none}
+    .hint{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    }
+    .hint b{color:var(--text)}
+    .footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      border-top:1px dashed var(--line);
+      padding-top:10px;
+    }
+    .toast{
+      position:fixed; bottom:16px; right:16px;
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 12px;
+      color:var(--text);
+      font-size:13px;
+      max-width: 360px;
+      display:none;
+      box-shadow: 0 12px 30px rgba(2,6,23,.10);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>MCQ (65 câu) – Quảng cáo, Thông tin thuốc</h1>
+      <div class="sub">
+        Chọn đáp án: <b>đúng</b> tô <span style="color:var(--ok);font-weight:800">xanh</span>, <b>sai</b> tô
+        <span style="color:var(--bad);font-weight:800">đỏ</span>. Mỗi lần bấm <b>Làm lại</b> hoặc tải lại trang: đáp án sẽ <b>đảo ngẫu nhiên</b>.
+      </div>
+      <div class="bar">
+        <button id="resetBtn">Làm lại (đảo đáp án)</button>
+        <button class="secondary" id="scrollTopBtn">Về đầu trang</button>
+        <div class="pill" id="scorePill">Đúng: 0/65</div>
+        <div class="pill">Gợi ý: câu “SAI/NGOẠI TRỪ” thường dễ gài nhiễu.</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="grid" id="quiz"></div>
+      <div class="footer">
+        Ghi chú: Khi chọn sai, hệ thống sẽ tô đỏ đáp án bạn chọn và đồng thời tô xanh đáp án đúng để bạn học lại nhanh.
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+const QUESTIONS = [
+  { q:"Đơn vị nào được quyền đăng ký hồ sơ thông tin, quảng cáo thuốc?", options:[
+    "Bất kỳ đơn vị kinh doanh dược hợp pháp",
+    "Chỉ đơn vị đăng ký thuốc hoặc đơn vị được ủy quyền hợp pháp bằng văn bản",
+    "Đơn vị phân phối thuốc trên thị trường",
+    "Đơn vị sản xuất có giấy phép GMP"
+  ], correct:1 },
+  { q:"Đơn vị khác ngoài đơn vị đăng ký thuốc muốn đăng ký hồ sơ TT, QC thuốc phải có điều kiện nào sau đây?", options:[
+    "Có giấy phép kinh doanh dược còn hiệu lực",
+    "Có hợp đồng phân phối thuốc",
+    "Có văn bản ủy quyền hợp pháp của đơn vị đăng ký thuốc",
+    "Có xác nhận của Sở Y tế"
+  ], correct:2 },
+  { q:"Thuốc chưa được cấp số đăng ký tại Việt Nam nhưng đã lưu hành ở nước khác chỉ được phép thông tin cho đối tượng nào?", options:[
+    "Người sử dụng thuốc",
+    "Công chúng thông qua quảng cáo",
+    "Cán bộ y tế thông qua hội thảo giới thiệu thuốc",
+    "Nhà thuốc bán lẻ"
+  ], correct:2 },
+  { q:"Nội dung thông tin, quảng cáo thuốc phải đảm bảo yêu cầu nào sau đây?", options:[
+    "Sinh động, hấp dẫn, dễ ghi nhớ",
+    "Khoa học, khách quan, chính xác, trung thực và không gây hiểu nhầm",
+    "Có hình ảnh minh họa sinh động",
+    "Nhấn mạnh ưu điểm vượt trội của thuốc"
+  ], correct:1 },
+  { q:"Ngôn ngữ sử dụng trong thông tin, quảng cáo thuốc tại Việt Nam là:", options:[
+    "Tiếng Việt, có thể kèm tiếng Anh",
+    "Tiếng Việt, trừ các từ đã được quốc tế hóa hoặc thương hiệu không thay thế được",
+    "Tiếng Anh nếu là thuốc nhập khẩu",
+    "Song ngữ Việt – Anh bắt buộc"
+  ], correct:1 },
+  { q:"Cỡ chữ nhỏ nhất trong tài liệu quảng cáo thuốc phải:", options:[
+    "Không nhỏ hơn cỡ chữ 10",
+    "Không nhỏ hơn cỡ chữ 11",
+    "Không nhỏ hơn cỡ chữ tương đương 12 VnTime và nhìn thấy rõ trong điều kiện bình thường",
+    "Do đơn vị quảng cáo tự quyết định"
+  ], correct:2 },
+  { q:"(NGOẠI TRỪ) Đơn vị thực hiện thông tin, quảng cáo thuốc KHÔNG có trách nhiệm nào sau đây?", options:[
+    "Chịu trách nhiệm về nội dung thông tin, quảng cáo thuốc",
+    "Đảm bảo nội dung phù hợp với hồ sơ đã đăng ký",
+    "Theo dõi phản ứng có hại của thuốc trong quá trình lưu hành",
+    "Tự ý bổ sung nội dung mới nếu có lợi cho việc quảng bá thuốc"
+  ], correct:3 },
+  { q:"Thuốc nào sau đây bị cấm quảng cáo?", options:[
+    "Thuốc không kê đơn có SĐK còn hiệu lực",
+    "Thuốc kê đơn",
+    "Thuốc dược liệu",
+    "Thuốc OTC dùng ngoài"
+  ], correct:1 },
+  { q:"Hành vi nào sau đây bị nghiêm cấm trong thông tin, quảng cáo thuốc?", options:[
+    "Cung cấp thông tin khoa học cho CBYT",
+    "Sử dụng lợi ích vật chất để tác động đến thầy thuốc nhằm thúc đẩy kê đơn",
+    "Giới thiệu thuốc trong hội thảo y khoa",
+    "Phát hành tài liệu thông tin thuốc đã được phê duyệt"
+  ], correct:1 },
+  { q:"Việc sử dụng thư cảm ơn của bệnh nhân để quảng cáo thuốc là:", options:[
+    "Được phép nếu có sự đồng ý của bệnh nhân",
+    "Được phép nếu không nêu tên bệnh nhân",
+    "Bị nghiêm cấm",
+    "Chỉ cần báo cáo Sở Y tế"
+  ], correct:2 },
+  { q:"(SAI) Nhận định nào sau đây về quảng cáo thuốc là SAI?", options:[
+    "Không được sử dụng hình ảnh thầy thuốc để quảng cáo thuốc",
+    "Không được quảng cáo thuốc chưa được cấp SĐK",
+    "Có thể sử dụng kết quả nghiên cứu lâm sàng chưa đủ bằng chứng để tăng tính thuyết phục",
+    "Không được so sánh thuốc của mình tốt hơn thuốc khác"
+  ], correct:2 },
+  { q:"Câu chữ nào sau đây KHÔNG ĐƯỢC PHÉP xuất hiện trong quảng cáo thuốc?", options:[
+    "Đọc kỹ hướng dẫn sử dụng trước khi dùng",
+    "Thuốc này là số 1, tốt hơn tất cả các thuốc khác",
+    "Thuốc có chỉ định điều trị theo HDSD",
+    "Thuốc có chống chỉ định cần lưu ý"
+  ], correct:1 },
+  { q:"Hành vi nào sau đây bị cấm đối với tài liệu thông tin thuốc?", options:[
+    "Phát hành tài liệu cho CBYT đúng đối tượng",
+    "Phát hành tài liệu thông tin thuốc cho công chúng",
+    "Trích dẫn tài liệu khoa học cập nhật",
+    "Ghi rõ nguồn gốc tài liệu"
+  ], correct:1 },
+  { q:"Cơ quan nào có vai trò giúp Bộ Y tế thu thập, phân tích và cung cấp thông tin về phản ứng có hại của thuốc?", options:[
+    "Sở Y tế",
+    "Trung tâm ADR & DI quốc gia",
+    "Cục Quản lý Dược",
+    "Bệnh viện tuyến trung ương"
+  ], correct:1 },
+  { q:"Trong bệnh viện, đơn vị chịu trách nhiệm trực tiếp tổ chức hoạt động thông tin thuốc là:", options:[
+    "Hội đồng thuốc và điều trị",
+    "Khoa Dược",
+    "Đơn vị thông tin thuốc của bệnh viện",
+    "Phòng Kế hoạch tổng hợp"
+  ], correct:2 },
+  { q:"Giám đốc bệnh viện thực hiện trách nhiệm thông tin thuốc thông qua:", options:[
+    "Phòng Hành chính",
+    "Đơn vị thông tin thuốc của bệnh viện",
+    "Sở Y tế",
+    "Hội đồng chuyên môn"
+  ], correct:1 },
+  { q:"(NGOẠI TRỪ) Nhiệm vụ của đơn vị thông tin thuốc KHÔNG BAO GỒM:", options:[
+    "Thu thập và cung cấp thông tin thuốc",
+    "Báo cáo phản ứng có hại của thuốc",
+    "Hướng dẫn đơn vị thông tin thuốc tuyến dưới",
+    "Quyết định giá bán thuốc trong bệnh viện"
+  ], correct:3 },
+  { q:"Cán bộ, nhân viên y tế có trách nhiệm nào sau đây?", options:[
+    "Quảng cáo thuốc cho người bệnh",
+    "Cung cấp thông tin thuốc liên quan trong quá trình khám chữa bệnh",
+    "Phân phát tài liệu quảng cáo thuốc cho công chúng",
+    "So sánh thuốc trong quá trình tư vấn"
+  ], correct:1 },
+  { q:"Doanh nghiệp dược chỉ được cung cấp thông tin thuốc khi:", options:[
+    "Có nhu cầu thị trường",
+    "Có đầy đủ dữ kiện khoa học đã được chứng minh",
+    "Có lợi cho hoạt động kinh doanh",
+    "Có yêu cầu từ người sử dụng thuốc"
+  ], correct:1 },
+  { q:"Trong quá trình lưu hành, doanh nghiệp dược KHÔNG có trách nhiệm nào sau đây?", options:[
+    "Theo dõi phản ứng có hại của thuốc",
+    "Báo cáo suy giảm chất lượng thuốc",
+    "Báo cáo thông tin mới về thuốc",
+    "Tự ý điều chỉnh nội dung quảng cáo"
+  ], correct:3 },
+  { q:"Cơ sở bán lẻ thuốc phải chịu trách nhiệm về:", options:[
+    "Sản xuất thuốc",
+    "Nguồn gốc tài liệu thông tin, quảng cáo lưu hành tại cơ sở",
+    "Đăng ký số lưu hành thuốc",
+    "Xác nhận nội dung quảng cáo thuốc"
+  ], correct:1 },
+  { q:"Điều kiện về trình độ đối với người giới thiệu thuốc là:", options:[
+    "Bất kỳ trình độ nào",
+    "Cán bộ y dược từ trung cấp trở lên",
+    "Chỉ cần kinh nghiệm bán hàng",
+    "Tốt nghiệp đại học kinh tế"
+  ], correct:1 },
+  { q:"Người có trình độ trung cấp muốn làm người giới thiệu thuốc phải có ít nhất:", options:[
+    "6 tháng kinh nghiệm",
+    "1 năm kinh nghiệm",
+    "2 năm kinh nghiệm",
+    "3 năm kinh nghiệm"
+  ], correct:2 },
+  { q:"Người giới thiệu thuốc KHÔNG ĐƯỢC:", options:[
+    "Cung cấp thông tin thuốc cho CBYT",
+    "Thu thập báo cáo ADR",
+    "Tiếp cận hồ sơ bệnh án, đơn thuốc của người bệnh",
+    "Đeo thẻ khi hoạt động"
+  ], correct:2 },
+  { q:"(SAI) Nhận định nào sau đây về thẻ “Người giới thiệu thuốc” là SAI?", options:[
+    "Do cơ sở tuyển dụng cấp",
+    "Không có thời hạn",
+    "Được cấp bởi Sở Y tế",
+    "Có thể bị thu hồi trong một số trường hợp"
+  ], correct:2 },
+  { q:"Tài liệu TTT cho CBYT BẮT BUỘC phải có dòng nào sau đây?", options:[
+    "Tài liệu quảng cáo thuốc",
+    "Tài liệu tham khảo nội bộ",
+    "Tài liệu thông tin cho CBYT",
+    "Tài liệu phổ biến rộng rãi"
+  ], correct:2 },
+  { q:"Tài liệu TTT cho CBYT phải ghi rõ:", options:[
+    "Giá bán thuốc",
+    "Số giấy tiếp nhận của CQLD",
+    "Chiến lược marketing",
+    "Doanh số dự kiến"
+  ], correct:1 },
+  { q:"Thông tin mới phát hiện qua nghiên cứu hoặc theo dõi thị trường phải được cung cấp dưới hình thức:", options:[
+    "Quảng cáo rộng rãi",
+    "Cập nhật thông tin khoa học kèm tài liệu chứng minh",
+    "Phát tờ rơi cho công chúng",
+    "Đăng trên website doanh nghiệp"
+  ], correct:1 },
+  { q:"Nội dung hoạt động cảnh giác dược KHÔNG BAO GỒM:", options:[
+    "Theo dõi phản ứng có hại của thuốc",
+    "Phát hiện thuốc không đạt chất lượng",
+    "Đánh giá lợi ích – nguy cơ của thuốc",
+    "Quảng bá thuốc mới ra thị trường"
+  ], correct:3 },
+  { q:"Người sử dụng thuốc khi có dấu hiệu bất thường cần:", options:[
+    "Tự ý ngừng thuốc",
+    "Báo cho người trực tiếp khám chữa bệnh hoặc cơ sở bán lẻ thuốc",
+    "Chỉ báo cho người thân",
+    "Chờ tự khỏi"
+  ], correct:1 },
+  { q:"Luật Quảng cáo năm 2012 quy định thuốc nào sau đây cấm quảng cáo?", options:[
+    "Thuốc không kê đơn",
+    "Thuốc kê đơn",
+    "Thuốc dùng ngoài",
+    "Thuốc dược liệu"
+  ], correct:1 },
+  { q:"Chỉ định nào sau đây KHÔNG ĐƯỢC đưa vào nội dung quảng cáo thuốc?", options:[
+    "Điều trị cảm cúm",
+    "Điều trị lao",
+    "Giảm đau thông thường",
+    "Hạ sốt"
+  ], correct:1 },
+  { q:"Quảng cáo thuốc trên truyền hình BẮT BUỘC phải đọc rõ:", options:[
+    "Giá thuốc",
+    "Tên thuốc, tên hoạt chất, chỉ định, chống chỉ định và khuyến cáo “Đọc kỹ HDSD…”",
+    "Thành phần tá dược",
+    "Nơi sản xuất"
+  ], correct:1 },
+  { q:"Cơ quan cấp giấy xác nhận nội dung quảng cáo thuốc là:", options:[
+    "Sở Y tế",
+    "Bộ Y tế",
+    "Cục Quản lý Dược",
+    "Trung tâm ADR & DI"
+  ], correct:2 },
+  { q:"Thời hạn cấp giấy xác nhận nội dung quảng cáo thuốc khi hồ sơ hợp lệ là:", options:[
+    "05 ngày",
+    "07 ngày",
+    "10 ngày",
+    "15 ngày"
+  ], correct:2 },
+
+  { q:"Thuốc được phép quảng cáo phải đáp ứng điều kiện nào sau đây?", options:[
+    "Là thuốc kê đơn có hiệu quả cao",
+    "Là thuốc không kê đơn, có số đăng ký còn hiệu lực",
+    "Là thuốc nhập khẩu từ nước phát triển",
+    "Là thuốc được sử dụng phổ biến trong bệnh viện"
+  ], correct:1 },
+  { q:"Hình thức nào sau đây KHÔNG phải là hình thức quảng cáo thuốc hợp pháp?", options:[
+    "Sách, báo, tạp chí, tờ rơi",
+    "Bảng, biển, pano, băng rôn",
+    "Phát thanh, truyền hình",
+    "Phát hành tài liệu thông tin thuốc cho CBYT ra công chúng"
+  ], correct:3 },
+  { q:"(NGOẠI TRỪ) Nội dung quảng cáo thuốc phải phù hợp với các tài liệu nào sau đây, NGOẠI TRỪ:", options:[
+    "Tờ hướng dẫn sử dụng đã được Cục Quản lý Dược phê duyệt",
+    "Chuyên luận về thuốc trong Dược thư hoặc tài liệu quốc tế được công nhận",
+    "Kết quả nghiên cứu chưa được đánh giá đầy đủ để tăng tính thuyết phục",
+    "Nội dung hồ sơ đăng ký lưu hành thuốc"
+  ], correct:2 },
+  { q:"Tên hoạt chất của thuốc tân dược trong quảng cáo phải được ghi theo:", options:[
+    "Tên thương mại do doanh nghiệp đặt",
+    "Tên viết tắt thường dùng",
+    "Danh pháp quốc tế",
+    "Tên theo tiếng Việt"
+  ], correct:2 },
+  { q:"Thuốc có nguồn gốc dược liệu khi quảng cáo phải ghi tên hoạt chất như thế nào?", options:[
+    "Chỉ ghi tên tiếng Anh",
+    "Ghi tên theo tiếng Việt, nếu chưa có thì dùng tên nguyên bản kèm tên La-tinh",
+    "Chỉ ghi tên khoa học",
+    "Chỉ ghi tên thương mại"
+  ], correct:1 },
+  { q:"Khuyến cáo nào sau đây BẮT BUỘC phải có trong mọi nội dung quảng cáo thuốc?", options:[
+    "Thuốc đạt tiêu chuẩn chất lượng cao",
+    "Thuốc được nhiều người tin dùng",
+    "Đọc kỹ hướng dẫn sử dụng trước khi dùng",
+    "Thuốc có hiệu quả nhanh"
+  ], correct:2 },
+  { q:"Quảng cáo thuốc trên sách, báo, tạp chí PHẢI CÓ THÊM các thông tin nào?", options:[
+    "Giá bán và nơi phân phối",
+    "Thận trọng, liều dùng, cách dùng",
+    "Tên bác sĩ khuyên dùng",
+    "So sánh với thuốc khác"
+  ], correct:1 },
+  { q:"Quảng cáo thuốc trên phát thanh, truyền hình KHÔNG ĐƯỢC:", options:[
+    "Đọc rõ tên thuốc và tên hoạt chất",
+    "Đọc rõ chỉ định và chống chỉ định",
+    "Đọc rõ khuyến cáo “Đọc kỹ HDSD…”",
+    "Lược bỏ chống chỉ định để tiết kiệm thời lượng"
+  ], correct:3 },
+  { q:"Trong quảng cáo có nhiều phân cảnh, yêu cầu nào sau đây là đúng?", options:[
+    "Có thể phát xen kẽ các phân cảnh khác",
+    "Các phân cảnh quảng cáo phải xuất hiện liên tiếp và đủ thời gian để đọc",
+    "Nội dung sản phẩm được phép chuyển động liên tục",
+    "Chỉ cần hiển thị tên thuốc"
+  ], correct:1 },
+  { q:"Quảng cáo thuốc trên phương tiện quảng cáo ngoài trời PHẢI CÓ nội dung nào sau đây?", options:[
+    "Giá bán lẻ đề xuất",
+    "Tên thuốc, tên hoạt chất, tên và địa chỉ đơn vị chịu trách nhiệm, khuyến cáo HDSD",
+    "Công dụng nổi bật nhất của thuốc",
+    "Hình ảnh người bệnh trước – sau điều trị"
+  ], correct:1 },
+  { q:"Cơ quan có thẩm quyền xác nhận nội dung quảng cáo thuốc là:", options:[
+    "Sở Y tế",
+    "Bộ Y tế",
+    "Cục Quản lý Dược",
+    "Trung tâm ADR & DI quốc gia"
+  ], correct:2 },
+  { q:"Hồ sơ đề nghị xác nhận nội dung quảng cáo thuốc KHÔNG BAO GỒM:", options:[
+    "Văn bản đề nghị xác nhận",
+    "Tờ HDSD đã được duyệt",
+    "Mẫu nhãn sản phẩm",
+    "Báo cáo doanh thu dự kiến"
+  ], correct:3 },
+  { q:"Sau khi tiếp nhận hồ sơ hợp lệ, thời hạn cấp giấy xác nhận nội dung quảng cáo thuốc là:", options:[
+    "05 ngày",
+    "07 ngày",
+    "10 ngày",
+    "15 ngày"
+  ], correct:2 },
+  { q:"Trường hợp hồ sơ không hợp lệ, cơ quan tiếp nhận phải thông báo trong thời hạn:", options:[
+    "03 ngày",
+    "05 ngày",
+    "07 ngày",
+    "10 ngày"
+  ], correct:1 },
+  { q:"Thời gian tối đa để cơ sở chỉnh sửa, bổ sung hồ sơ quảng cáo thuốc là:", options:[
+    "30 ngày",
+    "60 ngày",
+    "90 ngày",
+    "120 ngày"
+  ], correct:2 },
+  { q:"Đơn vị nước ngoài muốn tổ chức hội thảo giới thiệu thuốc tại Việt Nam phải:", options:[
+    "Tự tổ chức độc lập",
+    "Phối hợp với một cơ sở kinh doanh dược hoặc cơ sở y tế tại Việt Nam",
+    "Chỉ cần xin phép Bộ Công Thương",
+    "Chỉ cần thông báo cho Cục Hải quan"
+  ], correct:1 },
+  { q:"Hoạt động trưng bày, giới thiệu thuốc tại hội nghị, hội thảo chuyên ngành y tế phải:", options:[
+    "Không cần thông báo",
+    "Thông báo bằng văn bản cho Sở Y tế nơi tổ chức",
+    "Xin phép Bộ Tài chính",
+    "Chỉ cần được ban tổ chức đồng ý"
+  ], correct:1 },
+  { q:"Mọi hoạt động quảng cáo kèm theo trưng bày thuốc tại hội nghị phải:", options:[
+    "Linh hoạt theo chương trình hội nghị",
+    "Tuân thủ đúng quy định về quảng cáo thuốc",
+    "Chỉ cần đúng với chiến lược marketing",
+    "Không cần xác nhận nội dung"
+  ], correct:1 },
+  { q:"Đối với quảng cáo thuốc thông qua hội thảo, cơ sở phải gửi thông báo cho Sở Y tế trước ít nhất:", options:[
+    "01 ngày",
+    "02 ngày",
+    "03 ngày",
+    "05 ngày"
+  ], correct:1 },
+  { q:"Hoạt động cảnh giác dược bao gồm nội dung nào sau đây?", options:[
+    "Theo dõi, phát hiện và báo cáo phản ứng có hại của thuốc",
+    "Quảng bá thuốc mới",
+    "Tăng doanh số bán thuốc",
+    "Tổ chức hội thảo tiếp thị"
+  ], correct:0 },
+  { q:"(NGOẠI TRỪ) Nội dung cảnh giác dược KHÔNG BAO GỒM:", options:[
+    "Thu thập thông tin về sai sót liên quan đến thuốc",
+    "Đánh giá lợi ích – nguy cơ của thuốc",
+    "Công bố kết luận về an toàn thuốc của cơ quan có thẩm quyền",
+    "So sánh thuốc để phục vụ quảng cáo"
+  ], correct:3 },
+  { q:"Người hành nghề khám chữa bệnh có trách nhiệm nào sau đây?", options:[
+    "Chỉ kê đơn theo kinh nghiệm",
+    "Chủ động theo dõi, phát hiện dấu hiệu bất thường liên quan đến thuốc",
+    "Không cần báo cáo phản ứng có hại",
+    "Chỉ xử lý khi có yêu cầu từ cơ quan quản lý"
+  ], correct:1 },
+  { q:"Cơ sở bán lẻ thuốc khi phát hiện dấu hiệu bất thường trong quá trình sử dụng thuốc phải:", options:[
+    "Giữ kín thông tin",
+    "Tư vấn và báo cáo cho cơ quan có thẩm quyền",
+    "Chỉ đổi thuốc cho người bệnh",
+    "Chờ chỉ đạo từ doanh nghiệp"
+  ], correct:1 },
+  { q:"Cơ sở sản xuất, đăng ký thuốc có trách nhiệm nào sau đây?", options:[
+    "Chỉ sản xuất theo đơn đặt hàng",
+    "Theo dõi chất lượng, an toàn, hiệu quả thuốc khi lưu hành",
+    "Chỉ báo cáo khi có yêu cầu",
+    "Không liên quan đến cảnh giác dược"
+  ], correct:1 },
+  { q:"Trong trường hợp thuốc có dấu hiệu không an toàn cho người sử dụng, thẩm quyền tạm ngừng kinh doanh thuốc thuộc về:", options:[
+    "Giám đốc bệnh viện",
+    "Sở Y tế",
+    "Bộ trưởng Bộ Y tế",
+    "Cục Quản lý Dược"
+  ], correct:2 },
+  { q:"(SAI) Nhận định nào sau đây là SAI?", options:[
+    "Không được quảng cáo thuốc kê đơn",
+    "Không được dùng hình ảnh thầy thuốc để quảng cáo thuốc",
+    "Có thể quảng cáo thuốc chưa được cấp SĐK nếu có hiệu quả cao",
+    "Quảng cáo thuốc phải đúng với nội dung đã được xác nhận"
+  ], correct:2 },
+  { q:"Điểm khác cơ bản giữa thông tin thuốc cho CBYT và quảng cáo thuốc là:", options:[
+    "Đối tượng tiếp nhận thông tin",
+    "Hình thức trình bày",
+    "Cỡ chữ sử dụng",
+    "Ngôn ngữ sử dụng"
+  ], correct:0 },
+  { q:"Tài liệu thông tin thuốc cho CBYT phải ghi rõ dòng nào sau đây?", options:[
+    "Tài liệu quảng cáo nội bộ",
+    "Tài liệu thông tin cho CBYT",
+    "Tài liệu phổ biến cộng đồng",
+    "Tài liệu giới thiệu sản phẩm"
+  ], correct:1 },
+  { q:"(NGOẠI TRỪ) Người giới thiệu thuốc KHÔNG ĐƯỢC PHÉP thực hiện hành vi nào sau đây?", options:[
+    "Giới thiệu thuốc theo phân công",
+    "Thu thập và báo cáo ADR",
+    "Tiếp cận người bệnh và hồ sơ bệnh án",
+    "Cung cấp thông tin phù hợp hồ sơ đăng ký thuốc"
+  ], correct:2 },
+  { q:"Mục tiêu cao nhất của các quy định về thông tin, quảng cáo và cảnh giác dược là:", options:[
+    "Tăng doanh thu cho doanh nghiệp dược",
+    "Đảm bảo sử dụng thuốc an toàn, hợp lý, hiệu quả",
+    "Đẩy mạnh hoạt động tiếp thị thuốc",
+    "Mở rộng thị trường thuốc"
+  ], correct:1 },
+];
+
+function shuffle(array){
+  const a = array.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>{ t.style.display="none"; }, 1600);
+}
+
+let answered = new Array(QUESTIONS.length).fill(false);
+let correctCount = 0;
+
+function updateScore(){
+  document.getElementById("scorePill").textContent = `Đúng: ${correctCount}/${QUESTIONS.length}`;
+}
+
+function renderQuiz(){
+  const quiz = document.getElementById("quiz");
+  quiz.innerHTML = "";
+  answered = new Array(QUESTIONS.length).fill(false);
+  correctCount = 0;
+  updateScore();
+
+  QUESTIONS.forEach((item, idx) => {
+    const optionObjs = item.options.map((text, i) => ({ text, originalIndex: i }));
+    const shuffled = shuffle(optionObjs);
+
+    const card = document.createElement("section");
+    card.className = "card";
+
+    const head = document.createElement("div");
+    head.className = "qhead";
+
+    const num = document.createElement("div");
+    num.className = "qnum";
+    num.textContent = `Câu ${idx+1}`;
+
+    const qtext = document.createElement("div");
+    qtext.className = "qtext";
+    qtext.textContent = item.q;
+
+    head.appendChild(num);
+    head.appendChild(qtext);
+
+    const opts = document.createElement("div");
+    opts.className = "opts";
+
+    const letters = ["A","B","C","D"];
+
+    shuffled.forEach((opt, k) => {
+      const id = `q${idx}_opt${k}`;
+
+      const label = document.createElement("label");
+      label.className = "opt";
+      label.htmlFor = id;
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `q${idx}`;
+      input.id = id;
+      input.value = String(opt.originalIndex);
+
+      const letter = document.createElement("div");
+      letter.className = "letter";
+      letter.textContent = letters[k];
+
+      const otext = document.createElement("div");
+      otext.className = "otext";
+      otext.textContent = opt.text;
+
+      label.appendChild(input);
+      label.appendChild(letter);
+      label.appendChild(otext);
+
+      input.addEventListener("change", () => {
+        if(answered[idx]) return;
+        answered[idx] = true;
+
+        const chosenOriginal = Number(input.value);
+        const isCorrect = chosenOriginal === item.correct;
+
+        const all = opts.querySelectorAll("input");
+        all.forEach(inp => inp.disabled = true);
+
+        const allLabels = opts.querySelectorAll(".opt");
+        allLabels.forEach(l => l.classList.add("disabled"));
+
+        if(isCorrect){
+          label.classList.add("correct");
+          correctCount++;
+          updateScore();
+          toast(`Câu ${idx+1}: Đúng`);
+        } else {
+          label.classList.add("wrong");
+          updateScore();
+          toast(`Câu ${idx+1}: Sai`);
+
+          const correctInput = Array.from(all).find(inp => Number(inp.value) === item.correct);
+          if(correctInput){
+            const correctLabel = correctInput.closest(".opt");
+            if(correctLabel) correctLabel.classList.add("correct");
+          }
+        }
+      });
+
+      opts.appendChild(label);
+    });
+
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.innerHTML = `Chọn <b>1</b> đáp án. Sau khi chọn, câu sẽ khóa và hiển thị đúng/sai bằng màu.`;
+
+    card.appendChild(head);
+    card.appendChild(opts);
+    card.appendChild(hint);
+
+    quiz.appendChild(card);
+  });
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  renderQuiz(); // đảo đáp án lại
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById("scrollTopBtn").addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+renderQuiz(); // vào lại web sẽ đảo đáp án
+</script>
+</body>
+</html>
