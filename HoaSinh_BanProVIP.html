@@ -1,0 +1,2169 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MQ-HÓA SINH-CTUMP | Quiz 296</title>
+  <style>
+    :root{
+      --bg:#f6f8ff;
+      --panel:#ffffff;
+      --ink:#20304a;      /* không đen */
+      --muted:#5b6b86;
+      --brand:#2f6fed;
+      --ok:#138a4b;
+      --bad:#d64545;
+      --warn:#b7791f;
+      --line:#d7def0;
+      --chip:#eef3ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg), #ffffff);
+      color:var(--ink);
+    }
+    header{
+      padding:18px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(8px);
+      position: sticky; top:0; z-index:10;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35}
+    main{padding:16px 0 34px}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 10px 25px rgba(32,48,74,.06);
+    }
+    .grid{display:grid;gap:14px;grid-template-columns: 1fr}
+    .quizTop{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+      padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:12px;
+    }
+    .stat{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--chip);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .pill b{color:var(--ink)}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav button{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:12px;
+    }
+    .nav button.active{
+      background:var(--chip);
+      border-color:#b9c7ff;
+      color:#2147b8;
+    }
+    .hint{color:var(--muted);font-size:12px}
+    .banner{
+      border:1px solid rgba(183,121,31,.35);
+      background: rgba(183,121,31,.08);
+      color:#6b4f1c;
+      border-radius:14px;
+      padding:10px 12px;
+      font-size:12px;
+      line-height:1.35;
+      margin-bottom:12px;
+    }
+    .rowBtns{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+      margin-top:10px;
+    }
+    button.action{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      padding:9px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:13px;
+    }
+    button.action.primary{
+      background: linear-gradient(180deg, #3a7cff, var(--brand));
+      color:white;
+      border-color:transparent;
+    }
+    button.action:disabled{opacity:.55;cursor:not-allowed}
+    .q{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:10px;
+      background:#fff;
+    }
+    .qhead{
+      display:flex;gap:10px;align-items:flex-start;justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .qnum{
+      min-width:72px;
+      font-weight:900;
+      color:#1e3a8a;
+      background:#eef3ff;
+      border:1px solid #d6e1ff;
+      border-radius:999px;
+      padding:6px 10px;
+      text-align:center;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .qtext{flex:1;color:var(--ink);font-size:14px;line-height:1.35;white-space:pre-wrap}
+    .opts{display:grid;gap:8px}
+    .opt{
+      display:flex;gap:10px;align-items:flex-start;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background:#fbfcff;
+      cursor:pointer;
+      user-select:none;
+    }
+    .opt:hover{border-color:#b9c7ff}
+    .marker{
+      width:26px;height:26px;min-width:26px;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:9px;
+      border:1px solid #cbd5ff;
+      background:#f1f5ff;
+      font-weight:900;
+      color:#2442a6;
+      font-size:12px;
+      margin-top:1px;
+    }
+    .otxt{color:var(--ink);font-size:13px;line-height:1.35;white-space:pre-wrap}
+    .opt input{margin-top:2px}
+    .opt.correct{
+      border-color: rgba(19,138,75,.4);
+      background: rgba(19,138,75,.08);
+    }
+    .opt.wrong{
+      border-color: rgba(214,69,69,.45);
+      background: rgba(214,69,69,.08);
+    }
+    .qfoot{
+      display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;
+      border-radius:999px;padding:6px 10px;font-weight:900;font-size:12px;
+      border:1px solid var(--line);background:#fff;
+    }
+    .badge.ok{color:var(--ok);border-color: rgba(19,138,75,.35);background: rgba(19,138,75,.07)}
+    .badge.bad{color:var(--bad);border-color: rgba(214,69,69,.35);background: rgba(214,69,69,.07)}
+    .badge.warn{color:var(--warn);border-color: rgba(183,121,31,.35);background: rgba(183,121,31,.07)}
+    .badge.miss{color:#6b7280;border-color: rgba(107,114,128,.35);background: rgba(107,114,128,.07)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <h1>MQ-HÓA SINH-CTUMP — Quiz 296 câu (đã nhét sẵn)</h1>
+    <div class="sub">
+      Đúng: xanh. Sai: đỏ. “Làm lại / Làm lại câu sai” sẽ đảo vị trí đáp án (hiển thị 1–2–3–4; không đảo chữ A/B/C/D theo vị trí).
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="card">
+      <div class="quizTop">
+        <div>
+          <div class="stat">
+            <span class="pill" id="pillTotal"><b>Tổng:</b> 0</span>
+            <span class="pill" id="pillBatch"><b>Đợt:</b> —</span>
+            <span class="pill" id="pillInBatch"><b>Trong đợt:</b> 0</span>
+          </div>
+          <div class="hint" id="hintText" style="margin-top:6px"></div>
+        </div>
+        <div class="nav" id="batchNav"></div>
+      </div>
+
+      <div id="banner" class="banner" style="display:none"></div>
+
+      <div id="quizArea"></div>
+
+      <div class="rowBtns">
+        <button class="action primary" id="btnSubmitBatch">Nộp đợt</button>
+        <button class="action" id="btnRetryBatch">Làm lại đợt</button>
+        <button class="action" id="btnRetryWrong">Làm lại câu sai</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+/* =========================
+   RAW DATA (dán nguyên văn theo bạn gửi)
+   Lưu ý: Nếu trong dữ liệu gốc của bạn còn thiếu một vài câu (ví dụ 8–11, 217, 230, 232, 246...),
+   trang sẽ tự báo “câu thiếu dữ liệu” và bỏ qua chấm điểm cho các câu đó.
+========================= */
+const RAW_DATA = String.raw`MQ-HÓA SINH-CTUMP
+Câu 1. Nguyên tắc xử trí do phỏng hóa chất tại Phòng thí nghiệm:
+*A. Rửa trôi và trung hòa bằng hóa chất khác.
+B. Rửa trôi hóa chất.
+C. Trung hòa bằng hóa chất khác.
+D. Băng chặt hoặc dùng Vaselin, thuốc mỡ.
+Câu 2. Nguyên tắc xử trí do phỏng do acid tại Phòng thí nghiệm:
+A. Đắp vải mùng tẩm Na Bicarbonate 8% sau đó rửa sạch với nước.
+B. Đắp vải mùng tẩm acid picric 3% sau đó rửa sạch với nước.
+*C. Rửa trôi hóa chất sau đó đắp vải mùng tẩm Na Bicarbonate 8%.
+D. Rửa trôi hóa chất sau đó đắp vải mùng tẩm acid picric 3%.
+Câu 3. Nguyên tắc xử trí do phỏng do kiềm tại Phòng thí nghiệm:
+A. Đắp vải mùng tẩm Na Bicarbonate 8% sau đó rửa sạch với nước.
+B. Đắp vải mùng tẩm acid picric 3% sau đó rửa sạch với nước.
+C. Rửa trôi hóa chất sau đó đắp vải mùng tẩm Na Bicarbonate 8%.
+*D. Rửa trôi hóa chất sau đó đắp vải mùng tẩm acid picric 3%.
+Câu 4. Khi bị Acid (Brom) rơi vào mắt, nguyên tắc xử trí là:
+A. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch bicarbonate natri 5%.
+B. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch acid boric 5%.
+*C. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch bicarbonate natri 1%.
+D. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch acid boric 1%.
+Câu 5. Khi bị chất kiềm rơi vào mắt, nguyên tắc xử trí là:
+A. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch bicarbonate natri 5%.
+B. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch acid boric 5%.
+C. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch bicarbonate natri 1%.
+*D. Tắm mắt tức khắc với nước, sau đó tắm mắt trong dung dịch acid boric 1%.
+Câu 6. Khi bị hóa chất không phải acid hay kiềm rơi vào miệng, nguyên tắc xử trí là:
+A. Súc miệng nhiều lần bằng dung dịch natri bicarbonate 1%.
+B. Súc miệng nhiều lần bằng dung dịch acid boric 1%.
+C. Súc miệng nhiều lần bằng dung dịch NaCl 0,9%.
+*D. Súc miệng nhiều lần bằng nước sạch.
+Câu 7. Nguyên tắc xử trí khi bị nhiễm hơi độc trong Phòng thí nghiệm, NGOẠI TRỪ:
+A. Đem nạn nhân ra nơi thoáng khí, nới lỏng quần áo.
+*B. Cho nạn nhân uống trà đường hay nước đường.
+C. Cho nạn nhan uống 1 ly cà phê đen.
+D. Hô hấp nhân tạo (nếu cần) trong lúc đi đến bệnh viện.
+Câu 8. Protein tan được trong nước là nhờ 
+A. Tích điện cùng dấu  
+B. Có lớp áo nước 
+*C. Cả a và b đúng  
+D. Cả a và b sai 
+Câu 9.  Khi đun sôi dung dịch Xà phòng với HCl đậm đặc thu được sản phẩm: 
+*A. Acid béo + nước muối. 
+B. Acid béo + nước. 
+C. Dầu ăn + nước. 
+D. Xà phòng + nước muối
+Câu 10. Câu 3. Phản ứng Biuret dùng để 
+*A. Nhận biết liên kết peptid  
+B. Nhận biết liên kết este 
+C. Nhận biết liên kết amid 
+D. Nhận biết liên kết đôi 
+Câu 11.  Mẫu máu để định lượng Lipid, Cholesterol phải được lấy như thế nào  
+*A. Sau bữa ăn 8 giờ. 
+B. Lúc sáng sớm, cách bữa ăn 12 giờ. 
+C. Lấy bất cứ lúc nào, miễn xa bữa ăn là được. 
+D. Lấy sau bữa ăn 2 giờ. 
+Câu 12. Cốc có mỏ còn được gọi là:
+A. Ballon.	
+*B. Becher.	
+C. Eprouvette.	
+D. Erlenmeyer.
+Câu 13. Bình cầu còn được gọi là:
+*A. Ballon.	
+B. Becher.	
+C. Eprouvette.	
+D. Erlenmeyer.
+Câu 14. Ống đong còn đượng gọi là:
+A. Ballon.	
+B. Becher.	
+*C. Eprouvette.	
+D. Erlenmeyer.
+Câu 15. Ống hút còn được gọi là:
+A. Ballon.	
+B. Becher.	
+*C. Piptte.	
+D. Erlenmeyer.
+Câu 16. Bình nón còn được gọi là:
+A. Ballon.	
+B. Becher.	
+C. Eprouvette.	
+*D. Erlenmeyer.
+Câu 17. Thời gian bảo quản cho phép với các mẫu huyết thanh và huyết tương ở nhiệt độ phòng thí nghiệm là:
+*A. 4 giờ.	
+B. 8 giờ.
+C. 12 giờ.	
+D. 1-2 ngày.
+Câu 18. Thời gian bảo quản cho phép với các mẫu huyết thanh và huyết tương ở nhiệt độ 2 – 80C là:
+A. 4 giờ.	
+B. 8 giờ.
+C. 12 giờ.	
+*D. 1-2 ngày.
+Câu 19. Mẫu huyết thanh và huyết tương bảo quản được 1 – 2 ngày ở nhiệt độ:
+*A. 2 – 80C.
+B. 8 – 120C.
+C. 12 – 240C.
+D. 24 – 370C.
+Câu 20. Khi lấy huyết thanh định lượng Kali, Natri, khi ly tâm cục máu đông hình thành và tách cục huyết khỏi dính vào thành ống, thời gian không quá:
+A. 15 phút.
+B. 30 phút.
+C. 45 phút.
+*D. 60 phút.
+Câu 21. Khi nghi ngờ viêm tiết niệu nên lấy nước tiểu khi:
+*A. Lúc ngủ dậy.
+B. Sau bữa ăn 2 giờ.
+C. Khoảng 14 – 16 giờ.
+D. Bất kỳ lúc nào.
+Câu 22. Khi nghi ngờ glucose niệu nên lấy nước tiểu khi:
+A. Lúc ngủ dậy.
+*B. Sau bữa ăn 2 giờ.
+C. Khoảng 14 – 16 giờ.
+D. Bất kỳ lúc nào.
+Câu 23. Khi nghi ngờ urobilinogen nên lấy nước tiểu khi:
+A. Lúc ngủ dậy.
+B. Sau bữa ăn 2 giờ.
+*C. Khoảng 14 – 16 giờ.
+D. Bất kỳ lúc nào.
+Câu 24. Nhiệt độ thích hợp để bảo quản mẫu nước tiểu trong vòng 3 ngày là:
+A. Dưới 00C.
+*B. 2 – 80C.
+C. 12 – 240C.
+D. 24 – 370C.
+Câu 25. Nhiệt độ thích hợp để bảo quản mẫu nước tiểu trong lâu hơn 3 ngày là:
+*A. Dưới 00C.
+B. 2 – 80C.
+C. 12 – 240C.
+D. 24 – 370C.
+Câu 26. Khi lấy dịch vị để chẩn đoán các bệnh dạ dày, bệnh nhân cần nhịn đói:
+A. 6 giờ.
+*B. 12 giờ.
+C. 24 giờ.
+D. 32 giờ.
+Câu 27. Khi lấy dịch vị để chẩn đoán các bệnh dạ dày, bệnh nhân cần ngừng dùng các thuốc ảnh hưởng đến sự bài tiết dịch vị ít nhất:
+A. 6 giờ.
+B. 12 giờ.
+*C. 24 giờ.
+D. 32 giờ.
+Câu 28. Phản ứng Fehling dương tính khi:
+A. Cho phức hợp màu đỏ gạch.
+*B. Cho kết tủa đỏ gạch.
+C. Cho phức hợp màu đỏ.
+D. Cho kết tủa màu đỏ.
+Câu 29. Phản ứng Fehling dương tính khi:
+*A. MS có tính khử.
+B. PS có tính khử.
+C. MS có tính oxy hóa.
+D. PS có tính oxy hóa.
+Câu 30. Phản ứng Fehling được thực hiện trong môi trường:
+A. Acid mạnh.
+*B. Base mạnh.
+C. Có enzyme xúc tác.
+D. NaCl 0,9%.
+Câu 31. Khi thực hiện phản ứng Fehling cần:
+A. Đun sôi cách thủy 5 phút.
+*B. Đun sôi cách thủy 3 phút.
+C. Ủ ở 370C trong 5 phút.
+D. Ủ ở 370C trong 3 phút.
+Câu 32. Nguyên tắc của phản ứng Molish là:
+A. Các loại protid đều cho kết tủa đỏ gạch với Naphtol trong H2SO4 đậm đặc.
+B. Các loại glucid đều cho kết tủa đỏ gạch với Naphtol trong H2SO4 đậm đặc.
+C. Các loại protid đều cho phức chất màu tím với Naphtol trong H2SO4 đậm đặc.
+*D. Các loại glucid đều cho phức chất màu tím với Naphtol trong H2SO4 đậm đặc.
+Câu 33. Trong phản ứng màu của PS, Iod kết hợp với tinh bột cho màu:
+*A. Xanh dương.
+B. Xanh lá cây.
+C. Đỏ nâu.
+D. Đỏ gạch.
+Câu 34. Trong phản ứng màu của PS, Iod kết hợp với glycogen cho màu:
+A. Xanh dương.
+B. Xanh lá cây.
+*C. Đỏ nâu.
+D. Đỏ gạch.
+Câu 35. Trong phản ứng màu của PS, Iod kết hợp với tinh bột cho hiện tượng:
+A. Xanh dương sau một thời gian màu đậm hơn.
+*B. Xanh dương sau một thời gian thì mất màu.
+C. Đỏ nâu sau một thời gian thì màu đậm hơn.
+D. Đỏ nâu sau một thời gian thì mất màu.
+Câu 36. Trong phản ứng màu của PS, Iod kết hợp với glycogen cho hiện tượng:
+A. Xanh dương sau một thời gian màu đậm hơn.
+B. Xanh dương sau một thời gian thì mất màu.
+C. Đỏ nâu sau một thời gian thì màu đậm hơn.
+*D. Đỏ nâu sau một thời gian thì mất màu.
+Câu 37. Phương pháp Somoyi Nelson dùng để:
+*A. Định lượng glucose trong huyết tương.
+B. Định lượng cholesterol toàn phần trong huyết tương.
+C. Định lượng HDL – cholesterol trong huyết tương.
+D. Định lượng LDL – cholesterol trong huyết tương.
+Câu 38. Trong phương pháp Somoyi Nelson, phương pháp được sử dụng là:
+A. Đo động học đa điểm.
+*B. Đo điểm cuối.
+C. Pha loãng dần.
+D. Đo động học 2 điểm.
+Câu 39. Chất dùng để đo quang trong phương pháp Somoyi Nelson là:
+A. Arsenomolybdat – Màu đỏ.
+B. Arsenomolybdat – Màu xanh.
+C. Oxid Molybdine – Màu đỏ.
+*D. Oxid Molybdine – Màu xanh.
+Câu 40. Trong phương pháp Somoyi Nelson, huyết thanh được pha loãng:
+A. 1/5.
+*B. 1/10.
+C. 1/20.
+D. 1/50.
+Câu 41. Trong phương pháp Somoyi Nelson, trước khi cho dung dịch Asenomolybdat vào, ta cần:
+A. Đun cách thủy 800C trong 20 phút rồi làm lạnh ngay.
+B. Đun cách thủy 800C trong 30 phút rồi làm lạnh ngay.
+*C. Đun cách thủy 1000C trong 20 phút rồi làm lạnh ngay.
+D. Đun cách thủy 1000C trong 30 phút rồi làm lạnh ngay.
+Câu 42. Lượng glucose trong máu ở mức bình thường là:
+A. 50 – 100 mg/dl.
+*B. 75 – 110 mg/dl.
+C. 50 – 110 mg/dl.
+D. 75 – 120 mg/dl.
+Câu 43. Glucose máu tăng trong, NGOẠI TRỪ:
+A. Basedow.
+*B. Nhược giáp.
+C. Viêm tụy.
+D. Đái tháo đường.
+Câu 44. Glucose máu tăng trong, NGOẠI TRỪ:
+A. Cường giáp.
+B. U tủy thượng thận.
+*C. Xơ gan.
+D. U não.
+Câu 45. Glucose máu giảm trong:
+A. Sau ăn.
+B. Viêm màng não.
+*C. Cường tụy.
+D. Đái tháo đường.
+Câu 46. Phương pháp Benedict được dùng để:
+*A. Tìm glucose trong nước tiểu.
+B. Định lượng glucose trong nước tiểu.
+C. Tìm glucose trong máu.
+D. Định lượng glucose trong máu.
+Câu 47. Phương pháp Benedict là phương pháp:
+A. Định lượng.
+B. Định tính.
+*C. Bán định lượng.
+D. Cả định lượng và định tính.
+Câu 48. Phương pháp Benedict (+) khi:
+*A. Có ít tủa, thuốc thử vấy màu xanh lá.
+B. Có tủa màu vàng sẫm.
+C. Có tủa đỏ gạch.
+D. Có tủa nâu đậm.
+Câu 49. Phương pháp Benedict (++) khi:
+A. Có ít tủa, thuốc thử vấy màu xanh lá.
+*B. Có tủa màu vàng sẫm.
+C. Có tủa đỏ gạch.
+D. Có tủa nâu đậm.
+Câu 50. Phương pháp Benedict (+++) khi:
+A. Có ít tủa, thuốc thử vấy màu xanh lá.
+B. Có tủa màu vàng sẫm.
+*C. Có tủa đỏ gạch.
+D. Có tủa nâu đậm.
+Câu 51. Phương pháp Benedict (++++) khi:
+A. Có ít tủa, thuốc thử vấy màu xanh lá.
+B. Có tủa màu vàng sẫm.
+C. Có tủa đỏ gạch.
+*D. Có tủa nâu đậm.
+Câu 52. Phương pháp Benedict (+) thì:
+A. Glucose < 3 g/L.
+*B. Glucose < 5 g/L.
+C. Glucose từ 5 – 10 g/L.
+D. Glucose từ 10 – 20 g/L.
+Câu 53. Phương pháp Benedict (++) thì:
+A. Glucose < 3 g/L.
+B. Glucose < 5 g/L.
+*C. Glucose từ 5 – 10 g/L.
+D. Glucose từ 10 – 20 g/L.
+Câu 54. Phương pháp Benedict (+++) thì:
+A. Glucose < 3 g/L.
+B. Glucose < 5 g/L.
+C. Glucose từ 5 – 10 g/L.
+*D. Glucose từ 10 – 20 g/L.
+Câu 55. Phương pháp Benedict (++++) thì:
+*A. Glucose > 20 g/L.
+B. Glucose > 25 g/L.
+C. Glucose từ 5 – 10 g/L.
+D. Glucose từ 10 – 20 g/L.
+Câu 56. Phản ứng dùng phương pháp đo điểm cuối, NGOẠI TRỪ:
+A. Phản ứng định lượng Cholesterol toàn phần.
+B. Phản ứng Biuret.
+*C. Phản ứng định lượng AST.
+D. Phản ứng định lượng Triglycerid.
+Câu 57. Trong phản ứng định lượng Cholesterol toàn phần, thuốc thử enzyme KHÔNG bao gồm:
+A. Cholesterol Esterase.
+B. Cholesterol Oxydase.
+*C. Catalase.
+D. Peroxydase.
+Câu 58. Trong phản ứng định lượng Cholesterol toàn phần, chất được tạo cuối cùng là:
+*A. Quinoneimine – Hồng cánh sen.
+B. Quinoneimine – Xanh tím.
+C. Quinone – Hồng cánh sen.
+D. Quinone – Xanh tím.
+Câu 59. Trong phản ứng định lượng Cholesterol toàn phần, sau khi cho thuốc thử và mẫu thử vào ống nghiệm:
+A. Đun cách thủy 1000C trong 20 phút sau đó làm lạnh nhanh.
+B. Đun cách thủy 800C trong 20 phút sau đó làm lạnh nhanh.
+*C. Ủ ở 370C trong 5 phút.
+D. Ủ ở 370C trong 10 phút.
+Câu 60. Trong phản ứng định lượng Cholesterol toàn phần, nồng độ cholesterol cao hơn 750 mg/dl thì phải pha loãng:
+A. 2 lần.
+*B. 3 lần.
+C. 4 lần.
+D. 5 lần.
+Câu 61. Ở người bình thường, Choslesterol toàn phần ở mức:
+A. 50 – 100 mg/dl.
+B. 50 – 150 mg/dl.
+C. 150 – 250 mg/dl.
+*D. 150 – 260 mg/dl.
+Câu 62. Tăng Cholesterol toàn phần tiên phát gặp khi:
+A. Vàng da tắc mật.
+B. Hội chứng thận hư.
+C. Suy giáp tiên phát.
+*D. Tăng lipid gia đình.
+Câu 63. Cholesterol toàn phần tăng trong, NGOẠI TRỪ:
+A. Loạn glycogen gan.
+B. Suy giáp.
+*C. Gan bị tổn thương nặng.
+D. Rối loạn chuyển hóa lipid.
+Câu 64. Cholesterol toàn phần tăng trong:
+A. Thiếu dinh dưỡng.
+B. Cường giáp.
+C. Gan bị tổn thương nặng.
+*D. Rối loạn chuyển hóa lipid.
+Câu 65. Triglycerid trong mẫu thử được định lượng theo phương pháp:
+A. Đo động học đa điểm.
+*B. Đo điểm cuối.
+C. Pha loãng dần.
+D. Đo động học 2 điểm.
+Câu 66. Trong phản ứng định lượng Triglycerid, chất được tạo cuối cùng là:
+*A. Quinoneimine – Hồng cánh sen.
+B. Quinoneimine – Xanh tím.
+C. Quinone – Hồng cánh sen.
+D. Quinone – Xanh tím.
+Câu 67. Trong phản ứng định lượng Triglycerid có sữ dụng enzyme, NGOẠI TRỪ:
+*A. Catalase.
+B. Peroxydase.
+C. Lipase.
+D. Glycerokinase.
+Câu 68. Trong phản ứng định lượng Triglycerid, sau khi cho thuốc thử và mẫu thử vào ống nghiệm:
+A. Đun cách thủy 1000C trong 20 phút sau đó làm lạnh nhanh.
+B. Đun cách thủy 800C trong 20 phút sau đó làm lạnh nhanh.
+C. Ủ ở 370C trong 5 phút.
+*D. Ủ ở 370C trong 10 phút.
+Câu 69. Phức màu trong phản ứng định lượng Triglycerid không còn chính xác sau:
+A. 15 phút.
+B. 30 phút.
+C. 45 phút.
+*D. 60 phút.
+Câu 70. Trong phản ứng định lượng Triglycerid, các yếu tố ảnh hưởng đến kết quả xét nghiệm, NGOẠI TRỪ:
+A. Hb > 10 g/L.
+**B. Hb > 10 mg/dL.
+C. Bilirubin > 40 mg/dL.
+D. Bilirubin > 0,4 g/L.
+Câu 71. Trong phản ứng định lượng Triglycerid, giá trị Triglycerid trong máu của người bình thường là:
+A. 100 – 150 mg/dL.
+*B. 150 – 200 mg/dL.
+C. 200 – 250 mg/dL.
+D. 250 – 300 mg/dL.
+Câu 72. Triglycerid nếu quá 	có thể dẫn đến viêm tụy cấp tính:
+A. 10 mmol/L.
+*B. 11 mmol/L.
+C. 12 mmol/L.
+D. 13 mmol/L.
+Câu 73. Triglycerid tăng trong:
+*A. Xơ gan do rượu.
+B. Suy kiệt.
+C. Cường giáp.
+D. Xơ gan.
+Câu 74. Độ tuyến tính của phản ứng định lượng triglycerid là:
+A. 9,74 – 562 mg/dL.
+*B. 9,74 – 1062 mg/dL.
+C. 8,74 – 562 mg/dL.
+D. 8,74 – 1062 mg/dL.
+Câu 75. HDL – Cholesterol trong mẫu thử được định lượng theo phương pháp:
+A. Đo động học đa điểm.
+*B. Đo điểm cuối.
+C. Pha loãng dần.
+D. Đo động học 2 điểm.
+Câu 76. Trong thí nghiệm định lượng HDL – Cholesterol trong máu, các thành phần sau bị bất hoạt do PVS/PEGME, NGOẠI TRỪ:
+A. Chylomicrons.
+*B. Triglyceride.
+C. LDL – Cholesterol.
+D. VLDL – Cholesterol.
+Câu 77. Trong phản ứng định lượng HDL – Cholesterol, chất được tạo cuối cùng là:
+A. Quinoneimine – Hồng cánh sen.
+B. Quinoneimine – Xanh tím.
+C. Quinone – Hồng cánh sen.
+*D. Quinone – Xanh tím.
+Câu 78. Trong phản ứng định lượng HDL – Cholesterol, sau mỗi lần thêm thuốc thử thì:
+A. Đun cách thủy 1000C trong 20 phút sau đó làm lạnh nhanh.
+B. Đun cách thủy 800C trong 20 phút sau đó làm lạnh nhanh.
+*C. Ủ ở 370C trong 5 phút.
+D. Ủ ở 370C trong 10 phút.
+Câu 79. Trong phản ứng định lượng HDL – Cholesterol, các yếu tố ảnh hưởng đến kết quả xét nghiệm, NGOẠI TRỪ:
+A. Hb > 10 g/L.
+*B. Bilirubin > 30 mg/dL.
+C. Bilirubin > 40 mg/dL.
+D. Triglycerid > 2000 mg/dL.
+Câu 80. Trong phản ứng định lượng HDL – Cholesterol, độ tuyến tính:
+A. 1,9 – 153 mg/dL.
+*B. 1,9 – 193 mg/dL.
+C. 1,5 – 153 mg/dL.
+D. 1,5 – 193 mg/dL.
+Câu 81. Trong phản ứng định lượng HDL – Cholesterol, giá trị bình thường ở nam là:
+*A. 35,3 – 79,5 mg/dL.
+B. 35,3 – 88 mg/dL.
+C. 42 – 88 mg/dL.
+D. 42 – 79,5 mg/dL.
+Câu 82. Trong phản ứng định lượng HDL – Cholesterol, giá trị bình thường ở nữ là:
+A. 35,3 – 79,5 mg/dL.
+B. 35,3 – 88 mg/dL.
+*C. 42 – 88 mg/dL.
+D. 42 – 79,5 mg/dL.
+Câu 83. HDL – Cholesterol tăng:
+*A. Giúp giảm nguy cơ xơ vữa động mạch.
+B. Làm tăng nguy cơ xơ vữa động mạch.
+C. Trong bệnh béo phì.
+D. Khi hút thuốc lá.
+Câu 84. Trong phản ứng định lượng LDL – Cholesterol, thuốc thử enzyme 2 là:
+A. CHE + CHO.
+B. Catalase.
+*C. Peroxydase.
+D. Oxydase.
+Câu 85. Trong phản ứng định lượng LDL – Cholesterol, sau mỗi lần thêm thuốc thử thì:
+A. Đun cách thủy 1000C trong 20 phút sau đó làm lạnh nhanh.
+B. Đun cách thủy 800C trong 20 phút sau đó làm lạnh nhanh.
+*C. Ủ ở 370C trong 5 phút.
+D. Ủ ở 370C trong 10 phút.
+Câu 86. Nồng độ LDL – Cholesterol bình thường là:
+A. < 120 mg/dL.
+*B. < 130 mg/dL.
+C. < 140 mg/dL.
+D. < 150 mg/dL.
+Câu 87. Điều kiện để áp dụng công thức tính nồng độ LDL – Cholesterol dựa trên nồng độ các loại lipid còn lại là:
+A. Triglycerid > 400 mg/dL.
+B. Cholesterol toàn phần > 400 mg/dL.
+*C. Triglycerid < 400 mg/dL.
+D. Cholesterol toàn phần < 400 mg/dL.
+Câu 88. Phản ứng tìm Ceton trong nước tiểu (+) khi:
+*A. Phức chất màu tím.
+B. Phức chất màu đỏ.
+C. Kết tủa màu đỏ gạch.
+D. Kết tủa màu đỏ nâu.
+Câu 89. Trong nước tiểu bình thường có thể có:
+A. Glucose.
+B. Ceton.
+C. Hb.
+*D. Bilirubin.
+Câu 90. Chọn tập hợp gồm các chất hữu cơ bình thường có trong nước tiểu:
+A. Acid uric, ure, glucose.
+B. Protein, ure, aceton.
+*C. Ure, creatinin, acid uric.
+D. Ure, acid uric, hemoglobin.
+Câu 91. Nước tiểu có ceton khi, NGOẠI TRỪ:
+A. Vận động cơ nhiều.
+B. Cushing.
+C. Bệnh đái tháo đường nặng.
+*D. Viêm tụy.
+Câu 92. Phản ứng Biuret dùng để:
+*A. Định lượng protein toàn phần trong huyết thanh.
+B. Định lượng acid uric trong huyết thanh.
+C. Định lượng bilirubin trong huyết thanh.
+D. Định lượng HDL – Cholesterol trong huyết thanh.
+Câu 93. Trong môi trường kiềm, protein trong huyết thanh phản ứng với Cu++ tạo thành phức màu:
+A. Hồng cánh sen.
+*B. Màu tím hồng.
+C. Màu đỏ.
+D. Màu nâu đỏ.
+Câu 94. Trong phản ứng định lượng protein trong huyết thanh, sau khi cho chất thử và thuốc thử vào ống nghiệm:
+A. Ủ ở 370C trong 5 phút.
+B. Ủ ở 370C trong 10 phút.
+C. Để ở nhiệt độ phòng thí nghiệm trong 10 phút.
+*D. Để ở nhiệt độ phòng thí nghiệm trong 20 phút.
+Câu 95. Nồng độ protein huyết thanh bình thường là:
+A. 50 – 60 g/L.
+B. 60 – 70 g/L.
+*C. 60 – 80 g/L.
+D. 70 – 80 g/L.
+Câu 96. Nồng độ protein huyết thanh giảm trong, NGOẠI TRỪ:
+*A. Sốt kéo dài, mất nước liên tục.
+B. Xơ gan.
+C. Hội chứng thận hư.
+D. Mất máu.
+Câu 97. Nồng độ protein huyết thanh tăng trong:
+A. Hội chứng thận hư.
+B. Mất máu.
+*C. Bệnh Addison.
+D. Xơ gan, viêm gan.
+Câu 98. Acid uric trong mẫu thử được định lượng theo phương pháp:
+A. Đo động học đa điểm.
+*B. Đo điểm cuối.
+C. Pha loãng dần.
+D. Đo động học 2 điểm.
+Câu 99.  Enzyme cần cho phản ứng định lượng acid uric là:
+A. Urease.
+*B. Urinase.
+C. Catalase.
+D. Oxydase.
+Câu 100.  Trong phản ứng định lượng acid uric, nếu mẫu thử là nước tiểu thì cần pha loãng:
+A. 3 lần.
+*B. 10 lần.
+C. 50 lần.
+D. 100 lần.
+Câu 101.  Trong phản ứng định lượng acid uric, chất được tạo cuối cùng là:
+*A. Quinoneimine dye – Hồng cánh sen.
+B. Quinoneimine – Xanh tím.
+C. Quinone – Hồng cánh sen.
+D. Quinone – Xanh tím.
+Câu 102. Trong phản ứng định lượng acid uric, khi cho thuốc thử và mẫu thử vào ống nghiệm:
+*A. Ủ ở 370C trong 5 phút.
+B. Ủ ở 370C trong 10 phút.
+C. Để ở nhiệt độ phòng thí nghiệm trong 10 phút.
+D. Để ở nhiệt độ phòng thí nghiệm trong 20 phút.
+Câu 103.  Phức màu trong phản ứng định lượng acid uric không còn chính xác sau:
+*A. 15 phút.
+B. 30 phút.
+C. 45 phút.
+D. 60 phút.
+Câu 104. Trong phản ứng định lượng acid uric, các yếu tố ảnh hưởng đến kết quả xét nghiệm, NGOẠI TRỪ:
+A. Hb > 10 g/L.
+*B. Bilirubin > 30 mg/dL.
+C. Bilirubin > 40 mg/dL.
+D. Triglycerid > 2000 mg/dL.
+Câu 105.  Trong định lượng acid uric huyết thanh/huyết tương, giá trị bình thường ở nam là:
+*A. 3,5 – 7,2 mg/dL.
+B. 3,5 – 5 mg/dL.
+C. 2,6 – 6 mg/dL.
+D. 2,6 – 7,2 mg/dL.
+Câu 106.  Trong định lượng acid uric huyết thanh/huyết tương, giá trị bình thường ở nữ là:
+A. 3,5 – 7,2 mg/dL.
+B. 3,5 – 5 mg/dL.
+*C. 2,6 – 6 mg/dL.
+D. 2,6 – 7,2 mg/dL.
+Câu 107.  Trong định lượng acid uric nước tiểu, giá trị bình thường là:
+A. 250 – 500 mg/24 giờ.
+*B. 250 – 750 mg/24 giờ.
+C. 500 – 750 mg/24 giờ.
+D. 500 – 600 mg/24 giờ.
+Câu 108.  Nguyên nhân tiên phát làm tăng acid uric máu và nước tiểu là:
+*A. Bệnh Gout.
+B. Bệnh đa hồng cầu, bạch cầu cấp.
+C. Điều trị bằng tia X, chất phóng xạ.
+D. Viêm thận mãn.
+Câu 109.  Độ tuyến tính của định lượng acid uric là:
+A. > 20 mg/dL.
+B. < 20 mg/dL.
+*C. 0,49 – 25 mg/dL.
+D. 5 -25 mg/dL.
+Câu 110.  Ure trong mẫu thử được định lượng theo phương pháp:
+A. Đo động học đa điểm.
+B. Đo điểm cuối.
+C. Pha loãng dần.
+*D. Đo động học 2 điểm.
+Câu 111.  Enzyme nào cần trong phản ứng định lượng ure:
+*A. Urease.
+B. Urinase.
+C. Catalase.
+D. Oxydase.
+Câu 112.  Trong phản ứng định lượng ure, nếu mẫu thử là nước tiểu thì cần pha loãng:
+A. 3 lần.
+B. 10 lần.
+C. 50 lần.
+*D. 100 lần.
+Câu 113. Trong phản ứng định lượng ure, các yếu tố ảnh hưởng đến kết quả xét nghiệm, NGOẠI TRỪ:
+A. Hb > 7,5 g/L.
+B. Bilirubin > 30 mg/dL.
+*C. Bilirubin > 40 mg/dL.
+D. Triglycerid > 2000 mg/dL.
+Câu 114.  Ure máu bình thường ở người lớn là:
+*A. 17 – 43 mg/dL.
+B. 11 – 36 mg/dL.
+C. 15 – 36 mg/dL.
+D. 18 – 45 mg/dL.
+Câu 115.  Ure máu bình thường ở trẻ 4 – 13 tuổi là:
+A. 17 – 43 mg/dL.
+B. 11 – 36 mg/dL.
+*C. 15 – 36 mg/dL.
+D. 18 – 45 mg/dL.
+Câu 116.  Ure máu bình thường ở trẻ 14 – 19 tuổi là:
+A. 17 – 43 mg/dL.
+B. 11 – 36 mg/dL.
+C. 18 – 36 mg/dL.
+*D. 18 – 45 mg/dL.
+Câu 117.  Ure nước tiểu bình thường là:
+A. 15 – 26g/24 giờ.
+*B. 26 – 43g/24 giờ.
+C. 26 – 35g/24 giờ.
+D. 35 – 43g/24 giờ.
+Câu 118.  Ure máu / creatinin máu bình thường là:
+A. 10 – 20 [(mg/dl)/(mg/dl)].
+*B. 20 – 35 [(mg/dl)/(mg/dl)].
+C. 35 – 45 [(mg/dl)/(mg/dl)].
+D. 45 – 55 [(mg/dl)/(mg/dl)].
+Câu 119.  Ure máu tăng trong trường hợp:
+*A. Chức năng lọc của cầu thận giảm.
+B. Suy gan.
+C. Chế độ ăn thiếu protid.
+D. Giảm thoái hóa protid.
+Câu 120.  Các bệnh lý sau làm tăng ure máu, NGOẠI TRỪ:
+*A. Gan tổn thương nặng.
+B. Hội chứng thận cấp tính.
+C. Tắc nghẽn đường tiểu do hẹp đường tiểu.
+D. Viêm cầu thận cấp, viêm ống thận cấp.
+Câu 121.  Trong trường hợp thai nghén, chọn phát biểu đúng:
+A. Nồng độ protein toàn phần trong huyết thanh bình thường.
+B. Nồng độ protein toàn phần trong huyết thanh giảm.
+C. Nồng độ ure trong huyết thanh tăng.
+*D. Nồng độ ure trong huyết thanh giảm.
+Câu 122.  Trong phản ứng định lượng creatinin, nếu mẫu thử là nước tiểu thì cần pha loãng:
+A. 3 lần.
+B. 10 lần.
+*C. 50 lần.
+D. 100 lần.
+Câu 123.  Trong phương pháp định lượng Creatinin, phương pháp được sử dụng là:
+A. Đo động học đa điểm.
+B. Đo điểm cuối.
+C. Pha loãng dần.
+*D. Đo động học 2 điểm.
+Câu 124. Trong phản ứng định lượng creatinin, khi creatinin gặp picric acid trong môi trường kiềm sẽ tạo thành phức hợp tên là:
+A. Creatin.
+B. Creatinin.
+C. Creatin phosphat.
+*D. Creatinin – picrate.
+Câu 125. Trong phản ứng định lượng creatinin, khi creatinin gặp picric acid trong môi trường kiềm sẽ tạo thành phức hợp có màu:
+*A. Vàng cam.
+B. Hồng cánh sen.
+C. Nâu đỏ.
+D. Tím hồng.
+Câu 126. Trong công thức tính độ thanh thải Creatinin, 1440 có ý nghĩa là:
+A. Số giây trong 24 giờ.
+B. Số giây trong một giờ.
+*C. Số phút trong 24 giờ.
+D. Số phút trong một giờ.
+Câu 127. Bình thường giá trị creatinin máu ở nam là:
+A. 0,1 – 0,5 mg/dL.
+*B. 0,6 – 1,1 mg/dL.
+C. 0,5 – 0,9 mg/dL.
+D. 0,5 – 1,1 mg/dL.
+Câu 128. Bình thường giá trị creatinin máu ở nữ là:
+A. 0,1 – 0,5 mg/dL.
+B. 0,6 – 1,1 mg/dL.
+*C. 0,5 – 0,9 mg/dL.
+D. 0,5 – 1,1 mg/dL.
+Câu 129. Bình thường giá trị creatinin nước tiểu là:
+A. 1000 – 1200 mg/12 giờ.
+B. 1000 – 1200 mg/24 giờ.
+C. 1000 – 1500 mg/12 giờ.
+*D. 1000 – 1500 mg/24 giờ.
+Câu 130. Độ thanh thải creatinin ở nam là:
+A. 45 – 90 ml/phút.
+*B. 98 – 156 ml/phút.
+C. 95 – 160 ml/phút.
+D. 98 – 160 ml/phút.
+Câu 131. Độ thanh thải creatinin ở nữ là:
+A. 45 – 90 ml/phút.
+B. 98 – 156 ml/phút.
+*C. 95 – 160 ml/phút.
+D. 98 – 160 ml/phút.
+Câu 132. Creatinin máu tăng trong các bệnh về:
+A. Gan.
+*B. Thận.
+C. Tụy.
+D. Tiết niệu.
+Câu 133. Giấy nhúng nước tiểu 3 thông số gồm:
+A. pH, Glucose, Ceton.
+B. pH, Ceton, Bilirubin.
+*C. Glucose, pH, Protein.
+D. Glucose, Protein, Bilirubin.
+Câu 134. Nhúng băng thử nước tiểu 3 thông số vào mẫu thử trong:
+*A. 2 giây.
+B. 3 giây.
+C. 4 giây.
+D. 5 giây.
+Câu 135. Băng thử nước tiểu 3 thông số không còn chính xác sau:
+A. 1 phút.
+*B. 2 phút.
+C. 3 phút.
+D. 4 phút.
+Câu 136. Nước tiểu bình thường có pH từ:
+A. 7 – 9.
+B. 5 – 7.
+*C. 5 – 9.
+D. 6 – 7.
+Câu 137. Khi thử nước tiểu 3 thông số, nước tiểu có glucose (+) khi kết quả có:
+A. Màu xanh lam.
+*B. Màu nâu.
+C. Màu vàng cam.
+D. Màu xanh lá.
+Câu 138. Khi thử nước tiểu 3 thông số, glucose cho kết quả  tính giả khi:
+*A. Dụng cụ lẫn chất tẩy rửa.
+B. Nồng độ ceton cao
+C. Tỉ trọng nước tiểu cao.
+D. Bệnh nhân dùng nhiều vitamin C.
+Câu 139. Khi thử nước tiểu 3 thông số, nước tiểu có protein (+) khi kết quả có:
+A. Màu xanh lam.
+B. Màu nâu.
+C. Màu vàng nhạt.
+*D. Màu xanh lá.
+Câu 140. Khi thử nước tiểu 3 thông số, protein cho kết quả dương tính giả khi:
+A. pH nước tiểu acid.
+B. Nước tiểu bệnh nhân quá trong.
+*C. Dụng cụ chứa nước tiểu có Acetat ammonium.
+D. Ở một số bệnh nhân dùng nhiều vitamin C.
+Câu 141. pH thấp nhất lúc:
+*A. Lúc ngủ dậy.
+B. Sau bữa ăn 2 giờ.
+C. Khoảng 14 – 16 giờ.
+D. Bất kỳ lúc nào.
+Câu 142. pH cao nhất lúc:
+A. Lúc ngủ dậy.
+*B. Sau bữa ăn.
+C. Sau khi vận động.
+D. Bất kỳ lúc nào.
+Câu 143. Nước tiểu lấy để thử protein tốt nhất là nước tiểu:
+*A. Lần đi tiểu đầu lúc sáng sớm.*
+B. Lần đi tiểu trong khoảng 9 – 10 giờ sáng.
+C. Lần đi tiểu sau bữa ăn.
+D. Lần đi tiểu trong khoảng 3 – 4 giờ chiều.
+Câu 144. Trong thử nước tiểu 3 thông số, độ nhạy của thông số protein là:
+A. 5 – 10 mg/dL.
+*B. 10 – 15 mg/dL.
+C. 15 – 20 mg/dL.
+D. 20 – 25 mg/dL.
+Câu 145. Trong thử nước tiểu 3 thông số, độ nhạy của thông số glucose là:
+A. 50 mg/dL.
+*B. 100 mg/dL.
+C. 150 mg/dL.
+D. 200 mg/dL.
+Câu 146. Trong thử nước tiểu 10 thông số, thông số urobilinogen dựa trên nguyên tắc:
+A.  Muối diazonium + Urobilinogen + Aldehyde màu đỏ.
+B. Muối diazonium + Urobilinogen + Aldehyde màu xanh.
+*C. Muối diazonium + Urobilinogen + Azo màu đỏ.
+D. Muối diazonium + Urobilinogen + Azo màu xanh.
+Câu 147. Trong thử nước tiểu 10 thông số, thông số bạch cầu đi tìm sự có mặt của men 	 trong bạch cầu hạt:
+A. Catalase.
+B. Peroxydase.
+*C. Esterase.
+D. Uricase.
+Câu 148. Trong thử nước tiểu 10 thông số, cetone (+) có màu:
+A. Màu xanh lá.
+B. Màu đỏ.
+C. Màu vàng.
+*D. Màu hồng.
+Câu 149. Trong thử nước tiểu 10 thông số, độ nhạy của glucose là:
+A. 50 – 75 mg/dL.
+B. 75 – 100 mg/dL.
+*C. 75 – 125 mg/dL.
+D. 75 – 150 mg/dL.
+Câu 150. Trong thử nước tiểu 10 thông số, độ nhạy của bilirubin là:
+A. 0,1 – 0,4 mg/dL.
+*B. 0,4 – 0,8 mg/dL.
+C. 0,8 – 1,2 mg/dL.
+D. < 1,2 mg/dL.
+Câu 151. Trong thử nước tiểu 10 thông số, độ nhạy của cetone là:
+*A. 5 – 10 mg/dL.
+B. 10 – 15 mg/dL.
+C. 15 – 20 mg/dL.
+D. 20 – 25 mg/dL.
+Câu 152. Trong thử nước tiểu 10 thông số, độ nhạy của máu là:
+A. 0,015 – 0,032 mg/dL.
+*B. 0,015 – 0,062 mg/dL.
+C. 0,01 – 0,032 mg/dL.
+D. 0,01 – 0,062 mg/dL.
+Câu 153. Trong thử nước tiểu 10 thông số, độ nhạy của protein là:
+A. 5 – 10 mg/dL.
+B. 15 – 20 mg/dL.
+*C. 15 – 30 mg/dL.
+D. 20 – 25 mg/dL.
+Câu 154. Trong thử nước tiểu 10 thông số, độ nhạy của nitrite là:
+A. < 0,06 mg/dL.
+B. > 0,1 mg/dL.
+*C. 0,06 – 0,1 mg/dL.
+D. 0,06 – 0,15 mg/dL.
+Câu 155. Trong thử nước tiểu 10 thông số, độ nhạy của bạch cầu là:
+*A. 5 – 15 tế bào/µL.
+B. 15 – 30 tế bào/µL.
+C. 30 – 45 tế bào/µL.
+D. 45 – 55 tế bào/µL.
+Câu 156.  Khi thực hiện phản ứng định lượng bilirubin toàn phần cần:
+A. Đun sôi cách thủy 5 phút.
+B. Đun sôi cách thủy 3 phút.
+*C. Ủ ở 370C trong 5 phút.
+D. Ủ ở 370C trong 3 phút.
+Câu 157.  Độ tuyến tính của phản ứng định lượng Bilirubin toàn phần là:
+A. 0 – 15 mg/dL.
+*B. 0 – 20 mg/dL.
+C. 15 – 25 mg/dL.
+D. 15 – 30 mg/dL.
+Câu 158.  Giá trị Bilirubin toàn phần bình thường ở người lớn là:
+*A. < 2 mg/dL.
+B. 2 – 3 mg/dL.
+C. 3 – 4 mg/dL.
+D. < 3 mg/dL.
+Câu 159.  Khi thực hiện phản ứng định lượng Bilirubin trực tiếp cần:
+A. Đun sôi cách thủy 5 phút.
+B. Đun sôi cách thủy 3 phút.
+*C. Ủ ở 370C trong 5 phút.
+D. Ủ ở 370C trong 3 phút.
+Câu 160.  Độ tuyến tính của phản ứng định lượng Bilirubin trực tiếp là:
+A. 0,18 – 20 mg/dL.
+*B. 0,18 – 23 mg/dL.
+C. 0,18 – 30 mg/dL.
+D. 0.18 – 40 mg/dL.
+Câu 161.  Khi vàng da trước gan:
+A. Bilirubin GT bình thường, Bilirubin TT tăng.
+B. Cả Bilirubin GT và TT đều tăng.
+*C. Bilirubin GT tăng, Bilirubin TT bình thường.
+D. Bilirubin GT tăng, Bilirubin TT giảm.
+Câu 162.  Khi vàng da tại gan:
+A. Bilirubin GT bình thường, Bilirubin TT tăng.
+*B. Cả Bilirubin GT và TT đều tăng.
+C. Bilirubin GT tăng, Bilirubin TT bình thường.
+D. Bilirubin GT tăng, Bilirubin TT giảm.
+Câu 163.  Khi vàng da sau gan:
+*A. Bilirubin GT bình thường, Bilirubin TT tăng.
+B. Cả Bilirubin GT và TT đều tăng.
+C. Bilirubin GT tăng, Bilirubin TT bình thường.
+D. Bilirubin GT tăng, Bilirubin TT giảm.
+Câu 164.  Vàng da trước gan gây ra bởi, NGOẠI TRỪ:
+A. Thiếu men G6DP.
+*B. Tắc ống dẫn mật.
+C. Hồng cầu dễ vỡ.
+D. Sốt rét.
+Câu 165.  Phản ứng Mayer dùng để:
+A. Tìm Glucose trong nước tiểu.
+B. Tìm Glucose trong máu.
+*C. Tìm Hemoglobin trong nước tiểu.
+D. Tìm Creatinin trong nước tiểu.
+Câu 166.  Phản ứng Mayer dựa trên nguyên tắc, Hemoglobin có tác dụng như:
+*A. Peroxydase.	
+B. Oxidase.
+C. Lipase.	
+D. Glucose oxidase.
+Câu 167. Trong phản ứng Mayer, khi thuốc thử là Phenolphtalein, hiện tượng quan sát được là:
+A. Cho phức hợp màu đỏ gạch.
+B. Cho kết tủa đỏ gạch.
+*C. Cho phức hợp màu đỏ.
+D. Cho kết tủa màu đỏ.
+Câu 168.  Trong phản ứng Mayer, sau 	không có hiện tượng thì xem như (-):
+A. 1 phút	
+*B. 2 phút
+C. 3 phút	
+D. 4 phút
+Câu 169.  Trong phương pháp định lượng ALT/GPT, phương pháp được sử dụng là:
+*A. Đo động học đa điểm	
+B. Đo điểm cuối
+C. Pha loãng dần	
+D. Đo động học 2 điểm
+Câu 170.  Nguyên tắc của phương pháp định lượng ALT/GPT là xác định hoạt độ men:
+A. Guanine Aminotransferase.
+B. Cytosine Aminotransferase.
+*C. Alanin Aminotransferase.
+D. Thymin Aminotransferase.
+Câu 171.  Trong phương pháp định lượng ALT/GPT, nhiệt độ ủ là:
+*A. 370C.
+B. Nhiệt độ phòng thí nghiệm.
+C. 1000C.
+D. 800C.
+Câu 172. Trong phương pháp định lượng ALT/GPT, yếu tố ảnh hưởng đến kết quả xét nghiệm là:
+A. Hb > 10 g/L, Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+*B. Hb > 2,5 g/L, Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+C. Hb > 10 g/L, Bilirubin > 40 mg/dL, Triglycerides > 2000 mg/dL.
+D. Hb > 0,75 g/L, Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+Câu 173. Trong phương pháp định lượng ALT/GPT, tăng hoạt độ 	là dấu hiệu của nhồi máu cơ tim:
+*A. Transaminase	
+B. Hepatopathies
+C. Tranferase	
+D. Oxidase
+Câu 174. Trong phương pháp định lượng ALT/GPT, tăng hoạt độ 	là dấu hiệu của loạn dưỡng cơ, tổn thương nội quan:
+A. Transaminase	
+*B. Hepatopathies
+C. Tranferase	
+D. Oxidase
+Câu 175.  Trong định lượng ALT/GPT, nồng độ bình thường ở nam là:
+A. ≤ 40 U/L	
+B. ≤ 34 U/L
+*C. ≤ 45 U/L.	
+D. ≤ 50 U/L.
+Câu 176.  Trong định lượng ALT/GPT, nồng độ bình thường ở nữ là:
+*A. ≤ 34 U/L	
+B. ≤ 45 U/L
+C. ≤ 50 U/L.	
+D. ≤ 40 U/L.
+Câu 177.  Khi nồng độ ALT/GPT tăng > 10 lần là dấu hiệu của:
+A. Viêm gan cấp.	
+B. Hội chứng thận hư
+C. Nhồi máu cơ tim.	
+*D. Hội chứng hủy tế bào.
+Câu 178.  Nhồi máu cơ tim khi:
+A. GOT < GPT.	
+B. GOT = GPT.
+*C. GOT > GPT.	
+D. Chỉ liên quan đến GPT
+Câu 179.  Độ tuyến tính của phản ứng ALT/GPT là:
+*A. 4,4 -360 U/L	
+B. 3,3 -360 U/L
+C. 4,4 -390 U/L	
+D. 3,3 -390 U/L
+Câu 180.  Nguyên tắc của phương pháp định lượng AST/GOT là xác định hoạt độ men:
+A. Guanine Aminotransferase.
+*B. Aspartate Aminotransferase.
+C. Alanin Aminotransferase.
+D. Thymin Aminotransferase.
+Câu 181.  Trong phương pháp định lượng AST/GOT, nhiệt độ ủ là:
+*A. 370C.
+B. Nhiệt độ phòng thí nghiệm.
+C. 1000C.
+D. 800C.
+Câu 182.  AST hầu hết có ở:
+A. Gan	
+B. Cơ bắp
+*C. Cơ tim	
+D. Tụy
+Câu 183. Trong phương pháp định lượng AST/GOT, yếu tố ảnh hưởng đến kết quả xét nghiệm là:
+A. Hb > 10 g/L, Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+B. Hb > 2,5 g/L, Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+C. Bilirubin > 40 mg/dL, Triglycerides > 2000 mg/dL.
+*D. Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+Câu 184.  Trong định lượng AST/GOT, nồng độ bình thường ở nam là:
+A. ≤ 40 U/L	
+*B. ≤ 35 U/L
+C. ≤ 45 U/L	
+D. ≤ 50 U/L
+Câu 185.  Trong định lượng AST/GOT, nồng độ bình thường ở nữ là:
+A. ≤ 40 U/L	
+B. ≤ 34 U/L
+*C. ≤ 31 U/L	
+D. ≤ 50 U/L
+Câu 186.  Độ tuyến tính của phản ứng AST/GOT là:
+A. 3,84 -360 U/L	
+B. 2,84 -360 U/L
+*C. 3,84 -390 U/L	
+D. 2,84 -390 U/L
+Câu 187.  Nên xét nghiệm trong vòng 	sau khi lấy nước tiểu:
+A. 01 giờ	
+*B. 02 giờ
+C. 03 giờ	
+D. 04 giờ
+Câu 188.  Cách lấy mẫu nước tiểu, NGOẠI TRỪ:
+*A. Bỏ phần nước tiểu đầu.
+B. Không làm xét nghiệm cặn lắng với nước tiểu để trong tủ lạnh.
+C. Tốt nhất nên lấy nước tiểu vào lúc sáng sớm.
+D. Nước tiểu sau khi soi cặn lắng không thể làm xét nghiệm khác được.
+Câu 189.  Rót nước tiểu vào ống ly tâm tới:
+A. ½ ống	
+*B. 2/3 ống
+C. 3/4 ống	
+D. 1/3 ống
+Câu 190.  Quay ly tâm với tốc độ bao nhiêu, trong bao lâu:
+A. 1000 vòng/phút – 3 phút.
+*B. 1500 vòng/phút – 5 phút.
+C. 1000 vòng/phút – 5 phút.
+D. 1500 vòng/phút – 3 phút.
+Câu 191.  Để nhìn tổng quang trường, ta dùng:
+*A. Vật kính 10X	
+B. Vật kính 20X
+C. Vật kính 30X	
+D. Vật kính 40X
+Câu 192.  Để xác định loại tế bào, ta dùng:
+A. Vật kính 10X	
+B. Vật kính 20X
+C. Vật kính 30X	
+*D. Vật kính 40X
+Câu 193.  Bạch cầu có kích thước:
+A. Lớn gấp 1,5 đến 2 lần hồng cầu.
+*B. Lớn gấp 1,5 đến 3 lần hồng cầu.
+C. Lớn gấp 2 lần hồng cầu.
+D. Lớn gấp 3 lần hồng cầu.
+Câu 194.  Phương pháp Wohlgemuth dùng để:
+A. Định lượng Amylase trong huyết thanh.
+B. Định lượng CK-MB trong máu.
+C. Định lượng Amylase trong nước tiểu.
+*D. Xác định hoạt độ Amylase trong nước tiểu.
+Câu 195. Định nghĩa 1 đơn vị Wohlgemuth: là lượng amylase tối thiểu có khả năng thủy phân 2 ml dung dịch hồ tinh bột 0,1% ở 370C trong 30 phút. Định nghĩa trên: (1ml)
+A. Đúng.
+*B. Sai.
+Câu 196.  Sau khi khi cho nước tiểu và hồ tinh bột vào ống nghiệm:
+A. Đun sôi 1000C cách thủy 30 phút.
+B. Đun sôi 1000C cách thủy 20 phút.
+*C. Đun sôi 370C cách thủy trong 30 phút.
+D. Đun sôi ở 370C cách thủy trong 20 phút.
+Câu 197.  Hoạt độ Amylase trong nước tiểu bình thường:
+*A. 8 – 64 đơn vị Wohlgemuth.
+B. 8 – 32 đơn vị Wohlgemuth.
+C. 8 – 16 đơn vị Wohlgenmuth.
+D. 8 – 128 đơn vị Wohlgemuth.
+Câu 198.  Amylase tăng quá 200 đơn vị trong trường hợp:
+A. Viêm gan	
+*B. Viêm tụy cấp
+C. Xơ gan	
+D. Suy thận
+Câu 199. Trong phương pháp định lượng Amylase trong huyết thanh, phương pháp được sử dụng là:
+*A. Đo động học đa điểm	
+B. Đo điểm cuối
+C. Pha loãng dần	
+D. Đo động học 2 điểm
+Câu 200.  Trong phương pháp định lượng Amylase trong huyết thanh, độ tuyến tính là:
+A. 10,8 – 1400 U/L	
+B. 9,8 – 1400 U/L
+*C. 10,8 – 1500 U/L	
+D. 9,8 – 1500 U/L
+Câu 201.  Amylase trong huyết thanh bình thường:
+A. < 50 U/L	
+B. < 60 U/L
+C. < 70 U/L	
+*D. < 80 U/L
+Câu 202.  Amylase trong nước tiểu bình thường là:
+A. < 300 U/L	
+B. < 400 U/L
+*C. < 500 U/L	
+D. < 600 U/L
+Câu 203. Trong phương pháp định lượng Amylase trong huyết thanh, yếu tố ảnh hưởng đến kết quả xét nghiệm là:
+A. Hb > 10 g/L, Bilirubin > 40 mg/dL, Triglycerides > 2000 mg/dL.
+*B. Hb > 2,5 g/L, Bilirubin > 40 mg/dL, Triglycerides > 2000 mg/dL.
+C. Bilirubin > 40 mg/dL, Triglycerides > 2000 mg/dL.
+D. Bilirubin > 30 mg/dL, Triglycerides > 2000 mg/dL.
+Câu 204.  Trong phương pháp định lượng CK-MB trong máu, độ tuyến tính là:
+A. 6,1 – 1400 U/L	
+B. 7,1 – 1400 U/L
+C. 6,1 – 1200 U/L	
+*D. 7,1 – 1200 U/L
+Câu 205.  Trong định CK-MB trong máu, giá trị bình thường:
+A. ≤ 20 IU/L.	
+*B. ≤ 25 IU/L.
+C. ≤ 30 IU/L.	
+D. ≤ 35 IU/L.
+Câu 206.  Thời gian bán hủy của CK-MB trong huyết tương là khoảng:
+A. 06 giờ.	
+*B. 12 giờ.
+C. 24 giờ.	
+D. 32 giờ.
+Câu 207.  CK-MB dùng để chẩn đoán sớm nhồi máu cơ tim, vì 	CK-MB luôn tăng cao:
+A. 2-4 giờ.	
+*B. 4-6 giờ.
+C. 8-12 giờ.	
+D. 12-24 giờ.
+Câu 208.  Nguyên tắc của phản ứng Rivalta là:
+A. Protein bị đông kết bởi acid sunfuric.
+B. Protein bị kết tủa bởi acid sunfuric.
+*C. Protein bị đông kết bởi acid acetic.
+D. Protein bị kết tủa bởi acid sunfuric.
+Câu 209.  Rivanlta (+) có nghĩa:
+*A. Dịch tiết – Protein > 30 g/L.	
+B. Dịch thấm – Protein > 30 g/L
+C. Dịch tiết – Protein < 30 g/L	
+D. Dịch thấm – Protein < 30 g/L.
+Câu 210. Rivanlta (-) có nghĩa:
+A. Dịch tiết – Protein > 30 g/L.	
+B. Dịch thấm – Protein > 30 g/L
+C. Dịch tiết – Protein < 30 g/L	
+*D. Dịch thấm – Protein < 30 g/L.
+Câu 211. Cho biết: VNT / 24 giờ = 1400 ml:
+-	Nồng độ Creatinin / NT: 90 mg /dl.
+-	Nồng độ Creatinin / HT: 1,2 mg/dl
+→ Tính Creatinin Clearance ? 
+*A. 72,916 ml/phút
+B. 92,916 ml/phút
+C. 90 ml/phút
+D. 1,2 ml/phút
+Câu 212. Có thể bảo quản nước tiểu để soi cặn lắng bằng cách thêm vào nước tiểu 
+*A. 08 giọt formol 10 % cho 300 ml nước tiểu 
+B. 08 giọt formol 10 % cho 500 ml nước tiểu 
+C. 10 giọt formol 8 % cho 300 ml nước tiểu 
+D. 10 giọt formol 10 % cho 500 ml nước tiểu 
+Câu 213. Để xem các thành phần của cặn lắng nước tiểu, người ta dùng thuốc nhuộm Sternheiner Malhin Staining có 2 loại dung dịch A và dung dịch B pha theo tỉ lệ thể tích 
+*A. 3 : 97 
+B. 5 : 95 
+C. 10 : 90 
+D. 15 : 85
+Câu 214. Màu của phản ứng Molisd:
+A. Xanh	
+B. Đỏ
+*C. Tím	
+D. Hồng
+Câu 215. Yếu tố ảnh hưởng đến kết quả xét nghiệm định lượng amylase huyết thanh, Ngoại trừ:
+A. Hb > 0,25 g/dl	
+B. Bilirubin > 40mg/dl
+C. Triglycerid > 2mg/dl	
+*D. Triglycerid < 2mg/dl
+Câu 216. Cholesterol ester---> cholesterol emzym xúc tác là:
+*A. Cholesterol Esterase	
+B. Glycerol -3-phosphate oxidase
+C. Cholesterol Oxydase	
+D. Peroxydase
+Câu 217. Phát biểu về ceton, CHỌN CÂU SAI: 
+A. Là sản phẩm thoái hóa của acid béo. 
+B. Khi tăng > 70 mg% trong máu, sẽ xuất hiện trong nước tiểu. 
+C. Bình thường có 1 lượng nhỏ ceton < 1mg trong nước tiểu 24 giờ.   
+*D. Thể ceton chỉ có trong nước tiểu của bệnh nhân tiểu đường. 
+Câu 218.  Giá trị Acid Uric huyết thanh/huyết tương bình thường Nam: (Chọn nhiều đáp án)
+*A.	210-432 umol/l
+B.	156-360 umol/l
+C.	2,6-6,0 mg/l
+*D.	3,5-7,2 mg/dl
+E.	250-750 mg/24 giờ
+F.	1,5-4,5 mmol/24 giờ
+Câu 219.  Phản ứng định lượng LDL có bao nhiêu giai đoạn:
+A.	1 giai đoạn	
+*B. 2 giai đoạn
+C. 3 giai đoạn	
+D. 4 giai đoạn
+Câu 220.  Thời gian để dung dịch đo protein toàn phần trong huyết thanh:
+A. 10 phút	
+B. 15 phút
+*C. 20 phút	
+D. 25 phút
+Câu 221.  Trong viêm tụy cấp amylase niệu có trị số tối đa lúc:
+A. 6-12 giờ	
+*B. 12-24 giờ
+C. 24-36giờ	
+D. 12-36 giờ
+Câu 222.  Cholesterol giảm trong:
+A. Hội chứng thận hư	
+B. Vàng da tắc mật
+C. Suy tuyến giáp	
+*D. Cường giáp
+Câu 223.  Quinonemine có màu gì:
+A. Xanh	
+B. Đỏ
+C. Tím	
+*D. Hồng
+Câu 224.  Giá trị bình thường của amylase trong huyết thanh và nước tiểu:
+*A. < 80 U/L, < 500 U/L	
+B. > 80 U/L, < 500 U/L
+C. < 80 U/L, >500 U/L	
+D. > 80 U/L, > 500 U/L
+Câu 225.  Sản phẩm trung gian của quá trình thủy phân tinh bột hoặc glycogen:
+*A. Dextrin	
+B. Dextran
+C. Pyurat	
+D. Asparat
+Câu 226.  Giá trị Acid uric huyết thanh/huyết tương bình thường Nữ: (Chọn nhiều đáp án)
+A.	210-432 umol/l
+*B.	156-360 umol/l
+*C.	2,6-6,0 mg/l
+D.	3,5-7,2 mg/dl
+E.	250-750 mg/24 giờ
+F.	1,5-4,5 mmol/24 giờ
+Câu 227.  Giá trị bình thường của tryglycerid:
+A.	150-260 mg/dl	
+*B. 150-200 mg/dl
+C. < 130 mg/dl	
+D. 1,9-193 mg/dl
+Câu 228.  Nguồn gốc acid Uric:
+A. Base purin	
+*B. Tế bào chết hàng loạt
+C. NH3	
+D. Acid axetic
+Câu 229.  Các loại Emzym có trong phản ứng định lượng LDL: (Chọn nhiều đáp án)
+A. Cholesterol Esterase	
+B. Glycerol -3-phosphate oxidase
+C. Cholesterol Oxydase	
+*D. Peroxydase
+E. Glycerokinase	
+F. PVS/PEGME
+*G. Catalase	
+H. Lipase LPL
+*L. CHE+CHO
+Câu 230. Nước tiểu để dùng que nhúng phải được bảo quản bằng chất bảo quản  
+A. Đúng 
+*B. Sai  
+Câu 231.  Protein trong huyết thanh phản ứng với Cu++ tạo phức hợp màu gì:
+*A. Tím hồng	
+B. Xanh tím
+C. Nâu đỏ	
+D. Cam
+Câu 232. Để phân biệt bệnh phân đái máu do tán huyết hay đái máu do sỏi bàng quang, ta dùng phản ứng:
+*A. Mayer
+B. Molish
+C. Fehling
+D. Cặn lắng nước tiểu
+Câu 233.  Nồng độ protein trong huyết thanh bình thường là:
+A. 50-80 g/L	
+*B. 60-80 g/L
+C. 70-80 g/L	
+D. 80-90 g/L
+Câu 234.  Tryglycerid tăng bao nhiêu có thể dẫn đến viêm tụy cấp tính:
+*A. 11 mmol/l	
+B. 11 ml/l
+C. 11 mg/dl	
+D. 11mg/l
+Câu 235.  Độ ổn đinh huyết tương/huyết thanh -200C trong xét nghiệm tryglycerid là:
+A. 3 tháng	
+B. 6 tháng
+C. 9 tháng	
+*D. ít nhất 1 năm
+Câu 236.  Glucose tăng khi: 
+A. u não 
+B. u tủy thượng thận
+C. Tất cả sai
+*D. Tất cẩ đúng
+Câu 237.  Dung dịch để đấp lên vết phỏng do vật nóng:
+*A. Acid picric	
+B. Acid acetic
+C. Acid boric	
+D. Na bicarbonate 1%
+Câu 238.  Thuốc thử trong phản ứng nelson:
+A. Naphtol 1%	
+B. Enediols
+*C. Arsenomolydat	
+D. Benedict
+Câu 239.  Tăng nhu cầu protein sinh lý gặp trong: (Còn lại là tăng bệnh lý)
+A. Tiêu chảy	
+B. U đa tủy
+*C. Thai nghén	
+D. Sốt kéo dài
+Câu 240.  Thời gian ủ trong định lượng tryglycerid:
+A. Không cần ủ	
+B. 1 phút 370C
+C. 5 phút 370C	
+*D. 10 phút 370C
+Câu 241.  Kết quả của phản ứng fehling:
+A. Dung dịch đỏ gạch	
+*B. Kết tủa đỏ gạch
+C. Kết tủa xanh lý	
+D. Dung dịch xanh dương
+Câu 242.  Giá trị Acid Uric nước tiểu bình thường: (Chọn nhiều đáp án)
+A.	210-432 umol/l
+B.	156-360 umol/l
+C.	2,6-6,0 mg/l
+D.	3,5-7,2 mg/dl
+*E.	250-750 mg/24 giờ
+*F.	1,5-4,5 mmol/24 giờ
+Câu 243.  Bệnh lý lâm sàng làm tăng CK-MB, ngoại trừ:
+A.	Nhồi máu cơ tim cấp	
+B. Loạn dưỡng cơ
+C. Bỏng nhiệt	
+*D. Suy thận
+Câu 244.  Cholesterol---> cholesterol -3-one emzym xúc tác là:
+A. Cholesterol Esterase	
+B. Glycerol -3-phosphate oxidase
+*C. Cholesterol Oxydase	
+D. Peroxydase
+Câu 245.  Thuốc thử phản ứng Wohlgemuth là:
+*A. Nacl 90/00, DD hồ tinh bột 10/00, Iod N/50	
+B. Nacl 50/00, DD hồ tinh bột 10/00, Iod N/50
+C. Nacl 90/00, DD hồ tinh bột 10/00, Iod N/10	
+D. Nacl 7,50/00, DD hồ tinh bột 10/00, Iod N/10
+Câu 246.  Tập hợp gồm những chất hòa tan đượcLipid là : 
+A. Ether, NaCl, Nước cất, Alcol. 
+B. Ether, NaCl, Chloroform, Alcol. 
+*C. Ether, Aceton, Chloroform, Alcol. 
+D. Ether, NaOH, Nước cất, Chloroform. 
+Câu 247.  Độ ổn định huyết tương/huyết thanh ở 4-80C là:
+A. 2 ngày	
+B. 5 ngày
+*C. 7 ngày	
+D. 12 tuần
+Câu 248.  Endoamylase hay alpha-amylase có nguồn gốc từ:
+A. Tuyến thượng thận	
+*B. Tuyến tụy
+C. Tuyến giáp	
+D. Tuyến cận giáp
+Câu 249.  Emzym trong định lượng ure:
+A. Uricase	
+*B. Urecase
+C. Urioxydase	
+D. Ureoxydase
+Câu 250. Giá trị bình thường glucose trong huyết tương
+A. 65-100mg/dl (4,3-6.0 mmol/l)	
+B. 65-100mg/l (4,3-6.0 mmol/l)
+*C. 75-100mg/dl (4,3-6.0 mmol/l)	
+D. 75-100mg/l (4,3-6.0 mmol/l)
+Câu 251. Trong phản ứng wohlgemuth ở ống số 4 có độ pha loãng là
+A. 1/8	
+*B. 1/16
+C. 1/32	
+D. 1/64
+Câu 252. Trong phản ứng wohlgemuth ở ống số 8 có độ pha loãng là
+*A. 0	
+B. 1/32
+C. 1/64	
+D. 1/128
+Câu 253. Độ ổn định huyết tương/ huyết thanh ở -20 độ c trong xét nghiệm HDL là
+A. 2 ngày	
+B. 5 ngày
+C. 7 ngày	
+*D. 12 tuần
+Câu 254. Thuốc thử trong phản ứng Molish:
+*A. Naphtol 1%	
+B. Enediols
+C. Arsenomolyddat	
+D. Benedict
+Câu 255. Thuốc thử Lugol 1% có thành phần.....+	RỒI THÊM 100ML NƯỚC CẤT:
+*A. IOD 0,1G + 0,2G KI	
+B. IOD 0,2G + 0,1G KI
+C. IOD 1G + 2G KI	
+D. IOD 2G + 1G KI
+Câu 256. Giá trị bình thường của LDL
+A. 150-260mg/dl	
+B. 150-200mg/dl
+*C. <130 mg/dl	
+D. 1,9-193 mg/dl
+Câu 257. Các loại Emzym có trong phản ứng định lượng HDL: (Chọn nhiều đáp án)
+A. Cholesterol Esterase
+B. Glycerol -3-phosphate oxidase
+C. Cholesterol Oxydase	
+*D. Peroxydase
+E. Glycerokinase	
+*F. PVS/PEGME
+G. Catalase	
+H. Lipase LPL
+*L. CHE+CHO
+Câu 258. Emzym trong định lượng Acid uric
+*A. Uricase	
+B. Urecase
+C. Urioxydase	
+D. Ureoxydase
+Câu 259. Thể ceton gặp trong, ngoại trừ:
+A. Đái tháo đường nặng	
+B. Nhịn đói, nôn ói nhiều
+*C. Ăn nhiều đạm	
+D. Cushing
+Câu 260. Thuốc thử của phương pháp định lượng amylase huyết thanh
+A. MES buffer, Natri chloride, sodium chlorid, potassium thiocyanate, Sodium azide, CNPG
+B. NES buffer, cancium chloride, sodium chlorid, potassium thiocyanate
+*C. MES buffer, cancium chloride, sodium chlorid, potassium thiocyanate
+D. MES buffer, cancium chloride, Natri chlorid, potassium thiocyanate
+Câu 261. Tryglycerid tăng trong
+A. Xơ gan	
+B. Suy kiệt
+C. Bệnh mạn tính	
+*D. Xơ gan do rượu
+Câu 262. Phức hợp quinonemine được tạo thành nhớ xúc tác của emzym
+A. Cholesterol Esterase	
+B. Glycerol -3- phosphate oxidase
+C. Cholesterol Oxydase	
+*D. Peroxydase
+Câu 263. Nguyên tắc phản ứng xác định hoạt độ amylase trong nước tiểu
+A. Phương pháp pha loãng dần nước tiểu để tìm lượng enzym tối thiểu phân hủy hết 2ml dd hồ tinh bột 10/0 ở 370C trong 30p
+B. Phương pháp pha loãng dần nước tiểu để tìm lượng enzym tối thiểu phân hủy hết 2ml dd hồ tinh bột 10/00 ở 420C trong 30p
+C. Phương pháp pha loãng dần nước tiểu để tìm lượng enzym tối thiểu phân hủy hết 2ml dd hồ tinh bột 10/00 ở 370C trong 40p
+*D. Phương pháp pha loãng dần nước tiểu để tìm lượng enzym tối thiểu phân hủy hết 2ml dd hồ tinh bột 10/00 ở 370C trong 30p
+Câu 264. Để ngăn kết tủa acid uric ta làm:
+*A. 15ml NAOH 5M để giữ PH >8	
+B. 15ml NAOH 5M để giữ PH >6
+C. 10ml NAOH 5M để giữ PH >8	
+D. 10ml NAOH 5M để giữ PH >6
+Câu 265. Trong nhồi máu cơ tim CK-MB sẽ tăng cao nhất trong khoảng thời gian
+A. 6-12 giờ	
+*B. 12-18 giờ
+C. 18-24 giờ	
+D. 23-36 giờ
+Câu 266. Tỉ lệ pha loãng ure nước tiểu là
+A. 1:9	
+B. 1:1
+*C. 1:100	
+D. 3:97
+Câu 267.Tăng acid uric nguyên phát
+A. Đa hồng cầu, bạch cầu cấp, u hạch	
+B. Xạ trị, hóa trị
+C. Viêm thận, suy thận	
+*D. Gout
+Câu 268. Giá trị bình thường của HDL ở nam
+A. 15-26mg/dl	
+*B. 35,2-79,5mg/dl
+C. 42-88 mg/dl	
+D. 1,9-193 mg/dl
+Câu 269. Sản phẩm cuối cùng của quá trình thủy phân tinh bột hoặc glycogen là
+*A. Manto, glucos	
+B. Sacaro, gluco
+C. Manto, fructo	
+D. Fructo, glucos
+Câu 270. Các loại Emzym có trong phản ứng định lượng CHOLESTEROL toàn phần trong máu: (Chọn nhiều đáp án)
+*A. Cholesterol Esterase	
+B. Glycerol -3-phosphate oxidase
+*C. Cholesterol Oxydase	
+*D. Peroxydase
+E. Glycerokinase	
+F. PVS/PEGME
+G. Catalase	
+H. Lipase LPL
+L. CHE+CHO
+Câu 271. Giá trị bình thường của HDL ở nữ
+A. 15-26mg/dl	
+B. 35,2-79,5 mg/dl
+*C. 42-88 mg/dl	
+D. 1,9-193 mg/dl
+Câu 272. HDL tăng có tác dụng
+*A. Giảm nguy cơ sơ vữa động mạch và bệnh mạch vành
+B. Tăng nguy cơ sơ vữa động mạch và bệnh mạch vành
+C. Chưa thấy mối liên hệ
+Câu 273. Trong phản ứng wohlgemuth ống còn tinh bột có màu
+*A. Xanh dương	
+B. Màu trung gian
+C. Không màu	
+D. Màu tím
+Câu 274. QUINONE có màu gì?
+*A. Xanh tím	
+B. Hồng cánh sen
+C. Đỏ gạch	
+D. Tím
+Câu 275. Bảo quản huyết tương/ huyết thanh -200C trong xét nghiệm acid uric là
+A. 3 tháng	
+*B. 6 tháng
+C.9 tháng	
+D. ít nhất 1 năm
+Câu 276. Nguyên tắc phản ứng Rivalta
+A. Protein bị đông kết bởi acid lactic	
+*B. Protein bị đông kết bởi acid acetic
+C. Protein bị đông kết bởi acid citrit	
+D. Protein bị đông kết bởi kiềm yếu
+Câu 277.Các loại Emzym có trong phản ứng định lượng Triglycerid: (Chọn nhiều đáp án)
+A. Cholesterol Esterase	
+*B. Glycerol -3-phosphate oxidase
+C. Cholesterol Oxydase	
+*D. Peroxydase
+*E. Glycerokinase	
+F. PVS/PEGME
+G. Catalase	
+*H. Lipase LPL
+L. CHE+CHO
+Câu 278. Độ tuyến tính accid uric
+A. 49-250 mg/dl	
+*B. 0,49-25mg/dl
+C. 0,49-25g/l	
+D. 0,49-25mmol/l
+Câu 279. Khi nào glucose có trong nước tiểu?
+A. Khi vượt ngưỡng 170 mg/dl hay 170mg%	
+*B. Khi vượt ngưỡng 180 mg/dl hay 180mg%
+C. Khi thấp hơn 180 mg/dl hay 180mg%	
+D. Bình thường glucose có trong nước tiểu.
+Câu 280. Độ tuyến tính HDL
+A. 15-26 mg/dl	
+B. 35,2-79,5 mg/dl
+C. 42-88 mg/dl	
+*D. 1,9-193 mg/dl
+Câu 281. Giá trị bình thường của cholesterol
+*A. 150-260mg/dl	
+B. 150-200mg/dl
+C. <130 mg/dl	
+D. 1,9-193 mg/dl
+Câu 282. Tỉ lệ pha loàng acid uric nước tiểu là
+*A. 1:9	
+B. 1:1
+C. 1:100	
+D. 3:97
+Câu 283. Cholesterol tăng tiên phát trong:
+*A. Bệnh tăng lipid gia đình	
+B. Vàng da tắc mật
+C. Suy tuyền giáp	
+D. Cường giáp
+Câu 284. Độ bền màu của phản ứng acid uric là
+A. 5 phút	
+B. 10 phút
+*C. 15 phút	
+D. 20 phút
+Câu 285. Phương pháp định lượng amylase huyết thanh
+A. Đo điểm cuối	
+*B. Động học đa điểm
+C. Động học	
+D. Pha loãng huyết thanh
+Câu 286. Đơn vị Wohlgemuth là gì?
+*A. Là lượng amylase tối thiểu có khả năng thủy phân hết 1ml dd hồ tinh bột 10/00 ở 370C trong 30p
+B. Là lượng amylase tối đa có khả năng thủy phân hết 1ml dd hồ tinh bột 10/00 ở 370C trong 30p
+C. Là lượng amylase tối thiểu có khả năng thủy phân hết 1ml dd hồ tinh bột 10/0 ở 370C trong 30p
+D. Là lượng amylase tối đa có khả năng thủy phân hết 1ml dd hồ tinh bột 10/0 ở 370C trong 30p
+Câu 287. Độ tuyến tính của phương pháp định lượng amylase huyết thanh
+*A. 10.8-1500 U/L	
+B. 100.8 – 1500 U/L
+C. 20.8- 1600 U/L	
+D. 18.8 – 1500 U/L
+Câu 288. Định lượng amylase trong trường hợp nào sau đây không có giá trị chẩn đoán:
+A. Suy gan	
+B. Viêm tụy cấp
+*C. Suy thận	
+D. Suy tim
+Câu 289. Độ ổn định huyết tương/ huyết thanh ở 20-250C là
+*A. 2 ngày	
+B. 5 ngày
+C. 7 ngày	
+D. 12 tuần
+Câu 290. Phản ứng tìm ceton trong nước tiểu:
+*A. Ceton + Na nitroprussiat ---OH---> phức chất màu tím
+B. Ceton + Na nitroprussiat ---H---> phức chất màu tím
+C. Ceton + Na nitroprussiat ---OH---> phức chất màu hồng
+D. Ceton + Na nitroprussiat ---H---> phức chất màu hồng
+Câu 291. QUINONEMINE bền màu trong?
+A. 15 phút	
+B. 30 phút
+*C. 60 phút	
+D. 2 giờ
+Câu 292. Để loại protein khỏi huyết tương ta làm ?
+A. Ly tâm 300 vòng/ phút trong 10 phút.	
+B. Ly tâm 3000 vòng/ phút trong 1 phút.
+*C. Ly tâm 3000 vòng/ phút trong 10 phút.	
+D. Ly tâm 30000 vòng/ phút trong 1 phút.
+Câu 293. Tăng protein gặp trong (còn lại là giảm)
+A. Xơ gan, viêm gan	
+*B. Bệnh Addison
+C. Hội chứng thận hư	
+D. Mất máu
+Câu 294. LDL tăng có tác dụng?
+A. Giảm nguy cơ sơ vữa động mạch và bệnh mạch vành
+*B. Tăng nguy cơ sơ vữa động mạch và bệnh mạch vành
+C. Chưa thấy mối liên hệ
+Câu 295. Công thức tính nồng độ protein toàn phần trong huyết thanh
+*A. C(g/l) = OD/ODo x 6,25x 10	
+B. C(g/l) = OD/ODo x 7,25x 10
+C. C(g/l) = OD/ODo x 8,25x 10	
+D. C(g/l) = OD/ODo x 6,25
+Câu 296.  Các bước sóng phù hợp:
+A. Protein toàn phần  530 nm	
+B. Ure	340 nm
+C. Acid Uric	505nm	
+D. Creatinin	505 nm          
+*E. Tất cả đúng`;
+
+/* =========================
+   BATCHES (fixed)
+========================= */
+const BATCHES = [
+  {name:"1–27",   start:1,   end:27},
+  {name:"28–55",  start:28,  end:55},
+  {name:"56–92",  start:56,  end:92},
+  {name:"93–157", start:93,  end:157},
+  {name:"158–195",start:158, end:195},
+  {name:"196–212",start:196, end:212},
+  {name:"213–296",start:213, end:296},
+];
+
+/* =========================
+   STATE
+========================= */
+let QUESTIONS = [];
+let activeBatchIdx = 0;
+let renderOrderByQ = new Map();  // qid -> shuffled option indices
+let answers = new Map();         // qid -> Set(letters)
+let graded = new Map();          // qid -> {done,isCorrect}
+let missingNumbers = [];
+
+/* =========================
+   UTILS
+========================= */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function normStar(s){ return (s||"").trim().startsWith("*"); }
+function setsEqual(a,b){
+  if(a.size!==b.size) return false;
+  for(const x of a) if(!b.has(x)) return false;
+  return true;
+}
+function ensureShuffleForQ(qid){
+  const q = QUESTIONS.find(x=>x.id===qid);
+  if(!q || !q.options || q.options.length<2) return;
+  const n = q.options.length;
+  const idx = Array.from({length:n}, (_,i)=>i);
+  shuffle(idx);
+  renderOrderByQ.set(qid, idx);
+}
+function reshuffleForQ(qid){
+  renderOrderByQ.delete(qid);
+  ensureShuffleForQ(qid);
+}
+
+/* =========================
+   PARSER
+========================= */
+function parseRaw(raw){
+  raw = raw.replace(/(\d+)\s*0C\b/g, "$1°C");
+  raw = raw.replace(/(\d+(?:[.,]\d+)?)\/00\b/g, "$1‰");
+  const txt = raw.replace(/\r/g,"");
+  const re = /^Câu\s+(\d+)\.\s*/gm;
+  const pos = [];
+  let m;
+  while((m = re.exec(txt)) !== null){
+    pos.push({idx:m.index, qno: parseInt(m[1],10)});
+  }
+  if(pos.length===0) throw new Error("Không tìm thấy 'Câu N.' trong dữ liệu.");
+
+  const blocks = [];
+  for(let i=0;i<pos.length;i++){
+    const start = pos[i].idx;
+    const end = (i+1<pos.length) ? pos[i+1].idx : txt.length;
+    blocks.push({qno: pos[i].qno, body: txt.slice(start, end).trim()});
+  }
+
+  const qs = [];
+  for(const b of blocks){
+    let body = b.body.replace(/^Câu\s+\d+\.\s*/,"").trim();
+    const lines = body.split("\n").map(x=>x.trim()).filter(x=>x.length>0);
+
+    let promptLines = [];
+    let optLines = [];
+
+    for(const line of lines){
+      const om = line.match(/^(\*+)?\s*([A-Z])\.\s*(.+)$/);
+      if(om){
+        optLines.push({star: om[1]||"", letter: om[2], text: om[3]});
+      } else {
+        if(optLines.length>0){
+          optLines[optLines.length-1].text += "\n" + line;
+        } else {
+          promptLines.push(line);
+        }
+      }
+    }
+
+    const prompt = promptLines.join("\n").trim();
+    const correct = new Set();
+    for(const o of optLines){
+      if(normStar(o.star)) correct.add(o.letter);
+    }
+    const multi = (correct.size>1) || /chọn\s+nhiều\s+đáp\s+án/i.test(prompt);
+
+    qs.push({
+      id: b.qno,
+      prompt,
+      options: optLines.map(o=>({letter:o.letter, text:o.text.trim()})),
+      correct,
+      multi
+    });
+  }
+
+  qs.sort((a,b)=>a.id-b.id);
+  // keep only 1..296
+  return qs.filter(q=>q.id>=1 && q.id<=296);
+}
+
+/* =========================
+   MISSING DETECTOR
+========================= */
+function computeMissingNumbers(){
+  const set = new Set(QUESTIONS.map(q=>q.id));
+  const miss = [];
+  for(let i=1;i<=296;i++){
+    if(!set.has(i)) miss.push(i);
+  }
+  return miss;
+}
+
+/* =========================
+   BATCH HELPERS
+========================= */
+function getBatchQuestions(batchIdx){
+  const b = BATCHES[batchIdx];
+  const map = new Map(QUESTIONS.map(q=>[q.id,q]));
+  const arr = [];
+  for(let i=b.start;i<=b.end;i++){
+    if(map.has(i)) arr.push(map.get(i));
+    else arr.push({id:i, prompt:"(Thiếu dữ liệu câu này trong nguồn bạn đã gửi)", options:[], correct:new Set(), multi:false, missing:true});
+  }
+  return arr;
+}
+
+/* =========================
+   RENDER NAV
+========================= */
+function renderBatchNav(){
+  const nav = document.getElementById("batchNav");
+  nav.innerHTML = "";
+  BATCHES.forEach((b, idx)=>{
+    const btn = document.createElement("button");
+    btn.textContent = "Đợt " + (idx+1) + " (" + b.name + ")";
+    btn.className = (idx===activeBatchIdx) ? "active" : "";
+    btn.onclick = ()=>{
+      activeBatchIdx = idx;
+      renderCurrentBatch();
+    };
+    nav.appendChild(btn);
+  });
+}
+
+/* =========================
+   RENDER
+========================= */
+function renderCurrentBatch(){
+  const area = document.getElementById("quizArea");
+  area.innerHTML = "";
+
+  const b = BATCHES[activeBatchIdx];
+  const inBatch = getBatchQuestions(activeBatchIdx);
+
+  document.getElementById("pillTotal").innerHTML = "<b>Tổng:</b> 296";
+  document.getElementById("pillBatch").innerHTML = "<b>Đợt:</b> " + (activeBatchIdx+1) + " (" + b.name + ")";
+  document.getElementById("pillInBatch").innerHTML = "<b>Trong đợt:</b> " + inBatch.length;
+
+  document.getElementById("hintText").textContent =
+    "Chọn đáp án → Nộp đợt để chấm. Làm lại đợt / làm lại câu sai sẽ đảo vị trí đáp án.";
+
+  // render q cards
+  for(const q of inBatch){
+    if(!renderOrderByQ.has(q.id)) ensureShuffleForQ(q.id);
+
+    const qCard = document.createElement("div");
+    qCard.className = "q";
+    qCard.id = "q-" + q.id;
+
+    const qHead = document.createElement("div");
+    qHead.className = "qhead";
+
+    const qNum = document.createElement("div");
+    qNum.className = "qnum";
+    qNum.textContent = "Câu " + q.id;
+
+    const qText = document.createElement("div");
+    qText.className = "qtext";
+    qText.textContent = q.prompt || "(Không có nội dung câu hỏi)";
+
+    qHead.appendChild(qNum);
+    qHead.appendChild(qText);
+
+    const opts = document.createElement("div");
+    opts.className = "opts";
+
+    const badge = document.createElement("span");
+    badge.className = "badge warn";
+    badge.id = "badge-" + q.id;
+
+    if(q.options.length < 2){
+      badge.className = "badge miss";
+      badge.textContent = "Thiếu dữ liệu";
+      const qFoot = document.createElement("div");
+      qFoot.className = "qfoot";
+      qFoot.appendChild(badge);
+      qCard.appendChild(qHead);
+      qCard.appendChild(qFoot);
+      area.appendChild(qCard);
+      continue;
+    }
+
+    badge.textContent = q.multi ? "Chọn nhiều" : "Chọn một";
+
+    const order = renderOrderByQ.get(q.id) || [];
+    const selected = answers.get(q.id) || new Set();
+    const inputType = q.multi ? "checkbox" : "radio";
+
+    order.forEach((optIdx, pos)=>{
+      const opt = q.options[optIdx];
+
+      const label = document.createElement("label");
+      label.className = "opt";
+
+      const input = document.createElement("input");
+      input.type = inputType;
+      input.name = "q_" + q.id;
+      input.value = opt.letter;
+      input.checked = selected.has(opt.letter);
+input.onchange = ()=>{
+  const set = answers.get(q.id) || new Set();
+
+  if(q.multi){
+    if(input.checked) set.add(opt.letter);
+    else set.delete(opt.letter);
+  } else {
+    set.clear();
+    if(input.checked) set.add(opt.letter);
+  }
+
+  answers.set(q.id, set);
+
+  // 👉 CHẤM NGAY SAU KHI CHỌN
+  if(set.size > 0){
+    applyGradingStyles(q.id);   // tô xanh/đỏ + badge Đúng/Sai
+  } else {
+    // nếu bỏ chọn hết (multi)
+    graded.delete(q.id);
+
+    const badge = document.getElementById("badge-" + q.id);
+    if(badge){
+      badge.className = "badge warn";
+      badge.textContent = q.multi ? "Chọn nhiều" : "Chọn một";
+    }
+
+    const qEl = document.getElementById("q-" + q.id);
+    if(qEl){
+      qEl.querySelectorAll("label.opt").forEach(lb=>{
+        lb.classList.remove("correct","wrong");
+      });
+    }
+  }
+};
+
+
+      const mark = document.createElement("div");
+      mark.className = "marker";
+      mark.textContent = String(pos+1); // 1/2/3/4...
+
+      const txt = document.createElement("div");
+      txt.className = "otxt";
+      txt.textContent = opt.text;
+
+      label.appendChild(input);
+      label.appendChild(mark);
+      label.appendChild(txt);
+      opts.appendChild(label);
+    });
+
+    const qFoot = document.createElement("div");
+    qFoot.className = "qfoot";
+    qFoot.appendChild(badge);
+
+    qCard.appendChild(qHead);
+    qCard.appendChild(opts);
+    qCard.appendChild(qFoot);
+    area.appendChild(qCard);
+
+    if(graded.has(q.id)) applyGradingStyles(q.id);
+  }
+
+  // nav active
+  const nav = document.getElementById("batchNav");
+  [...nav.children].forEach((btn, i)=>btn.className = (i===activeBatchIdx) ? "active" : "");
+
+  renderBanner();
+}
+
+function applyGradingStyles(qid){
+  const q = QUESTIONS.find(x=>x.id===qid);
+  const qEl = document.getElementById("q-" + qid);
+  if(!q || !qEl) return;
+
+  const selected = answers.get(qid) || new Set();
+  const correct = q.correct || new Set();
+  const isCorrect = setsEqual(selected, correct) && selected.size > 0;
+
+  // badge Đúng / Sai
+  const badge = document.getElementById("badge-" + qid);
+  if(badge){
+    badge.className = "badge " + (isCorrect ? "ok" : "bad");
+    badge.textContent = isCorrect ? "Đúng" : "Sai";
+  }
+
+  // reset màu
+  qEl.querySelectorAll("label.opt").forEach(lb=>{
+    lb.classList.remove("correct","wrong");
+  });
+
+  // 👉 CHỈ TÔ MÀU ĐÁP ÁN NGƯỜI DÙNG CHỌN
+  qEl.querySelectorAll("label.opt").forEach(lb=>{
+    const input = lb.querySelector("input");
+    if(!input) return;
+
+    const letter = input.value;
+
+    if(selected.has(letter)){
+      if(correct.has(letter)){
+        lb.classList.add("correct"); // chọn đúng → xanh
+      } else {
+        lb.classList.add("wrong");   // chọn sai → đỏ
+      }
+    }
+  });
+
+  graded.set(qid, {done:true, isCorrect});
+}
+
+function renderBanner(){
+  const el = document.getElementById("banner");
+  if(!missingNumbers.length){
+    el.style.display = "none";
+    return;
+  }
+  el.style.display = "block";
+  el.innerHTML =
+    `Phát hiện <b>${missingNumbers.length}</b> câu bị thiếu trong dữ liệu bạn đã gửi (ví dụ: ` +
+    `${missingNumbers.slice(0,20).join(", ")}${missingNumbers.length>20?"...":""}). ` +
+    `Các câu thiếu sẽ hiện “Thiếu dữ liệu” và không chấm điểm.`;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+function submitBatch(){
+  const inBatch = getBatchQuestions(activeBatchIdx);
+  let correctCount = 0;
+  let answeredCount = 0;
+  let gradable = 0;
+
+  for(const q of inBatch){
+    if(!q.options || q.options.length<2) continue;
+    gradable++;
+    const selected = answers.get(q.id) || new Set();
+    if(selected.size>0) answeredCount++;
+    applyGradingStyles(q.id);
+    const st = graded.get(q.id);
+    if(st && st.isCorrect) correctCount++;
+  }
+
+  alert(`Kết quả đợt ${activeBatchIdx+1} (${BATCHES[activeBatchIdx].name}):\n- Có thể chấm: ${gradable} câu\n- Đã làm: ${answeredCount}/${gradable}\n- Đúng: ${correctCount}/${gradable}`);
+}
+
+function retryBatch(){
+  const inBatch = getBatchQuestions(activeBatchIdx);
+  for(const q of inBatch){
+    answers.delete(q.id);
+    graded.delete(q.id);
+    if(q.options && q.options.length>=2) reshuffleForQ(q.id);
+  }
+  renderCurrentBatch();
+}
+
+function retryWrong(){
+  const inBatch = getBatchQuestions(activeBatchIdx);
+  let any = false;
+  for(const q of inBatch){
+    if(!q.options || q.options.length<2) continue;
+    const st = graded.get(q.id);
+    if(st && st.done && !st.isCorrect){
+      any = true;
+      answers.delete(q.id);
+      graded.delete(q.id);
+      reshuffleForQ(q.id);
+    }
+  }
+  if(!any){
+    alert("Không có câu sai để làm lại trong đợt này (hoặc bạn chưa nộp đợt).");
+    return;
+  }
+  renderCurrentBatch();
+}
+
+/* =========================
+   INIT
+========================= */
+(function init(){
+  try{
+    QUESTIONS = parseRaw(RAW_DATA);
+
+    // reset state
+    answers = new Map();
+    graded = new Map();
+    renderOrderByQ = new Map();
+
+    // detect missing 1..296 from provided raw
+    missingNumbers = computeMissingNumbers();
+
+    renderBatchNav();
+    renderCurrentBatch();
+  }catch(e){
+    alert("Không load được dữ liệu quiz: " + (e?.message||e));
+  }
+})();
+
+document.getElementById("btnSubmitBatch").onclick = submitBatch;
+document.getElementById("btnRetryBatch").onclick = retryBatch;
+document.getElementById("btnRetryWrong").onclick = retryWrong;
+</script>
+</body>
+</html>
