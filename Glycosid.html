@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Glycosid</title>
+<style>
+:root{--bg1:#f4fbff;--bg2:#eef7f1;--card:#fff;--text:#2f4858;--muted:#6b8796;--primary:#5fa8d3;--primary2:#7fc8a9;--good:#1f9d55;--bad:#d94f4f;--border:#cfe3ee;--soft:#f8fbfd;--softgood:#e8f8ef;--softbad:#fdecec}
+*{box-sizing:border-box} body{font-family:Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--text);margin:0}
+.container{max-width:980px;margin:auto;padding:24px}.hero{background:linear-gradient(135deg,#dff4ff,#edf9ef);border:1px solid var(--border);border-radius:22px;padding:22px;margin-bottom:18px}
+h1{margin:0 0 8px;color:#3b6f8d}.sub{margin:0;color:var(--muted);line-height:1.6}.toolbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.left,.right{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pill{background:#ffffffcc;border:1px solid var(--border);padding:10px 14px;border-radius:999px;font-size:14px;color:#4f7387}
+button{border:none;border-radius:999px;padding:12px 18px;cursor:pointer}.btn1{background:#fff;border:1px solid var(--border);color:#507286}.btn2{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
+.card{background:var(--card);border-radius:18px;padding:16px;margin-bottom:14px;border:1px solid var(--border);box-shadow:0 8px 22px rgba(95,168,211,.08)}
+.q{font-weight:700;line-height:1.55;color:#315d75;margin-bottom:12px}.option{padding:12px 14px;border-radius:12px;margin:8px 0;cursor:pointer;background:var(--soft);border:1px solid #dbeaf2}
+.option.correct{background:var(--softgood);color:var(--good);border-color:#9fd8b5;font-weight:600}.option.wrong{background:var(--softbad);color:var(--bad);border-color:#efaaaa;font-weight:600}
+.result{position:sticky;bottom:16px;background:#ffffffe8;border:1px solid var(--border);border-radius:18px;padding:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.score{font-weight:700;color:#3d6a80}.note,.status{color:var(--muted);font-size:14px}.status.good{color:var(--good)}.status.bad{color:var(--bad)}
+@media(max-width:700px){.container{padding:16px}.result{position:static}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>Ôn tập Glycosid</h1>
+    <p class="sub">Đủ 60 câu. Giữ nguyên thứ tự câu hỏi, chỉ đảo thứ tự đáp án. Chọn là hiện kết quả ngay. Có thể làm lại toàn bộ hoặc chỉ làm lại câu sai.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="left">
+      <div class="pill">60 câu trắc nghiệm</div>
+      <div class="pill">Đúng <span style="color:#1f9d55;font-weight:700">màu xanh</span></div>
+      <div class="pill">Sai <span style="color:#d94f4f;font-weight:700">màu đỏ</span></div>
+    </div>
+    <div class="right">
+      <button class="btn1" onclick="retryWrong()">Làm lại câu sai</button>
+      <button class="btn2" onclick="restart()">Làm lại</button>
+    </div>
+  </div>
+
+  <div id="quiz"></div>
+
+  <div class="result">
+    <div>
+      <div class="score" id="scoreText">Chọn đáp án để xem kết quả ngay</div>
+      <div class="note">Chọn đáp án → hiện kết quả ngay (xanh = đúng, đỏ = sai).</div>
+    </div>
+    <div class="note" id="progressText">Đã trả lời: 0/60 • Sai: 0</div>
+  </div>
+</div>
+<script>
+const data=[
+{q:"Glycosid là gì (định nghĩa rộng)?",a:["Chỉ gồm đường","Đường + acid","Đường + phân tử hữu cơ","Chỉ gồm aglycon"],c:2},
+{q:"Glycosid theo định nghĩa hẹp là:",a:["Heterosid","Holosid","Monosid","Polysaccharid"],c:0},
+{q:"Thành phần của glycosid gồm:",a:["Glycon + aglycon","Protein + lipid","Acid + base","Enzym + đường"],c:0},
+{q:"Phần đường của glycosid gọi là:",a:["Aglycon","Genin","Glycon","Ester"],c:2},
+{q:"Phần không đường gọi là:",a:["Glycon","Aglycon","Ose","Disaccharid"],c:1},
+{q:"Glycosid có dây nối acetal nên:",a:["Kém bền","Dễ thủy phân","Bền","Không tan"],c:2},
+{q:"Pseudoglycosid có dây nối:",a:["Ether","Acetal","Ester","Amide"],c:2},
+{q:"Pseudoglycosid dễ bị thủy phân trong:",a:["Nước lạnh","Acid/nhiệt","Base nhẹ","Không bị thủy phân"],c:1},
+{q:"Holosid có đặc điểm:",a:["Nhiều loại đường","Không có đường","1 loại đường","Có protein"],c:2},
+{q:"Heterosid có đặc điểm:",a:["1 loại đường","Không có đường","Nhiều loại đường","Không có aglycon"],c:2},
+{q:"Monosid có:",a:["1 phân tử đường","2 phân tử đường","3 phân tử đường","Không có đường"],c:0},
+{q:"Biosid có:",a:["1 đường","2 đường","3 đường","4 đường"],c:1},
+{q:"Trisid có:",a:["2 đường","3 đường","4 đường","5 đường"],c:1},
+{q:"Monoglycosid có:",a:["1 mạch đường","2 mạch đường","Không có đường","Nhiều aglycon"],c:0},
+{q:"Diglycosid có:",a:["1 mạch","2 mạch","3 mạch","Không mạch"],c:1},
+{q:"α-glycosid và β-glycosid khác nhau ở:",a:["Số đường","Loại aglycon","Cấu hình liên kết","Độ tan"],c:2},
+{q:"Pyranosid là dạng:",a:["5 cạnh","6 cạnh","7 cạnh","4 cạnh"],c:1},
+{q:"Furanosid là dạng:",a:["4 cạnh","5 cạnh","6 cạnh","7 cạnh"],c:1},
+{q:"Đường desoxy là:",a:["Bị oxi hóa","Bị khử","Không đổi","Có N"],c:1},
+{q:"Đường uronic là:",a:["Bị khử","Bị oxi hóa","Không đổi","Không tan"],c:1},
+{q:"O-glycosid có liên kết qua:",a:["O","N","C","S"],c:0},
+{q:"N-glycosid liên kết qua:",a:["O","N","C","S"],c:1},
+{q:"C-glycosid liên kết qua:",a:["O","N","C","S"],c:2},
+{q:"Loại bền nhất là:",a:["O-glycosid","N-glycosid","C-glycosid","S-glycosid"],c:2},
+{q:"S-glycosid thường gặp trong:",a:["Họ Hoa hồng","Họ Cải","Họ Cúc","Họ Đậu"],c:1},
+{q:"Phần quyết định tác dụng sinh lý:",a:["Glycon","Aglycon","Enzym","Nước"],c:1},
+{q:"Phần quyết định độ phân cực:",a:["Aglycon","Glycon","Protein","Lipid"],c:1},
+{q:"Glycosid thường có vị:",a:["Chua","Đắng","Mặn","Không vị"],c:1},
+{q:"Glycyrrhizin có vị:",a:["Đắng","Ngọt","Chua","Cay"],c:1},
+{q:"Glycosid thường:",a:["Có màu","Không màu","Đen","Xanh"],c:1},
+{q:"Anthraglycosid có màu:",a:["Xanh","Vàng cam → nâu","Đỏ","Trắng"],c:1},
+{q:"Flavonoid glycosid có màu:",a:["Xanh","Vàng","Đen","Trắng"],c:1},
+{q:"Anthocyanin có màu:",a:["Vàng","Tím","Đen","Trắng"],c:1},
+{q:"Glycosid tan tốt trong:",a:["Dung môi kém phân cực","Dung môi phân cực","Hexan","Benzen"],c:1},
+{q:"Aglycon tan tốt trong:",a:["Nước","Dung môi phân cực","Dung môi kém phân cực","Acid mạnh"],c:2},
+{q:"Dung môi phân cực mạnh:",a:["CHCl₃","Ether","Nước","Benzen"],c:2},
+{q:"Dung môi kém phân cực:",a:["Nước","Methanol","CHCl₃","Ethanol"],c:2},
+{q:"Glycosid ít đường sẽ:",a:["Tan nước tốt","Tan dung môi hữu cơ tốt","Không tan","Kết tủa"],c:1},
+{q:"Thủy phân glycosid tạo:",a:["2 aglycon","Glycon + aglycon","Protein","Lipid"],c:1},
+{q:"Tác nhân thủy phân:",a:["Enzym","Acid","Cả A và B","Base yếu"],c:2},
+{q:"Enzym thủy phân có tính:",a:["Mạnh","Chọn lọc","Không chọn lọc","Phá hủy cấu trúc"],c:1},
+{q:"Acid thủy phân có tính:",a:["Nhẹ","Chọn lọc","Mạnh, không chọn lọc","Không phản ứng"],c:2},
+{q:"Thủy phân enzym dùng để:",a:["Phá hủy","Xác định cấu trúc","Làm khô","Tạo màu"],c:1},
+{q:"Độ bền giảm dần:",a:["O > C > glucuronic","C > glucuronic > O","N > C > O","S > O > C"],c:1},
+{q:"Pha thuận dùng:",a:["RP","Silicagel","Nước","Acid"],c:1},
+{q:"Trong pha thuận:",a:["Rf glycosid > aglycon","Rf glycosid < aglycon","Bằng nhau","Không xác định"],c:1},
+{q:"Nhiều đường → Rf:",a:["Tăng","Giảm","Không đổi","=0.5"],c:1},
+{q:"Pha đảo (RP):",a:["Phân cực","Kém phân cực","Acid","Base"],c:1},
+{q:"Trong RP: nhiều đường → Rf:",a:["Giảm","Tăng","Không đổi","=0"],c:1},
+{q:"Glycosid dễ tạo:",a:["Acid","Artefact","Protein","Lipid"],c:1},
+{q:"Thủy phân có lợi trong dược liệu:",a:["Actiso","Mía","Digitalis","Tất cả"],c:3},
+{q:"Thủy phân có hại:",a:["Cam thảo","Actiso","Cà độc dược","Digitalis"],c:2},
+{q:"Cần diệt men khi:",a:["Chiết","Sấy","Sau thu hoạch","Trước uống"],c:2},
+{q:"Tạp tan trong dầu loại bằng:",a:["Nước","Dung môi hữu cơ kém phân cực","Acid","Base"],c:1},
+{q:"Tạp tan trong nước loại bằng:",a:["Lọc","Lắng","Cô","Sấy"],c:1},
+{q:"Glycosid thường tồn tại:",a:["Kết tinh","Dạng hòa tan trong tế bào","Khí","Rắn khô"],c:1},
+{q:"Khi chiết xuất glycosid có thể:",a:["Bay hơi","Kết tinh","Phân hủy","Không đổi"],c:1},
+{q:"Glycosid có tính khử:",a:["Có","Không (đa số)","Luôn có","Luôn không"],c:1},
+{q:"Ngoại lệ có tính khử khi:",a:["Có nhiều đường","Aglycon có nhóm khử","Tan trong nước","Có màu"],c:1},
+{q:"Phản ứng màu glycosid phụ thuộc:",a:["Nhiệt độ","Loại glycosid","Ánh sáng","pH"],c:1}
+];
+
+let current=[];
+const quizEl=document.getElementById('quiz');
+const scoreText=document.getElementById('scoreText');
+const progressText=document.getElementById('progressText');
+
+function shuffle(arr){return arr.map(v=>[v,Math.random()]).sort((a,b)=>a[1]-b[1]).map(v=>v[0])}
+
+function prepare(src=data){
+  return src.map((q,idx)=>{
+    const opts=shuffle(q.a.map((t,i)=>({t,i})));
+    return {...q,id:`q_${idx}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,opts,correct:opts.findIndex(o=>o.i===q.c),wrong:false,answered:false,locked:false};
+  });
+}
+
+function updateProgress(){
+  const answered=current.filter(q=>q.answered).length;
+  const wrong=current.filter(q=>q.wrong).length;
+  progressText.textContent=`Đã trả lời: ${answered}/${current.length} • Sai: ${wrong}`;
+}
+
+function render(){
+  quizEl.innerHTML='';
+  current.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.className='card';
+    const title=document.createElement('div');
+    title.className='q';
+    title.textContent=`Câu ${i+1}. ${q.q}`;
+    div.appendChild(title);
+
+    q.opts.forEach((o,idx)=>{
+      const opt=document.createElement('div');
+      opt.className='option';
+      opt.innerHTML=`<strong>${String.fromCharCode(65+idx)}.</strong> ${o.t}`;
+      opt.onclick=()=>{
+        if(q.locked)return;
+        q.locked=true;
+        q.answered=true;
+        const options=div.querySelectorAll('.option');
+        if(idx===q.correct){
+          opt.classList.add('correct');
+          q.wrong=false;
+          status.textContent='Chính xác';
+          status.className='status good';
+        }else{
+          opt.classList.add('wrong');
+          options[q.correct].classList.add('correct');
+          q.wrong=true;
+          status.textContent=`Sai. Đáp án đúng là ${String.fromCharCode(65+q.correct)}.`;
+          status.className='status bad';
+        }
+        updateProgress();
+      };
+      div.appendChild(opt);
+    });
+
+    const status=document.createElement('div');
+    status.className='status';
+    div.appendChild(status);
+    quizEl.appendChild(div);
+  });
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){
+  current=prepare();
+  scoreText.textContent='Chọn đáp án để xem kết quả ngay';
+  render();
+}
+
+function retryWrong(){
+  const wrong=current.filter(q=>q.wrong).map(q=>({q:q.q,a:q.a,c:q.c}));
+  if(wrong.length===0){
+    scoreText.textContent='Không có câu sai để làm lại';
+    return;
+  }
+  current=prepare(wrong);
+  scoreText.textContent=`Đang làm lại ${wrong.length} câu sai`;
+  render();
+}
+
+function runSelfTests(){
+  console.assert(data.length===60,'Phải có đủ 60 câu');
+  console.assert(data.every(q=>Array.isArray(q.a)&&q.a.length===4),'Mỗi câu phải có 4 đáp án');
+  console.assert(data.every(q=>Number.isInteger(q.c)&&q.c>=0&&q.c<4),'Mỗi câu phải có đáp án đúng hợp lệ');
+  const sample=prepare([{q:'test',a:['A','B','C','D'],c:2}])[0];
+  console.assert(typeof sample.correct==='number' && sample.correct>=0 && sample.correct<4,'Phải ánh xạ đúng đáp án sau khi đảo');
+}
+
+runSelfTests();
+restart();
+</script>
+</body>
+</html>
